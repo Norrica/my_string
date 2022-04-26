@@ -2,7 +2,6 @@
 
 typedef long unsigned s21_size_t;
 
-
 void *s21_memchr(const void *str, int c, s21_size_t n); // jarrusab
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n); // jarrusab
 void *s21_memcpy(void *dest, const void *src, s21_size_t n); // jarrusab
@@ -20,6 +19,6 @@ char *s21_strerror(int errnum); // tarengre
 s21_size_t s21_strlen(const char *str); // tarengre
 char *s21_strpbrk(const char *str1, const char *str2); // gladisar
 char *s21_strrchr(const char *str, int c); // gladisar
-char *s21_strstr(const char *haystack, const char *needle); // gladisar
+char *s21_strstr(const char *str, const char *substr); // gladisar
 char *s21_strtok(char *str, const char *delim); // gladisar
 s21_size_t s21_strspn(const char *str1, const char *str2); // gladisar
