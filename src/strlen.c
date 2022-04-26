@@ -1,11 +1,8 @@
 #include "s21_string.h"
 
-size_t strlen(const char *str) {
-    char *p = str;
-    size_t length = 0;
-    while (p != '\0') {
-        length++;
-        p++;
-    }
-    return length;
+s21_size_t s21_strlen(const char *str)
+{
+    s21_size_t len = 0;
+    for(; str[len]; len++);
+    return len + 1;
 }
