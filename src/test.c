@@ -61,34 +61,68 @@ START_TEST(test_strstr) {
 }
 END_TEST
 
-START_TEST(NAME HERE) {
-	char *a[N_TESTS][2] = {
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
-		{"", ""},
+START_TEST(test_strchr) {
+	typedef struct s {
+	  char *str;
+	  char c;
+	} test;
+	test t = {"a", 'c'};
+	test a[N_TESTS] = {
+		{"ololo",'o'},
+		{"   ", ' '},
+		{"   ", ' '},
+		{" ", ' '},
+		{"aaaa   aaaa", ' '},
+		{"aaaa zaaaa", ' '},
+		{"this is test", 'i'},
+		{"aaaaaabaaaaaa", 'b'},
+		{"aaaaaabaaaaaa", 'a'},
+		{"close", 'x'},
+		{"close", 'c'},
+		{"close", 'l'},
+		{"maximax", 'x'},
+		{"maximax", 'm'},
+		{"maximax", 'a'},
+		{"maximax", 'i'},
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
 //		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
 		ck_assert_ptr_eq(
-			string.h_function(a[i][0], a[i][1]),
-			s21_string.h_function(a[i][0], a[i][1])
-		)
+			strchr(a[i].str, a[i].c),
+			s21_strchr(a[i].str, a[i].c)
+		);
 	}
 }
 END_TEST
+//START_TEST(NAME_HERE) {
+//	char *a[N_TESTS][2] = {
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//		{"", ""},
+//	};
+//	for (int i = 0; i < N_TESTS; ++i) {
+////		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//		ck_assert_ptr_eq(
+//			string.h_function(a[i][0], a[i][1]),
+//			s21_string.h_function(a[i][0], a[i][1])
+//		)
+//	}
+//}
+//END_TEST
+
 
 Suite *string_suite(void) {
 	Suite *s;
@@ -104,10 +138,15 @@ Suite *string_suite(void) {
 	tcase_add_test(strstr_case, test_strstr);
 	suite_add_tcase(s, strstr_case);
 
-	TCase *NEW CASE;
-	NEW CASE = tcase_create("");
-	tcase_add_test(NEW CASE, test_strstr);
-	suite_add_tcase(s, NEW CASE);
+	TCase *strchr_case;
+	strchr_case = tcase_create("strchr");
+	tcase_add_test(strchr_case, test_strchr);
+	suite_add_tcase(s, strchr_case);
+
+	//TCase *NEW CASE;
+	//NEW CASE = tcase_create("");
+	//tcase_add_test(NEW CASE, NAME HERE);
+	//suite_add_tcase(s, NEW CASE);
 
 	return s;
 }
