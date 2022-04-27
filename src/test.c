@@ -175,7 +175,7 @@ Suite *string_suite(void) {
 	tcase_add_test(strpbrk_case, test_strpbrk);
 	suite_add_tcase(s, strpbrk_case);
 	//TCase *NEW CASE;
-	//NEW CASE = tcase_create("");
+	//NEW CASE = tcase_create("NAME HERE");
 	//tcase_add_test(NEW CASE, NAME HERE);
 	//suite_add_tcase(s, NEW CASE);
 
