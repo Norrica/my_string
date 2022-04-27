@@ -1,3 +1,14 @@
+/* 
+The strcat() function concatenates the destination string and the source string, 
+and the result is stored in the destination string.
+--------------------------------------------
+char str1[100] = "This is ", str2[] = "programiz.com";
+strcat(str1, str2);
+puts(str1);
+>> This is programiz.com
+--------------------------------------------
+*/
+
 #include "s21_string.h"
 
 char *s21_strcat(char *dest, const char *src) {
