@@ -4,26 +4,29 @@
 #include "s21_string.h"
 #include <check.h>
 
-#define N_TESTS 15
-START_TEST(test_strspn) {
+#define N_TESTS 16
 
-	char *a[N_TESTS][2] = {
-		{"this is a test", "hits"},
-		{"this is a test", "hits "},
-		{"ololo", "ol"},
-		{"ololo", "lo"},
-		{"ololo", "l"},
-		{"ololo", "o"},
-		{"", ""},
-		{"a", ""},
-		{"", "a"},
-		{"ba", "a"},
-		{"ba", "ab"},
-		{"ab", "ba"},
-		{"abababa", "ba"},
-		{"ababcaba", "ba"},
-	};
+char *a[N_TESTS][2] = {
+	{"this is a test", "hits"},
+	{"this is a test", "hits "},
+	{"ololo", "ol"},
+	{"ololo", "lo"},
+	{"ololo", "l"},
+	{"ololo", "o"},
+	{"", ""},
+	{" ", " "},
+	{"   ", " "},
+	{"a", ""},
+	{"", "a"},
+	{"ba", "a"},
+	{"ba", "ab"},
+	{"ab", "ba"},
+	{"abababa", "ba"},
+	{"ababcaba", "ba"},
+};
+START_TEST(test_strspn) {
 	for (int i = 0; i < N_TESTS; ++i) {
+		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
 		ck_assert_int_eq(strspn(a[i][0], a[i][1]),
 						 s21_strspn(a[i][0], a[i][1]));
 	}
