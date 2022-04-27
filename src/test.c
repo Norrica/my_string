@@ -66,7 +66,6 @@ START_TEST(test_strchr) {
 	  char *str;
 	  char c;
 	} test;
-	test t = {"a", 'c'};
 	test a[N_TESTS] = {
 		{"ololo",'o'},
 		{"   ", ' '},
@@ -123,6 +122,34 @@ END_TEST
 //}
 //END_TEST
 
+START_TEST(test_strpbrk) {
+	char *a[N_TESTS][2] = {
+		{"this is test", "is"},
+		{"aaaaaabaaaaaa", "b"},
+		{"aaaaaabaaaaaa", "baa"},
+		{"aaaaaabaaaaaa", "ab"},
+		{"", ""},
+		{"", "    "},
+		{"   ", ""},
+		{"   ", " "},
+		{" ", " "},
+		{"close", "x"},
+		{"close", "x"},
+		{"close", "x"},
+		{"maximax", "ax"},
+		{"maximax", "max"},
+		{"maximax", "im"},
+		{"maximax", "ix"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			strpbrk(a[i][0], a[i][1]),
+			s21_strpbrk(a[i][0], a[i][1])
+		);
+	}
+}
+END_TEST
 
 Suite *string_suite(void) {
 	Suite *s;
@@ -143,6 +170,10 @@ Suite *string_suite(void) {
 	tcase_add_test(strchr_case, test_strchr);
 	suite_add_tcase(s, strchr_case);
 
+	TCase *strpbrk_case;
+	strpbrk_case = tcase_create("strpbrk");
+	tcase_add_test(strpbrk_case, test_strpbrk);
+	suite_add_tcase(s, strpbrk_case);
 	//TCase *NEW CASE;
 	//NEW CASE = tcase_create("");
 	//tcase_add_test(NEW CASE, NAME HERE);
