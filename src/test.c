@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "s21_string.h"
@@ -7,7 +6,7 @@
 #define N_TESTS 16
 
 START_TEST(test_strspn) {
-	char *a[N_TESTS][2] = {
+	char *a[0 + N_TESTS][2] = {
 		{"this is a test", "hits"},
 		{"this is a test", "hits "},
 		{"ololo", "ol"},
@@ -30,23 +29,90 @@ START_TEST(test_strspn) {
 		ck_assert_int_eq(strspn(a[i][0], a[i][1]),
 						 s21_strspn(a[i][0], a[i][1]));
 	}
-//    ck_assert(1 == 2);
-//    ck_assert_msg(1 == 2, "Was expecting 2, but got 1");
+}
+END_TEST
+
+START_TEST(test_strstr) {
+	char *a[N_TESTS][2] = {
+		{"this is test", "is"},
+		{"aaaaaabaaaaaa", "b"},
+		{"aaaaaabaaaaaa", "baa"},
+		{"aaaaaabaaaaaa", "ab"},
+		{"", ""},
+		{"", "    "},
+		{"   ", ""},
+		{"   ", " "},
+		{" ", " "},
+		{"close", "x"},
+		{"close", "x"},
+		{"close", "x"},
+		{"maximax", "ax"},
+		{"maximax", "max"},
+		{"maximax", "im"},
+		{"maximax", "ix"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			strstr(a[i][0], a[i][1]),
+			s21_strstr(a[i][0], a[i][1])
+		);
+	}
+}
+END_TEST
+
+START_TEST(NAME HERE) {
+	char *a[N_TESTS][2] = {
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+		{"", ""},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			string.h_function(a[i][0], a[i][1]),
+			s21_string.h_function(a[i][0], a[i][1])
+		)
+	}
 }
 END_TEST
 
 Suite *string_suite(void) {
 	Suite *s;
-	TCase *tc_core;
 	s = suite_create("s21_string");
-	tc_core = tcase_create("Core");
-	tcase_add_test(tc_core, test_strspn);
-	suite_add_tcase(s, tc_core);
+
+	TCase *strspn_case;
+	strspn_case = tcase_create("strspn");
+	tcase_add_test(strspn_case, test_strspn);
+	suite_add_tcase(s, strspn_case);
+
+	TCase *strstr_case;
+	strstr_case = tcase_create("strstr");
+	tcase_add_test(strstr_case, test_strstr);
+	suite_add_tcase(s, strstr_case);
+
+	TCase *NEW CASE;
+	NEW CASE = tcase_create("");
+	tcase_add_test(NEW CASE, test_strstr);
+	suite_add_tcase(s, NEW CASE);
+
 	return s;
 }
 
 int main(void) {
-//	size_t p;
 	int number_failed = 0;
 	Suite *s;
 	SRunner *sr;
@@ -56,5 +122,4 @@ int main(void) {
 	number_failed = srunner_ntests_failed(sr);
 	srunner_free(sr);
 	return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
-//	return 0;
 }
