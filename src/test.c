@@ -66,7 +66,6 @@ START_TEST(test_strchr) {
 	  char *str;
 	  char c;
 	} test;
-	test t = {"a", 'c'};
 	test a[N_TESTS] = {
 		{"ololo",'o'},
 		{"   ", ' '},
@@ -144,7 +143,7 @@ Suite *string_suite(void) {
 	suite_add_tcase(s, strchr_case);
 
 	//TCase *NEW CASE;
-	//NEW CASE = tcase_create("");
+	//NEW CASE = tcase_create("NAME HERE");
 	//tcase_add_test(NEW CASE, NAME HERE);
 	//suite_add_tcase(s, NEW CASE);
 
