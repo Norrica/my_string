@@ -6,7 +6,7 @@ s21_size_t s21_strspn(const char *str1, const char *str2) {
 			if (*s1 == *s2) {
 				s2 = (char *) str2 - 1;
 				s1++;
-			} else if (*s2 == '\0') {
+			} else if (*s2 == '\0' || *s1 =='\0') {
 				return s1 - str1;
 			}
 		}
