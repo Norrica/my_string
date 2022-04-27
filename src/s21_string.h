@@ -18,7 +18,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2); // tarengre
 char *s21_strerror(int errnum); // tarengre
 s21_size_t s21_strlen(const char *str); // tarengre
 char *s21_strpbrk(const char *str1, const char *str2); // gladisar
-char *s21_strchr(const char *str, int c); // gladisar
+char *s21_strrchr(const char *str, int c); // gladisar
 char *s21_strstr(const char *str, const char *substr); // gladisar
 char *s21_strtok(char *str, const char *delim); // gladisar
 s21_size_t s21_strspn(const char *str1, const char *str2); // gladisar
