@@ -1,3 +1,8 @@
+/* 
+The strcat() function concatenates the destination string and the source string, 
+and the result is stored in the destination string.
+*/
+
 #include "s21_string.h"
 
 char *s21_strcat(char *dest, const char *src) {
