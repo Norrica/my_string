@@ -33,6 +33,7 @@ START_TEST(test_strspn) {
 END_TEST
 
 START_TEST(test_strstr) {
+
 	char *a[N_TESTS][2] = {
 		{"this is test", "is"},
 		{"aaaaaabaaaaaa", "b"},
@@ -62,6 +63,7 @@ START_TEST(test_strstr) {
 END_TEST
 
 START_TEST(test_strchr) {
+
 	typedef struct s {
 	  char *str;
 	  char c;
@@ -94,7 +96,42 @@ START_TEST(test_strchr) {
 }
 END_TEST
 
+START_TEST(test_strrchr) {
+
+	typedef struct s {
+	  char *str;
+	  char c;
+	} test;
+	test a[N_TESTS] = {
+		{"ololo", 'o'},
+		{"   ", ' '},
+		{"   ", ' '},
+		{" ", ' '},
+		{"aaaa   aaaa", ' '},
+		{"", ' '},
+		{"this is test", 'i'},
+		{"aaaaaabaaaaaa", 'b'},
+		{"aaaaaabaaaaaa", 'a'},
+		{"close", 'x'},
+		{"close", 'c'},
+		{"close", 'l'},
+		{"maximax", 'x'},
+		{"maximax", 'm'},
+		{"maximax", 'a'},
+		{"maximax", 'i'},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			strrchr(a[i].str, a[i].c),
+			s21_strrchr(a[i].str, a[i].c)
+		);
+	}
+}
+END_TEST
+
 START_TEST(test_strpbrk) {
+
 	char *a[N_TESTS][2] = {
 		{"this is test", "is"},
 		{"aaaaaabaaaaaa", "b"},
@@ -124,6 +161,7 @@ START_TEST(test_strpbrk) {
 END_TEST
 
 START_TEST(test_memchr) {
+
 	typedef struct s {
 	  char *str;
 	  char c;
@@ -158,6 +196,7 @@ START_TEST(test_memchr) {
 END_TEST
 
 START_TEST(test_memcmp) {
+
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -192,6 +231,7 @@ START_TEST(test_memcmp) {
 END_TEST
 
 START_TEST(test_memcpy) {
+
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -217,15 +257,60 @@ START_TEST(test_memcpy) {
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
 //		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_ptr_eq(
-			memcpy(a[i].str, a[i].c, a[i].n),
-			s21_memcpy(a[i].str, a[i].c, a[i].n)
+		char s1[20];
+		strcpy(s1, a[i].str);
+		char s2[20];
+		strcpy(s2, a[i].str);
+		ck_assert_mem_eq(
+			memcpy(s1, a[i].c, a[i].n),
+			s21_memcpy(s2, a[i].c, a[i].n),
+			strlen(s1)
+		);
+	}
+}
+END_TEST
+
+START_TEST(test_strcpy) {
+
+	typedef struct s {
+	  char str[50];
+	  char *c;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", "is"},
+		{"this is test", "is"},
+		{"abaaaaaa", "baa"},
+		{"abaaaaaa", "baa"},
+		{"abaaaaaa", "baa"},
+		{"abaaaaaa", "ab"},
+		{" ", ""},
+		{"", "    "},
+		{"   ", ""},
+		{"   ", " "},
+		{" ", " "},
+		{"close", "x"},
+		{"maximax", "ax"},
+		{"maximax", "max"},
+		{"maximax", "im"},
+		{"maximax", "ix"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+		printf("[%s] : [%s]\n", a[i].str, a[i].c);
+		char s1[20];
+		strcpy(s1, a[i].str);
+		char s2[20];
+		strcpy(s2, a[i].str);
+		ck_assert_mem_eq(
+			strcpy(s1, a[i].c),
+			s21_strcpy(s2, a[i].c),
+			strlen(s1)
 		);
 	}
 }
 END_TEST
 
 START_TEST(test_memmove) {
+
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -243,23 +328,29 @@ START_TEST(test_memmove) {
 		{"   ", "", 1},
 		{"   ", " ", 1},
 		{" ", " ", 1},
-		{"close", "x", 5},
-		{"maximax", "ax", 7},
-		{"maximax", "max", 7},
-		{"maximax", "im", 7},
-		{"maximax", "ix", 7},
+		{"close", "x", 4},
+		{"maximax", "ax", 4},
+		{"maximax", "max", 4},
+		{"maximax", "im", 4},
+		{"maximax", "ix", 4},
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
 //		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_ptr_eq(
-			memmove(a[i].str, a[i].c, a[i].n),
-			s21_memmove(a[i].str, a[i].c, a[i].n)
+		char s1[20];
+		strcpy(s1, a[i].str);
+		char s2[20];
+		strcpy(s2, a[i].str);
+		ck_assert_mem_eq(
+			memmove(s1, a[i].c, a[i].n),
+			s21_memmove(s2, a[i].c, a[i].n),
+			strlen(s1)
 		);
 	}
 }
 END_TEST
 
 START_TEST(test_memset) {
+
 	typedef struct s {
 	  char *str;
 	  int c;
@@ -276,24 +367,30 @@ START_TEST(test_memset) {
 		{"   ", 48, 1},
 		{"   ", 48, 3},
 		{" ", 48, 1},
-		{" ", 48, 0},
+		{" ", 48, 1},
 		{"close", 48, 5},
 		{"maximax", 48, 1},
-		{"maximax", 48, 0},
+		{"maximax", 48, 1},
 		{"maximax", 48, 7},
 		{"maximax", 48, 4},
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
 //		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_ptr_eq(
-			memset(a[i].str, a[i].c, a[i].n),
-			s21_memset(a[i].str, a[i].c, a[i].n)
+		char s1[20];
+		strcpy(s1, a[i].str);
+		char s2[20];
+		strcpy(s2, a[i].str);
+		ck_assert_mem_eq(
+			memset(s1, a[i].c, a[i].n),
+			s21_memset(s2, a[i].c, a[i].n),
+			strlen(a[i].str)
 		);
 	}
 }
 END_TEST
 
 START_TEST(test_strcat) {
+
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -307,8 +404,8 @@ START_TEST(test_strcat) {
 		a[i].str = dest;
 	}
 
-	a[0].c = "";
-	a[1].c = " ";
+	a[0].c = " ";
+	a[1].c = "";
 	a[2].c = "a";
 	a[3].c = "a ";
 	a[4].c = " a";
@@ -324,18 +421,25 @@ START_TEST(test_strcat) {
 	a[14].c = " ABCD";
 	a[15].c = " ABCD ";
 
-	//};
 	for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_ptr_eq(
-			strcat(a[i].str, a[i].c),
-			s21_strcat(a[i].str, a[i].c)
+		//printf("[%s] : [%s] ->   ", a[i].str, a[i].c);
+		char curr1[50];
+		strcpy(curr1, a[i].str);
+		char curr2[50];
+		strcpy(curr2, a[i].str);
+		ck_assert_mem_eq(
+
+			strcat(curr1, a[i].c),
+			s21_strcat(curr2, a[i].c),
+			strlen(curr1)
 		);
+		//printf("[%s] : [%s]\n", curr1,curr2);
 	}
 }
 END_TEST
 
 START_TEST(test_strncat) {
+
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -351,50 +455,56 @@ START_TEST(test_strncat) {
 	}
 
 	a[0].c = "";
-	a[0].n = 1;
+	a[0].n = 5;
 	a[1].c = " ";
-	a[1].n = 1;
+	a[1].n = 5;
 	a[2].c = "a";
-	a[2].n = 1;
+	a[2].n = 5;
 	a[3].c = "a ";
-	a[3].n = 1;
+	a[3].n = 5;
 	a[4].c = " a";
-	a[4].n = 1;
+	a[4].n = 5;
 	a[5].c = "ab";
-	a[5].n = 1;
+	a[5].n = 5;
 	a[6].c = " ab";
-	a[6].n = 1;
+	a[6].n = 5;
 	a[7].c = " ab ";
-	a[7].n = 1;
+	a[7].n = 5;
 	a[8].c = "abcd";
-	a[8].n = 1;
+	a[8].n = 5;
 	a[9].c = "   ";
-	a[9].n = 1;
+	a[9].n = 5;
 	a[10].c = "abcdeftgh";
-	a[10].n = 1;
+	a[10].n = 5;
 	a[11].c = ".a.b";
-	a[11].n = 1;
+	a[11].n = 5;
 	a[12].c = "a/a/a";
-	a[12].n = 1;
+	a[12].n = 5;
 	a[13].c = "ABCD";
-	a[13].n = 1;
+	a[13].n = 5;
 	a[14].c = " ABCD";
-	a[14].n = 1;
+	a[14].n = 5;
 	a[15].c = " ABCD ";
-	a[15].n = 1;
+	a[15].n = 5;
 
 	//};
 	for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_ptr_eq(
-			strncat(a[i].str, a[i].c,a[i].n),
-			s21_strncat(a[i].str, a[i].c,a[i].n)
+		char curr1[50];
+		strcpy(curr1, a[i].str);
+		char curr2[50];
+		strcpy(curr2, a[i].str);
+		ck_assert_mem_eq(
+			strncat(curr1, a[i].c, a[i].n),
+			s21_strncat(curr2, a[i].c, a[i].n),
+			strlen(curr1)
 		);
+		//printf("[%s] : [%s]\n", curr1, curr2);
 	}
 }
 END_TEST
 
 START_TEST(test_strcmp) {
+
 	char *a[N_TESTS][2] = {
 		{"this is test", "this is test"},
 		{"aaaaaabaaaaaa", "aaaaaabaaaaaab"},
@@ -423,8 +533,73 @@ START_TEST(test_strcmp) {
 }
 END_TEST
 
+START_TEST(test_strncmp) {
 
+	typedef struct s {
+	  char *str;
+	  char *c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", "this is test", 5},
+		{"aaaaaabaaaaaa", "aaaaaabaaaaaab", 5},
+		{"aaaaaabaaaaaa", "baa", 5},
+		{"aaaaaabaaaaaa", "ab", 5},
+		{"", "", 5},
+		{"", "    ", 5},
+		{"   ", "", 5},
+		{"   ", " ", 5},
+		{" ", " ", 5},
+		{"close", "x", 5},
+		{"close", "x", 5},
+		{"close", "x", 5},
+		{"maximax", "ax", 5},
+		{"maximax", "max", 5},
+		{"maximax", "im", 5},
+		{"maximax", "ix", 5},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_int_eq(
+			strncmp(a[i].str, a[i].c, a[i].n),
+			s21_strncmp(a[i].str, a[i].c, a[i].n)
+		);
+	}
+}
+END_TEST
 
+START_TEST(test_strlen) {
+
+	typedef struct s {
+	  char *str;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test"},
+		{"!№;%:?*"},
+		{"aaaaaabaaaaaa"},
+		{"aaaaaabaaaaaa"},
+		{""},
+		{""},
+		{"   "},
+		{"   "},
+		{" "},
+		{"close"},
+		{"close"},
+		{"close"},
+		{"maximax"},
+		{"maximax"},
+		{"maximax"},
+		{"maximax"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_int_eq(
+			strlen(a[i].str),
+			s21_strlen(a[i].str)
+		);
+	}
+}
+END_TEST
 
 //START_TEST(NAME_HERE) {
 //	char *a[N_TESTS][2] = {
@@ -456,6 +631,7 @@ END_TEST
 //END_TEST
 
 Suite *string_suite(void) {
+
 	Suite *s;
 	s = suite_create("s21_string");
 
@@ -473,6 +649,11 @@ Suite *string_suite(void) {
 	strchr_case = tcase_create("strchr");
 	tcase_add_test(strchr_case, test_strchr);
 	suite_add_tcase(s, strchr_case);
+
+	TCase *strrchr_case;
+	strrchr_case = tcase_create("strrchr");
+	tcase_add_test(strrchr_case, test_strrchr);
+	suite_add_tcase(s, strrchr_case);
 
 	TCase *memchr_case;
 	memchr_case = tcase_create("memchr");
@@ -514,15 +695,24 @@ Suite *string_suite(void) {
 	tcase_add_test(memcpy_case, test_memcpy);
 	suite_add_tcase(s, memcpy_case);
 
+	TCase *strcpy_case;
+	strcpy_case = tcase_create("strcpy");
+	tcase_add_test(strcpy_case, test_strcpy);
+	suite_add_tcase(s, strcpy_case);
 	TCase *strcmp_case;
 	strcmp_case = tcase_create("strcmp");
 	tcase_add_test(strcmp_case, test_strcmp);
 	suite_add_tcase(s, strcmp_case);
-	
-	// TCase *strncmp_case;
-	// strncmp_case = tcase_create("strncmp");
-	// tcase_add_test(strncmp_case, test_strncmp);
-	// suite_add_tcase(s, strncmp_case);
+
+	TCase *strncmp_case;
+	strncmp_case = tcase_create("strncmp");
+	tcase_add_test(strncmp_case, test_strncmp);
+	suite_add_tcase(s, strncmp_case);
+
+	TCase *strlen_case;
+	strlen_case = tcase_create("strncmp");
+	tcase_add_test(strlen_case, test_strlen);
+	suite_add_tcase(s, strlen_case);
 
 	//TCase *NEW CASE;
 	//NEW CASE = tcase_create("NAME HERE");
@@ -532,6 +722,7 @@ Suite *string_suite(void) {
 }
 
 int main(void) {
+
 	int number_failed = 0;
 	Suite *s;
 	SRunner *sr;
