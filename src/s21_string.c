@@ -117,3 +117,29 @@ char *s21_strstr(const char *str, const char *substr) {
 		}
 	}
 }
+
+
+char *s21_strcat(char *dest, const char *src) {
+	if ((dest == NULL) && (src == NULL))
+		return NULL;
+
+	char *start = dest;
+	while (*start != '\0') {
+		start++;
+	}
+	while (*src != '\0') {
+		*start++ = *src++;
+	}
+	*start = '\0';
+	return dest;
+}
+
+char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+	char *ptr = dest;
+	while (*ptr != '\0')
+		ptr ++;
+	while (*src != '\0' && n--) {
+		*ptr++ = *src++; }
+	*ptr++ = '\0';
+	return dest;
+}
