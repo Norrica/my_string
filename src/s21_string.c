@@ -162,3 +162,10 @@ int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
         result = *(unsigned char*)str1 - *(unsigned char*)str2;
     return result;
 }
+
+s21_size_t s21_strlen(const char *str)
+{
+    s21_size_t len = 0;
+    for(; str[len]; len++);
+    return len + 1;
+}
