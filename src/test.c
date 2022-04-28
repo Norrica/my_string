@@ -61,40 +61,6 @@ START_TEST(test_strstr) {
 }
 END_TEST
 
-START_TEST(test_memcmp) {
-	typedef struct s {
-	  char *str;
-	  char *c;
-	  int n;
-	} test;
-	test a[N_TESTS] = {
-		{"this is test", "is", 1},
-		{"this is test", "is", 10},
-		{"abaaaaaa", "baa", 1},
-		{"abaaaaaa", "baa", 3},
-		{"abaaaaaa", "baa", 4},
-		{"abaaaaaa", "ab", 1},
-		{"", "", 1},
-		{"", "    ", 1},
-		{"   ", "", 1},
-		{"   ", " ", 1},
-		{" ", " ", 1},
-		{"close", "x", 5},
-		{"maximax", "ax", 7},
-		{"maximax", "max", 7},
-		{"maximax", "im", 7},
-		{"maximax", "ix", 7},
-	};
-	for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_int_eq(
-			memcmp(a[i].str, a[i].c, a[i].n),
-			s21_memcmp(a[i].str, a[i].c, a[i].n)
-		);
-	}
-}
-END_TEST
-
 START_TEST(test_strchr) {
 	typedef struct s {
 	  char *str;
@@ -156,6 +122,7 @@ START_TEST(test_strpbrk) {
 	}
 }
 END_TEST
+
 START_TEST(test_memchr) {
 	typedef struct s {
 	  char *str;
@@ -189,6 +156,110 @@ START_TEST(test_memchr) {
 	}
 }
 END_TEST
+
+START_TEST(test_memcmp) {
+	typedef struct s {
+	  char *str;
+	  char *c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", "is", 1},
+		{"this is test", "is", 10},
+		{"abaaaaaa", "baa", 1},
+		{"abaaaaaa", "baa", 3},
+		{"abaaaaaa", "baa", 4},
+		{"abaaaaaa", "ab", 1},
+		{"", "", 1},
+		{"", "    ", 1},
+		{"   ", "", 1},
+		{"   ", " ", 1},
+		{" ", " ", 1},
+		{"close", "x", 5},
+		{"maximax", "ax", 7},
+		{"maximax", "max", 7},
+		{"maximax", "im", 7},
+		{"maximax", "ix", 7},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_int_eq(
+			memcmp(a[i].str, a[i].c, a[i].n),
+			s21_memcmp(a[i].str, a[i].c, a[i].n)
+		);
+	}
+}
+END_TEST
+
+START_TEST(test_memmove) {
+	typedef struct s {
+	  char *str;
+	  char *c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", "is", 1},
+		{"this is test", "is", 10},
+		{"abaaaaaa", "baa", 1},
+		{"abaaaaaa", "baa", 3},
+		{"abaaaaaa", "baa", 4},
+		{"abaaaaaa", "ab", 1},
+		{"", "", 1},
+		{"", "    ", 1},
+		{"   ", "", 1},
+		{"   ", " ", 1},
+		{" ", " ", 1},
+		{"close", "x", 5},
+		{"maximax", "ax", 7},
+		{"maximax", "max", 7},
+		{"maximax", "im", 7},
+		{"maximax", "ix", 7},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			memmove(a[i].str, a[i].c, a[i].n),
+			s21_memmove(a[i].str, a[i].c, a[i].n)
+		);
+	}
+}
+END_TEST
+
+START_TEST(test_memset) {
+	typedef struct s {
+	  char *str;
+	  int c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", 48, 1},
+		{"this is test", 48, 10},
+		{"aaaaaaaa", 48, 1},
+		{"aaaaaaaa", 48, 3},
+		{"aaaaaaaa", 48, 4},
+		{"",48, 1},
+		{"", 48, 2},
+		{"   ",48, 1},
+		{"   ",48, 3},
+		{" ",48, 1},
+		{" ",48, 0},
+		{"close",48, 5},
+		{"maximax", 48, 1},
+		{"maximax", 48, 0},
+		{"maximax", 48, 7},
+		{"maximax", 48, 4},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			memset(a[i].str, a[i].c, a[i].n),
+			s21_memset(a[i].str, a[i].c, a[i].n)
+		);
+	}
+}
+END_TEST
+
+
 //START_TEST(NAME_HERE) {
 //	char *a[N_TESTS][2] = {
 //		{"", ""},
@@ -246,6 +317,10 @@ Suite *string_suite(void) {
 	memcmp_case = tcase_create("memcmp");
 	tcase_add_test(memcmp_case, test_memcmp);
 	suite_add_tcase(s, memcmp_case);
+	TCase *memset_case;
+	memset_case = tcase_create("memset");
+	tcase_add_test(memset_case, test_memset);
+	suite_add_tcase(s, memset_case);
 
 	TCase *strpbrk_case;
 	strpbrk_case = tcase_create("strpbrk");
