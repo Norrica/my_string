@@ -26,6 +26,6 @@ gcov_report: test
 	#TODO jarrusab
 
 run_test:
-	$(MAKE) clean
+	$(MAKE) -i clean
 	$(MAKE) test
 	./test

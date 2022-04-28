@@ -6,7 +6,6 @@
 #define N_TESTS 16
 
 START_TEST(test_strspn) {
-
 	char *a[N_TESTS][2] = {
 		{"this is a test", "hits"},
 		{"this is a test", "hits "},
@@ -33,9 +32,34 @@ START_TEST(test_strspn) {
 }
 
 END_TEST
+START_TEST(test_strcspn) {
+	char *a[N_TESTS][2] = {
+		{"this is a test", "hits"},
+		{"this is a test", "hits "},
+		{"ololo", "ol"},
+		{"ololo", "lo"},
+		{"ololo", "l"},
+		{"ololo", "o"},
+		{"", ""},
+		{" ", " "},
+		{"   ", " "},
+		{"a", ""},
+		{"", "a"},
+		{"ba", "a"},
+		{"ba", "ab"},
+		{"ab", "ba"},
+		{"abababa", "ba"},
+		{"ababcaba", "ba"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+		//printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_int_eq(strcspn(a[i][0], a[i][1]),
+						 s21_strcspn(a[i][0], a[i][1]));
+	}
+}
 
+END_TEST
 START_TEST(test_strstr) {
-
 	char *a[N_TESTS][2] = {
 		{"this is test", "is"},
 		{"aaaaaabaaaaaa", "b"},
@@ -64,9 +88,7 @@ START_TEST(test_strstr) {
 }
 
 END_TEST
-
 START_TEST(test_strchr) {
-
 	typedef struct s {
 	  char *str;
 	  char c;
@@ -99,9 +121,7 @@ START_TEST(test_strchr) {
 }
 
 END_TEST
-
 START_TEST(test_strrchr) {
-
 	typedef struct s {
 	  char *str;
 	  char c;
@@ -134,9 +154,7 @@ START_TEST(test_strrchr) {
 }
 
 END_TEST
-
 START_TEST(test_strpbrk) {
-
 	char *a[N_TESTS][2] = {
 		{"this is test", "is"},
 		{"aaaaaabaaaaaa", "b"},
@@ -165,9 +183,7 @@ START_TEST(test_strpbrk) {
 }
 
 END_TEST
-
 START_TEST(test_memchr) {
-
 	typedef struct s {
 	  char *str;
 	  char c;
@@ -201,9 +217,7 @@ START_TEST(test_memchr) {
 }
 
 END_TEST
-
 START_TEST(test_memcmp) {
-
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -237,9 +251,7 @@ START_TEST(test_memcmp) {
 }
 
 END_TEST
-
 START_TEST(test_memcpy) {
-
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -278,9 +290,7 @@ START_TEST(test_memcpy) {
 }
 
 END_TEST
-
 START_TEST(test_strcpy) {
-
 	typedef struct s {
 	  char str[25];
 	} test;
@@ -314,9 +324,7 @@ START_TEST(test_strcpy) {
 }
 
 END_TEST
-
 START_TEST(test_memmove) {
-
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -355,9 +363,7 @@ START_TEST(test_memmove) {
 }
 
 END_TEST
-
 START_TEST(test_memset) {
-
 	typedef struct s {
 	  char *str;
 	  int c;
@@ -396,9 +402,7 @@ START_TEST(test_memset) {
 }
 
 END_TEST
-
 START_TEST(test_strcat) {
-
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -407,11 +411,9 @@ START_TEST(test_strcat) {
 	char dest[50] = "abc";
 
 	test a[N_TESTS];
-
 	for (int i = 0; i < N_TESTS; ++i) {
 		a[i].str = dest;
 	}
-
 	a[0].c = " ";
 	a[1].c = "";
 	a[2].c = "a";
@@ -428,7 +430,6 @@ START_TEST(test_strcat) {
 	a[13].c = "ABCD";
 	a[14].c = " ABCD";
 	a[15].c = " ABCD ";
-
 	for (int i = 0; i < N_TESTS; ++i) {
 		//printf("[%s] : [%s] ->   ", a[i].str, a[i].c);
 		char curr1[50];
@@ -436,7 +437,6 @@ START_TEST(test_strcat) {
 		char curr2[50];
 		strcpy(curr2, a[i].str);
 		ck_assert_mem_eq(
-
 			strcat(curr1, a[i].c),
 			s21_strcat(curr2, a[i].c),
 			strlen(curr1)
@@ -446,9 +446,7 @@ START_TEST(test_strcat) {
 }
 
 END_TEST
-
 START_TEST(test_strncat) {
-
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -458,11 +456,9 @@ START_TEST(test_strncat) {
 	char dest[50] = "abc";
 
 	test a[N_TESTS];
-
 	for (int i = 0; i < N_TESTS; ++i) {
 		a[i].str = dest;
 	}
-
 	a[0].c = "";
 	a[0].n = 5;
 	a[1].c = " ";
@@ -512,9 +508,7 @@ START_TEST(test_strncat) {
 }
 
 END_TEST
-
 START_TEST(test_strcmp) {
-
 	char *a[N_TESTS][2] = {
 		{"this is test", "this is test"},
 		{"aaaaaabaaaaaa", "aaaaaabaaaaaab"},
@@ -543,9 +537,7 @@ START_TEST(test_strcmp) {
 }
 
 END_TEST
-
 START_TEST(test_strncmp) {
-
 	typedef struct s {
 	  char *str;
 	  char *c;
@@ -579,9 +571,7 @@ START_TEST(test_strncmp) {
 }
 
 END_TEST
-
 START_TEST(test_strlen) {
-
 	typedef struct s {
 	  char *str;
 	} test;
@@ -644,7 +634,6 @@ END_TEST
 //END_TEST
 
 Suite *string_suite(void) {
-
 	Suite *s;
 	s = suite_create("s21_string");
 
@@ -652,6 +641,11 @@ Suite *string_suite(void) {
 	strspn_case = tcase_create("strspn");
 	tcase_add_test(strspn_case, test_strspn);
 	suite_add_tcase(s, strspn_case);
+
+	TCase *strcspn_case;
+	strcspn_case = tcase_create("strcspn");
+	tcase_add_test(strcspn_case, test_strcspn);
+	suite_add_tcase(s, strcspn_case);
 
 	TCase *strstr_case;
 	strstr_case = tcase_create("strstr");
@@ -724,11 +718,11 @@ Suite *string_suite(void) {
 	suite_add_tcase(s, strncmp_case);
 
 	TCase *strlen_case;
-	strlen_case = tcase_create("strncmp");
+	strlen_case = tcase_create("strlen");
 	tcase_add_test(strlen_case, test_strlen);
 	suite_add_tcase(s, strlen_case);
 
-	//TCase *NEW CASE;
+	//TCase *NEW	CASE;
 	//NEW CASE = tcase_create("NAME HERE");
 	//tcase_add_test(NEW CASE, NAME HERE);
 	//suite_add_tcase(s, NEW CASE);
@@ -736,7 +730,6 @@ Suite *string_suite(void) {
 }
 
 int main(void) {
-
 	int number_failed = 0;
 	Suite *s;
 	SRunner *sr;
