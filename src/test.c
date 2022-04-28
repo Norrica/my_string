@@ -271,13 +271,13 @@ START_TEST(test_memset) {
 		{"aaaaaaaa", 48, 1},
 		{"aaaaaaaa", 48, 3},
 		{"aaaaaaaa", 48, 4},
-		{"",48, 1},
+		{"", 48, 1},
 		{"", 48, 2},
-		{"   ",48, 1},
-		{"   ",48, 3},
-		{" ",48, 1},
-		{" ",48, 0},
-		{"close",48, 5},
+		{"   ", 48, 1},
+		{"   ", 48, 3},
+		{" ", 48, 1},
+		{" ", 48, 0},
+		{"close", 48, 5},
 		{"maximax", 48, 1},
 		{"maximax", 48, 0},
 		{"maximax", 48, 7},
@@ -307,22 +307,22 @@ START_TEST(test_strcat) {
 		a[i].str = dest;
 	}
 
-	a[0].c="";
-	a[1].c=" ";
-	a[2].c="a";
-	a[3].c="a ";
-	a[4].c=" a";
-	a[5].c="ab";
-	a[6].c=" ab";
-	a[7].c=" ab ";
-	a[8].c="abcd";
-	a[9].c="   ";
-	a[10].c="abcdeftgh";
-	a[11].c=".a.b";
-	a[12].c="a/a/a";
-	a[13].c="ABCD";
-	a[14].c=" ABCD";
-	a[15].c=" ABCD ";
+	a[0].c = "";
+	a[1].c = " ";
+	a[2].c = "a";
+	a[3].c = "a ";
+	a[4].c = " a";
+	a[5].c = "ab";
+	a[6].c = " ab";
+	a[7].c = " ab ";
+	a[8].c = "abcd";
+	a[9].c = "   ";
+	a[10].c = "abcdeftgh";
+	a[11].c = ".a.b";
+	a[12].c = "a/a/a";
+	a[13].c = "ABCD";
+	a[14].c = " ABCD";
+	a[15].c = " ABCD ";
 
 	//};
 	for (int i = 0; i < N_TESTS; ++i) {
@@ -339,6 +339,7 @@ START_TEST(test_strncat) {
 	typedef struct s {
 	  char *str;
 	  char *c;
+	  int n;
 	} test;
 
 	char dest[50] = "abc";
@@ -349,29 +350,45 @@ START_TEST(test_strncat) {
 		a[i].str = dest;
 	}
 
-	a[0].c="";
-	a[1].c=" ";
-	a[2].c="a";
-	a[3].c="a ";
-	a[4].c=" a";
-	a[5].c="ab";
-	a[6].c=" ab";
-	a[7].c=" ab ";
-	a[8].c="abcd";
-	a[9].c="   ";
-	a[10].c="abcdeftgh";
-	a[11].c=".a.b";
-	a[12].c="a/a/a";
-	a[13].c="ABCD";
-	a[14].c=" ABCD";
-	a[15].c=" ABCD ";
+	a[0].c = "";
+	a[0].n = 1;
+	a[1].c = " ";
+	a[1].n = 1;
+	a[2].c = "a";
+	a[2].n = 1;
+	a[3].c = "a ";
+	a[3].n = 1;
+	a[4].c = " a";
+	a[4].n = 1;
+	a[5].c = "ab";
+	a[5].n = 1;
+	a[6].c = " ab";
+	a[6].n = 1;
+	a[7].c = " ab ";
+	a[7].n = 1;
+	a[8].c = "abcd";
+	a[8].n = 1;
+	a[9].c = "   ";
+	a[9].n = 1;
+	a[10].c = "abcdeftgh";
+	a[10].n = 1;
+	a[11].c = ".a.b";
+	a[11].n = 1;
+	a[12].c = "a/a/a";
+	a[12].n = 1;
+	a[13].c = "ABCD";
+	a[13].n = 1;
+	a[14].c = " ABCD";
+	a[14].n = 1;
+	a[15].c = " ABCD ";
+	a[15].n = 1;
 
 	//};
 	for (int i = 0; i < N_TESTS; ++i) {
 //		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
 		ck_assert_ptr_eq(
-			strcat(a[i].str, a[i].c),
-			s21_strcat(a[i].str, a[i].c)
+			strncat(a[i].str, a[i].c,a[i].n),
+			s21_strncat(a[i].str, a[i].c,a[i].n)
 		);
 	}
 }
