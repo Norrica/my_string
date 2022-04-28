@@ -15,7 +15,7 @@ void *s21_memchr(const void *str, int c, size_t n) {
 		}
 	void *result = (void *) s - 1;
 	if (!flg)
-		result = NULL;
+		result = S21_NULL;
 	return result;
 }
 
@@ -44,7 +44,7 @@ void *s21_memcpy(void *dest, const void *src, size_t n) {
 char *s21_strcpy(char *dest, const char *src) {
 
 	if (s21_strlen(dest) < s21_strlen(src)) {
-		return NULL;
+		return S21_NULL;
 	}
 	char *d = dest;
 	char *s = (char *) src;
@@ -87,13 +87,13 @@ char *s21_strchr(const char *str, int c) {
 	if (*p) {
 		return p;
 	} else {
-		return NULL;
+		return S21_NULL;
 	}
 }
 
 char *s21_strrchr(const char *str, int c) {
 
-	char *res = NULL;
+	char *res = S21_NULL;
 	for (int i = 0; str[i] != '\0'; ++i) {
 		if (str[i] == c) {
 			res = (char *) &str[i];
@@ -115,8 +115,8 @@ s21_size_t s21_strspn(const char *str1, const char *str2) {
 	if (*str1 == '\0' || *str2 == '\0') {
 		return 0;
 	}
-	for (char *s1 = (char *) str1; s1 != NULL; s1++) {
-		for (char *s2 = (char *) str2; s2 != NULL; s2++) {
+	for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
+		for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
 			if (*s1 == *s2) {
 				s2 = (char *) str2 - 1;
 				s1++;
@@ -133,7 +133,7 @@ char *s21_strstr(const char *str, const char *substr) {
 	const char *a = str, *b = substr;
 	while (1) {
 		if (!*b) return (char *) str;
-		if (!*a) return NULL;
+		if (!*a) return S21_NULL;
 		if (*a++ != *b++) {
 			a = ++str;
 			b = substr;
@@ -143,8 +143,8 @@ char *s21_strstr(const char *str, const char *substr) {
 
 char *s21_strcat(char *dest, const char *src) {
 
-	if ((dest == NULL) && (src == NULL))
-		return NULL;
+	if ((dest == S21_NULL) && (src == S21_NULL))
+		return S21_NULL;
 
 	char *start = dest;
 	while (*start != '\0') {
