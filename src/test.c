@@ -6,7 +6,7 @@
 #define N_TESTS 16
 
 START_TEST(test_strspn) {
-	char *a[0 + N_TESTS][2] = {
+	char *a[N_TESTS][2] = {
 		{"this is a test", "hits"},
 		{"this is a test", "hits "},
 		{"ololo", "ol"},
@@ -61,13 +61,47 @@ START_TEST(test_strstr) {
 }
 END_TEST
 
+START_TEST(test_memcmp) {
+	typedef struct s {
+	  char *str;
+	  char *c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", "is", 1},
+		{"this is test", "is", 10},
+		{"abaaaaaa", "baa", 1},
+		{"abaaaaaa", "baa", 3},
+		{"abaaaaaa", "baa", 4},
+		{"abaaaaaa", "ab", 1},
+		{"", "", 1},
+		{"", "    ", 1},
+		{"   ", "", 1},
+		{"   ", " ", 1},
+		{" ", " ", 1},
+		{"close", "x", 5},
+		{"maximax", "ax", 7},
+		{"maximax", "max", 7},
+		{"maximax", "im", 7},
+		{"maximax", "ix", 7},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_int_eq(
+			memcmp(a[i].str, a[i].c, a[i].n),
+			s21_memcmp(a[i].str, a[i].c, a[i].n)
+		);
+	}
+}
+END_TEST
+
 START_TEST(test_strchr) {
 	typedef struct s {
 	  char *str;
 	  char c;
 	} test;
 	test a[N_TESTS] = {
-		{"ololo",'o'},
+		{"ololo", 'o'},
 		{"   ", ' '},
 		{"   ", ' '},
 		{" ", ' '},
@@ -89,6 +123,68 @@ START_TEST(test_strchr) {
 		ck_assert_ptr_eq(
 			strchr(a[i].str, a[i].c),
 			s21_strchr(a[i].str, a[i].c)
+		);
+	}
+}
+END_TEST
+
+START_TEST(test_strpbrk) {
+	char *a[N_TESTS][2] = {
+		{"this is test", "is"},
+		{"aaaaaabaaaaaa", "b"},
+		{"aaaaaabaaaaaa", "baa"},
+		{"aaaaaabaaaaaa", "ab"},
+		{"", ""},
+		{"", "    "},
+		{"   ", ""},
+		{"   ", " "},
+		{" ", " "},
+		{"close", "x"},
+		{"close", "x"},
+		{"close", "x"},
+		{"maximax", "ax"},
+		{"maximax", "max"},
+		{"maximax", "im"},
+		{"maximax", "ix"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			strpbrk(a[i][0], a[i][1]),
+			s21_strpbrk(a[i][0], a[i][1])
+		);
+	}
+}
+END_TEST
+START_TEST(test_memchr) {
+	typedef struct s {
+	  char *str;
+	  char c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"ololo", 'o', 1},
+		{"", ' ', 1},
+		{"   ", ' ', 1},
+		{" ", ' ', 1},
+		{"this is test", 'i', 1},
+		{"aaaaaabaaaaaa", 'b', 1},
+		{"aaaaaabaaaaaa", 'a', 1},
+		{"aaaaaabaaaaaa", 'b', 7},
+		{"aaaaaabaaaaaa", 'a', 7},
+		{"close", 'x', 5},
+		{"close", 'c', 3},
+		{"close", 'l', 3},
+		{"maximax", 'x', 1},
+		{"maximax", 'm', 1},
+		{"maximax", 'x', 3},
+		{"maximax", 'm', 3},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			memchr(a[i].str, a[i].c, a[i].n),
+			memchr(a[i].str, a[i].c, a[i].n)
 		);
 	}
 }
@@ -122,35 +218,6 @@ END_TEST
 //}
 //END_TEST
 
-START_TEST(test_strpbrk) {
-	char *a[N_TESTS][2] = {
-		{"this is test", "is"},
-		{"aaaaaabaaaaaa", "b"},
-		{"aaaaaabaaaaaa", "baa"},
-		{"aaaaaabaaaaaa", "ab"},
-		{"", ""},
-		{"", "    "},
-		{"   ", ""},
-		{"   ", " "},
-		{" ", " "},
-		{"close", "x"},
-		{"close", "x"},
-		{"close", "x"},
-		{"maximax", "ax"},
-		{"maximax", "max"},
-		{"maximax", "im"},
-		{"maximax", "ix"},
-	};
-	for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_ptr_eq(
-			strpbrk(a[i][0], a[i][1]),
-			s21_strpbrk(a[i][0], a[i][1])
-		);
-	}
-}
-END_TEST
-
 Suite *string_suite(void) {
 	Suite *s;
 	s = suite_create("s21_string");
@@ -169,6 +236,16 @@ Suite *string_suite(void) {
 	strchr_case = tcase_create("strchr");
 	tcase_add_test(strchr_case, test_strchr);
 	suite_add_tcase(s, strchr_case);
+
+	TCase *memchr_case;
+	memchr_case = tcase_create("memchr");
+	tcase_add_test(memchr_case, test_memchr);
+	suite_add_tcase(s, memchr_case);
+
+	TCase *memcmp_case;
+	memcmp_case = tcase_create("memcmp");
+	tcase_add_test(memcmp_case, test_memcmp);
+	suite_add_tcase(s, memcmp_case);
 
 	TCase *strpbrk_case;
 	strpbrk_case = tcase_create("strpbrk");
