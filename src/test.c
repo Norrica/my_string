@@ -452,20 +452,40 @@ Suite *string_suite(void) {
 	tcase_add_test(memcmp_case, test_memcmp);
 	suite_add_tcase(s, memcmp_case);
 
-	//TCase *memset_case;
-	//memset_case = tcase_create("memset");
-	//tcase_add_test(memset_case, test_memset);
-	//suite_add_tcase(s, memset_case);
-
 	TCase *strpbrk_case;
 	strpbrk_case = tcase_create("strpbrk");
 	tcase_add_test(strpbrk_case, test_strpbrk);
 	suite_add_tcase(s, strpbrk_case);
+
+	TCase *strcat_case;
+	strcat_case = tcase_create("strcat");
+	tcase_add_test(strcat_case, test_strcat);
+	suite_add_tcase(s, strcat_case);
+
+	TCase *strncat_case;
+	strncat_case = tcase_create("strncat");
+	tcase_add_test(strncat_case, test_strncat);
+	suite_add_tcase(s, strncat_case);
+
+	TCase *memset_case;
+	memset_case = tcase_create("memset");
+	tcase_add_test(memset_case, test_memset);
+	suite_add_tcase(s, memset_case);
+
+	TCase *memmove_case;
+	memmove_case = tcase_create("memmove");
+	tcase_add_test(memmove_case, test_memmove);
+	suite_add_tcase(s, memmove_case);
+
+	TCase *memcpy_case;
+	memcpy_case = tcase_create("memcpy");
+	tcase_add_test(memcpy_case, test_memcpy);
+	suite_add_tcase(s, memcpy_case);
+
 	//TCase *NEW CASE;
 	//NEW CASE = tcase_create("NAME HERE");
 	//tcase_add_test(NEW CASE, NAME HERE);
 	//suite_add_tcase(s, NEW CASE);
-
 	return s;
 }
 
