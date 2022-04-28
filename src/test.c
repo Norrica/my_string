@@ -394,6 +394,38 @@ START_TEST(test_strncat) {
 }
 END_TEST
 
+START_TEST(test_strcmp) {
+	char *a[N_TESTS][2] = {
+		{"this is test", "this is test"},
+		{"aaaaaabaaaaaa", "aaaaaabaaaaaab"},
+		{"aaaaaabaaaaaa", "baa"},
+		{"aaaaaabaaaaaa", "ab"},
+		{"", ""},
+		{"", "    "},
+		{"   ", ""},
+		{"   ", " "},
+		{" ", " "},
+		{"close", "x"},
+		{"close", "x"},
+		{"close", "x"},
+		{"maximax", "ax"},
+		{"maximax", "max"},
+		{"maximax", "im"},
+		{"maximax", "ix"},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_int_eq(
+			strcmp(a[i][0], a[i][1]),
+			s21_strcmp(a[i][0], a[i][1])
+		);
+	}
+}
+END_TEST
+
+
+
+
 //START_TEST(NAME_HERE) {
 //	char *a[N_TESTS][2] = {
 //		{"", ""},
@@ -481,6 +513,16 @@ Suite *string_suite(void) {
 	memcpy_case = tcase_create("memcpy");
 	tcase_add_test(memcpy_case, test_memcpy);
 	suite_add_tcase(s, memcpy_case);
+
+	TCase *strcmp_case;
+	strcmp_case = tcase_create("strcmp");
+	tcase_add_test(strcmp_case, test_strcmp);
+	suite_add_tcase(s, strcmp_case);
+	
+	// TCase *strncmp_case;
+	// strncmp_case = tcase_create("strncmp");
+	// tcase_add_test(strncmp_case, test_strncmp);
+	// suite_add_tcase(s, strncmp_case);
 
 	//TCase *NEW CASE;
 	//NEW CASE = tcase_create("NAME HERE");
