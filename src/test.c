@@ -151,7 +151,7 @@ START_TEST(test_memchr) {
 //		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
 		ck_assert_ptr_eq(
 			memchr(a[i].str, a[i].c, a[i].n),
-			memchr(a[i].str, a[i].c, a[i].n)
+			s21_memchr(a[i].str, a[i].c, a[i].n)
 		);
 	}
 }
@@ -186,6 +186,40 @@ START_TEST(test_memcmp) {
 		ck_assert_int_eq(
 			memcmp(a[i].str, a[i].c, a[i].n),
 			s21_memcmp(a[i].str, a[i].c, a[i].n)
+		);
+	}
+}
+END_TEST
+
+START_TEST(test_memcpy) {
+	typedef struct s {
+	  char *str;
+	  char *c;
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", "is", 1},
+		{"this is test", "is", 10},
+		{"abaaaaaa", "baa", 1},
+		{"abaaaaaa", "baa", 3},
+		{"abaaaaaa", "baa", 4},
+		{"abaaaaaa", "ab", 1},
+		{"", "", 1},
+		{"", "    ", 1},
+		{"   ", "", 1},
+		{"   ", " ", 1},
+		{" ", " ", 1},
+		{"close", "x", 5},
+		{"maximax", "ax", 7},
+		{"maximax", "max", 7},
+		{"maximax", "im", 7},
+		{"maximax", "ix", 7},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			memcpy(a[i].str, a[i].c, a[i].n),
+			s21_memcpy(a[i].str, a[i].c, a[i].n)
 		);
 	}
 }
