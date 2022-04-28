@@ -62,12 +62,24 @@ void *s21_memset(void *str, int c, size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
+	char *p = (char *) str;
+	while (*p != c && *p != '\0')
+		p++;
+	if (*p) {
+		return p;
+	} else{
+		return NULL;
+	}
+}
+
+char *s21_strrchr(const char *str, int c) {
+	char *res = NULL;
 	for (int i = 0; str[i] != '\0'; ++i) {
 		if (str[i] == c) {
-			return (char *) &str[i];
+			res = (char *) &str[i];
 		}
 	}
-	return NULL;
+	return res;
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {

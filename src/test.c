@@ -72,7 +72,7 @@ START_TEST(test_strchr) {
 		{"   ", ' '},
 		{" ", ' '},
 		{"aaaa   aaaa", ' '},
-		{"aaaa zaaaa", ' '},
+		{"", ' '},
 		{"this is test", 'i'},
 		{"aaaaaabaaaaaa", 'b'},
 		{"aaaaaabaaaaaa", 'a'},
@@ -351,10 +351,11 @@ Suite *string_suite(void) {
 	memcmp_case = tcase_create("memcmp");
 	tcase_add_test(memcmp_case, test_memcmp);
 	suite_add_tcase(s, memcmp_case);
-	TCase *memset_case;
-	memset_case = tcase_create("memset");
-	tcase_add_test(memset_case, test_memset);
-	suite_add_tcase(s, memset_case);
+
+	//TCase *memset_case;
+	//memset_case = tcase_create("memset");
+	//tcase_add_test(memset_case, test_memset);
+	//suite_add_tcase(s, memset_case);
 
 	TCase *strpbrk_case;
 	strpbrk_case = tcase_create("strpbrk");
