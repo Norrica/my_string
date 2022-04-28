@@ -293,6 +293,35 @@ START_TEST(test_memset) {
 }
 END_TEST
 
+START_TEST(test_strcat) {
+	typedef struct s {
+	  char *str;
+	  char *c;
+	} test;
+
+	char dest[50] = "abc";
+
+	test a[N_TESTS];
+
+	for (int i = 0; i < N_TESTS; ++i) {
+		a[i].str = dest;
+	}
+
+	a[0].c="";
+	a[0].c=" ";
+	a[0].c="0";
+	a[0].c="abc";
+
+	//};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			strcat(a[i].str, a[i].c),
+			s21_strcat(a[i].str, a[i].c)
+		);
+	}
+}
+END_TEST
 
 //START_TEST(NAME_HERE) {
 //	char *a[N_TESTS][2] = {
