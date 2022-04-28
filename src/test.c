@@ -308,9 +308,63 @@ START_TEST(test_strcat) {
 	}
 
 	a[0].c="";
-	a[0].c=" ";
-	a[0].c="0";
-	a[0].c="abc";
+	a[1].c=" ";
+	a[2].c="a";
+	a[3].c="a ";
+	a[4].c=" a";
+	a[5].c="ab";
+	a[6].c=" ab";
+	a[7].c=" ab ";
+	a[8].c="abcd";
+	a[9].c="   ";
+	a[10].c="abcdeftgh";
+	a[11].c=".a.b";
+	a[12].c="a/a/a";
+	a[13].c="ABCD";
+	a[14].c=" ABCD";
+	a[15].c=" ABCD ";
+
+	//};
+	for (int i = 0; i < N_TESTS; ++i) {
+//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		ck_assert_ptr_eq(
+			strcat(a[i].str, a[i].c),
+			s21_strcat(a[i].str, a[i].c)
+		);
+	}
+}
+END_TEST
+
+START_TEST(test_strncat) {
+	typedef struct s {
+	  char *str;
+	  char *c;
+	} test;
+
+	char dest[50] = "abc";
+
+	test a[N_TESTS];
+
+	for (int i = 0; i < N_TESTS; ++i) {
+		a[i].str = dest;
+	}
+
+	a[0].c="";
+	a[1].c=" ";
+	a[2].c="a";
+	a[3].c="a ";
+	a[4].c=" a";
+	a[5].c="ab";
+	a[6].c=" ab";
+	a[7].c=" ab ";
+	a[8].c="abcd";
+	a[9].c="   ";
+	a[10].c="abcdeftgh";
+	a[11].c=".a.b";
+	a[12].c="a/a/a";
+	a[13].c="ABCD";
+	a[14].c=" ABCD";
+	a[15].c=" ABCD ";
 
 	//};
 	for (int i = 0; i < N_TESTS; ++i) {
