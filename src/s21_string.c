@@ -143,3 +143,16 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 	*ptr++ = '\0';
 	return dest;
 }
+
+int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
+    int result;
+    while (n && *str1 && (*str1 == *str2)) {
+        str1++;
+        str2++;
+        n--; }
+    if (n == 0)
+        result = 0;
+    else
+        result = *(unsigned char*)str1 - *(unsigned char*)str2;
+    return result;
+}
