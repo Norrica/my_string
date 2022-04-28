@@ -118,7 +118,6 @@ char *s21_strstr(const char *str, const char *substr) {
 	}
 }
 
-
 char *s21_strcat(char *dest, const char *src) {
 	if ((dest == NULL) && (src == NULL))
 		return NULL;
@@ -142,6 +141,13 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 		*ptr++ = *src++; }
 	*ptr++ = '\0';
 	return dest;
+}
+
+int s21_strcmp(const char *str1, const char *str2) {
+    while(*str1 && (*str1 == *str2)) {
+        str1++;
+        str2++; }
+    return *(const unsigned char*)str1 - *(const unsigned char*)str2;
 }
 
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
