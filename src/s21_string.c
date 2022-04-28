@@ -43,9 +43,9 @@ void *s21_memcpy(void *dest, const void *src, size_t n) {
 
 char *s21_strcpy(char *dest, const char *src) {
 
-	if (s21_strlen(dest) < s21_strlen(src)) {
-		return S21_NULL;
-	}
+	//if (s21_strlen(dest) < s21_strlen(src)) {
+	//	return S21_NULL;
+	//}
 	char *d = dest;
 	char *s = (char *) src;
 	for (; *d || *s; d++, s++) {
@@ -202,8 +202,8 @@ s21_size_t s21_strlen(const char *str) {
 
 //int main(){
 //#include <string.h>
-//	char *dest="gfdshsgh";
-//	char *src = "lol";
-//	strcpy(dest,src);
-//	puts(dest);
+//	char dest[20];
+//	//char *src = "";
+//	s21_strcpy(dest,"");
+//	printf("[%s]\n",dest);
 //}
