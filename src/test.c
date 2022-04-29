@@ -281,10 +281,9 @@ START_TEST(test_memcpy) {
 		strcpy(s1, a[i].str);
 		char s2[20];
 		strcpy(s2, a[i].str);
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			memcpy(s1, a[i].c, a[i].n),
-			s21_memcpy(s2, a[i].c, a[i].n),
-			strlen(s1)
+			s21_memcpy(s2, a[i].c, a[i].n)
 		);
 	}
 }
@@ -315,10 +314,9 @@ START_TEST(test_strcpy) {
 	for (int i = 0; i < N_TESTS; ++i) {
 		char s1[20];
 		char s2[20];
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			strcpy(s1, a[i].str),
-			s21_strcpy(s2, a[i].str),
-			strlen(s1)
+			s21_strcpy(s2, a[i].str)
 		);
 	}
 }
@@ -351,10 +349,9 @@ START_TEST(test_strncpy) {
 	for (int i = 0; i < N_TESTS; ++i) {
 		char s1[20];
 		char s2[20];
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			strncpy(s1, a[i].str, a[i].n),
-			s21_strncpy(s2, a[i].str, a[i].n),
-			strlen(s1)
+			s21_strncpy(s2, a[i].str, a[i].n)
 		);
 	}
 }
@@ -391,10 +388,9 @@ START_TEST(test_memmove) {
 		strcpy(s1, a[i].str);
 		char s2[20];
 		strcpy(s2, a[i].str);
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			memmove(s1, a[i].c, a[i].n),
-			s21_memmove(s2, a[i].c, a[i].n),
-			strlen(s1)
+			s21_memmove(s2, a[i].c, a[i].n)
 		);
 	}
 }
@@ -430,10 +426,9 @@ START_TEST(test_memset) {
 		strcpy(s1, a[i].str);
 		char s2[20];
 		strcpy(s2, a[i].str);
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			memset(s1, a[i].c, a[i].n),
-			s21_memset(s2, a[i].c, a[i].n),
-			strlen(a[i].str)
+			s21_memset(s2, a[i].c, a[i].n)
 		);
 	}
 }
@@ -473,10 +468,9 @@ START_TEST(test_strcat) {
 		strcpy(curr1, a[i].str);
 		char curr2[50];
 		strcpy(curr2, a[i].str);
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			strcat(curr1, a[i].c),
-			s21_strcat(curr2, a[i].c),
-			strlen(curr1)
+			s21_strcat(curr2, a[i].c)
 		);
 		//printf("[%s] : [%s]\n", curr1,curr2);
 	}
@@ -535,10 +529,9 @@ START_TEST(test_strncat) {
 		strcpy(curr1, a[i].str);
 		char curr2[50];
 		strcpy(curr2, a[i].str);
-		ck_assert_mem_eq(
+		ck_assert_str_eq(
 			strncat(curr1, a[i].c, a[i].n),
-			s21_strncat(curr2, a[i].c, a[i].n),
-			strlen(curr1)
+			s21_strncat(curr2, a[i].c, a[i].n)
 		);
 		//printf("[%s] : [%s]\n", curr1, curr2);
 	}
@@ -636,6 +629,47 @@ START_TEST(test_strlen) {
 			strlen(a[i].str),
 			s21_strlen(a[i].str)
 		);
+	}
+}
+
+END_TEST
+
+START_TEST(test_strtok) {
+	typedef struct s {
+	  char *str;
+	  char *delim;
+	} test;
+
+	test a[N_TESTS] = {
+		{"12345,67890",","},
+		{",1,2,3,4,5,6,7,8,9,0,",","},
+		{"123,456,789,0",","},
+		{",,,,,,,,,1234567890,,,,,,,,,,",","},
+		{"11111",""},
+		{",,,,,,111",","},
+		{"111,,,,,,",","},
+		{",,,,,,111,,,,,,",","},
+		{"lorem.ipsum dolores|ames,lupus",". |,"},
+		{"lorem.ipsum dolores|ames,lupus",". |"},
+		{"lorem.ipsum dolores|ames,lupus",". "},
+		{"lorem.ipsum dolores|ames,lupus",". "},
+		{"lorem.ipsum dolores|ames,lupus","."},
+		{"lorem.ipsum dolores|ames,lupus",",| ."},
+		{"lorem.ipsum dolores|ames,lupus",",| "},
+		{"lorem.ipsum dolores|ames,lupus",",|"},
+	};
+
+	for (int i = 0; i < N_TESTS; ++i) {
+		//printf("[%s] : [%s] ->   ", a[i].str, a[i].delim);
+		char curr1[50];
+		strcpy(curr1, a[i].str);
+		char curr2[50];
+		strcpy(curr2, a[i].str);
+		ck_assert_str_eq(
+			strtok(curr1, a[i].delim),
+			s21_strtok(curr2, a[i].delim)
+		);
+		//printf("[%s] : [%s]\n", curr1,curr2);
 	}
 }
 
@@ -763,7 +797,11 @@ Suite *string_suite(void) {
 	strlen_case = tcase_create("strlen");
 	tcase_add_test(strlen_case, test_strlen);
 	suite_add_tcase(s, strlen_case);
-
+	
+	TCase *strtok_case;
+	strtok_case = tcase_create("strtok");
+	tcase_add_test(strtok_case, test_strtok);
+	suite_add_tcase(s, strtok_case);
 	//TCase *NEW	CASE;
 	//NEW CASE = tcase_create("NAME HERE");
 	//tcase_add_test(NEW CASE, NAME HERE);

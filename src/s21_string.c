@@ -111,9 +111,11 @@ char *s21_strpbrk(const char *str1, const char *str2) {
 }
 
 s21_size_t s21_strspn(const char *str1, const char *str2) {
-	if (str1 == S21_NULL || str2 == S21_NULL) {
+	if (str1 == S21_NULL || str2 == S21_NULL
+		|| *str1 == '\0' || *str2 == '\0') {
 		return 0;
 	}
+
 	for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
 		for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
 			if (*s1 == *s2) {
@@ -231,6 +233,8 @@ char *s21_strtok(char *str, const char *delim) {
 		for (s21_size_t i = first; i < second; ++i) {
 			result[i - first] = str[i];
 		}
+		result[first+second]='\0';
+		str[second]='\0';
 		return result;
 	} else {
 		if (current == NULL || current[0] == '\0') {
@@ -243,15 +247,14 @@ char *s21_strtok(char *str, const char *delim) {
 	}
 }
 
-//#include <string.h>
-//
+#include <string.h>
+
 //int main() {
 //	char a[30] = ",,,,1,2,3,4,5,6,7,8,9,0,";
 //	//char a[25] = "12345a67890";
 //	char *b = ",";
-//	printf("%lu\n", strspn(a, b));
-//	printf("%lu\n", strcspn(a, b));
 //	puts(s21_strtok(a, b));
+//
 //	puts(s21_strtok(NULL, b));
 //	puts(s21_strtok(NULL, b));
 //	puts(s21_strtok(NULL, b));
