@@ -35,7 +35,7 @@ END_TEST
 START_TEST(test_strcspn) {
 	char *a[N_TESTS][2] = {
 		{"this is a test", "t"},
-		{"this is a test", " "},
+		{"this is a test", " a"},
 		{"ololo", "o"},
 		{"ololo", "l"},
 		{"ololo", "z"},
@@ -52,7 +52,6 @@ START_TEST(test_strcspn) {
 		{"ababcaba", "ac"},
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
-		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
 		size_t i1 = strcspn(a[i][0], a[i][1]);
 		s21_size_t i2 = s21_strcspn(a[i][0], a[i][1]);
 		ck_assert_int_eq(i1, i2);
