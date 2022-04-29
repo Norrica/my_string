@@ -1,5 +1,6 @@
 {
     "files.associations": {
-        "s21_string.h": "c"
+        "s21_string.h": "c",
+        "stdio.h": "c"
     }
 }
