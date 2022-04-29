@@ -1,7 +1,12 @@
+#ifndef S21_STRING_H
+#define S21_STRING_H
 #include <stdio.h>
-#define s21_NULL NULL
+#include <stdlib.h>
 
 typedef long unsigned s21_size_t;
+
+# define S21_NULL ((void *)0)
+
 
 void *s21_memchr(const void *str, int c, s21_size_t n);// jarrusab
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
@@ -23,3 +28,5 @@ char *s21_strrchr(const char *str, int c); // gladisar
 char *s21_strstr(const char *str, const char *substr);
 char *s21_strtok(char *str, const char *delim); // gladisar
 s21_size_t s21_strspn(const char *str1, const char *str2);
+
+#endif

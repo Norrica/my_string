@@ -3,7 +3,7 @@
 void *to_upper(const char *str) {
     char *result = (char*)str;
     if (s21_strlen(str) == 0) {
-        result = s21_NULL;
+        result = S21_NULL;
     } else { 
         for (int i=0; str[i]!= '\0'; i++)
             if (str[i] >= 97 && str[i] <= 122)
