@@ -111,7 +111,7 @@ char *s21_strpbrk(const char *str1, const char *str2) {
 }
 
 s21_size_t s21_strspn(const char *str1, const char *str2) {
-	if (*str1 == '\0' || *str2 == '\0') {
+	if (str1 == S21_NULL || str2 == S21_NULL) {
 		return 0;
 	}
 	for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
@@ -212,38 +212,62 @@ s21_size_t s21_strlen(const char *str) {
 	return len;
 }
 
-//int main() {
-////#include <string.h>
-////
-////#define N_TESTS 16
-////	char *a[N_TESTS][2] = {
-////		{"this is a test", "hits"},
-////		{"this is a test", "hits "},
-////		{"ololo", "ol"},
-////		{"ololo", "lo"},
-////		{"ololo", "l"},
-////		{"ololo", "o"},
-////		{"", ""},
-////		{" ", " "},
-////		{"   ", " "},
-////		{"a", ""},
-////		{"", "a"},
-////		{"ba", "a"},
-////		{"ba", "ab"},
-////		{"ab", "ba"},
-////		{"abababa", "ba"},
-////		{"ababcaba", "ba"},
-////	};
-////	for (int i = 0; i < N_TESTS; ++i) {
-////		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-////		printf("%lu:%lu\n",
-////			   strcspn(a[i][0], a[i][1]), s21_strcspn(a[i][0], a[i][1]));
-////	}
-//#include <string.h>
-//	//{"this is a test", "hits"}
-//	char *str_1 = "this is a test";
-//	char *charset = " ";
-//	printf("%lu\n", strcspn(str_1, charset));
-//	printf("%lu\n", s21_strcspn(str_1, charset));
-//}
+char *s21_strtok(char *str, const char *delim) {
+	static char *current;
+	char *result;
+	if (str != S21_NULL) {
+		/*remove delims from start*/
+		str = &str[s21_strspn(str, delim)];
+		s21_size_t first = s21_strspn(str, delim);
+		s21_size_t second = s21_strcspn(str, delim);
+		if (second == s21_strlen(str) || first == s21_strlen(str)) {
+			if (current != NULL)
+				return str;
+			else
+				return S21_NULL;
+		}
+		current = &str[second] + 1;
+		result = malloc((first + second) * sizeof(char));
+		for (s21_size_t i = first; i < second; ++i) {
+			result[i - first] = str[i];
+		}
+		return result;
+	} else {
+		if (current == NULL || current[0] == '\0') {
+			return S21_NULL;
+		} else {
+			result = s21_strtok(current, delim);
+			current = &current[s21_strspn(current, result)];
+			return result;
+		}
+	}
+}
 
+//#include <string.h>
+//
+//int main() {
+//	char a[30] = ",,,,1,2,3,4,5,6,7,8,9,0,";
+//	//char a[25] = "12345a67890";
+//	char *b = ",";
+//	printf("%lu\n", strspn(a, b));
+//	printf("%lu\n", strcspn(a, b));
+//	puts(s21_strtok(a, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	puts(s21_strtok(NULL, b));
+//	//puts(strtok(a, b));
+//	//puts(strtok(NULL, b));
+//	//puts(strtok(NULL, b));
+//	//puts(strtok(NULL, b));
+//}

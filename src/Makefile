@@ -8,6 +8,9 @@ all: build
 
 build: s21_string.a test
 
+global_debug: FLAGS += -g -O0
+global_debug: test
+
 clean:
 	rm s21_string.a
 	rm s21_string.o
@@ -25,10 +28,6 @@ test: s21_string.a
 gcov_report: test
 	#TODO jarrusab
 
-run_test:
-	$(MAKE) -i clean
-	$(MAKE) test
-	./test
-debug_test: FLAGS += -g -O0
-debug_test: test
-.PHONY : all debug_test clean distclean
+local_debug:
+		$(CC) $(FLAGS) -g s21_string.c -o local_test
+.PHONY : all debug_test clean
