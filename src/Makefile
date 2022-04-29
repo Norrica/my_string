@@ -29,3 +29,6 @@ run_test:
 	$(MAKE) -i clean
 	$(MAKE) test
 	./test
+debug_test: FLAGS += -g -O0
+debug_test: test
+.PHONY : all debug_test clean distclean

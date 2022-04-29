@@ -50,6 +50,15 @@ char *s21_strcpy(char *dest, const char *src) {
 	return dest;
 }
 
+char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
+	char *d = dest;
+	char *s = (char *) src;
+	for (; (*d || *s) && n; d++, s++, n--) {
+		*d = *s;
+	}
+	return dest;
+}
+
 void *s21_memmove(void *dest, const void *src, size_t n) {
 	char *d = dest;
 	const char *s = src;
@@ -119,20 +128,24 @@ s21_size_t s21_strspn(const char *str1, const char *str2) {
 }
 
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
-	if (*str1 == '\0' || *str2 == '\0') {
+	if (*str1 == '\0') {
 		return 0;
-	}
-	for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
-		for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
-			if (*s1 != *s2) {
-				s2 = (char *) str2 - 1;
-				s1++;
-			} else if (*s2 == '\0' || *s1 == '\0') {
-				return s1 - str1;
+	} else if (*str2 == '\0') {
+		return s21_strlen(str1);
+	} else {
+		for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
+			for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
+				if (*s1 == *s2) {
+					return s1 - str1;
+				} else if (*s1 == '\0') {
+					return s1 - str1;
+				} else if (*s1 != *s2) {
+					continue;
+				}
 			}
 		}
+		return 0;
 	}
-	return 0;
 }
 
 char *s21_strstr(const char *str, const char *substr) {
@@ -200,10 +213,38 @@ s21_size_t s21_strlen(const char *str) {
 	return len;
 }
 
-//int main(){
+//int main() {
+////#include <string.h>
+////
+////#define N_TESTS 16
+////	char *a[N_TESTS][2] = {
+////		{"this is a test", "hits"},
+////		{"this is a test", "hits "},
+////		{"ololo", "ol"},
+////		{"ololo", "lo"},
+////		{"ololo", "l"},
+////		{"ololo", "o"},
+////		{"", ""},
+////		{" ", " "},
+////		{"   ", " "},
+////		{"a", ""},
+////		{"", "a"},
+////		{"ba", "a"},
+////		{"ba", "ab"},
+////		{"ab", "ba"},
+////		{"abababa", "ba"},
+////		{"ababcaba", "ba"},
+////	};
+////	for (int i = 0; i < N_TESTS; ++i) {
+////		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+////		printf("%lu:%lu\n",
+////			   strcspn(a[i][0], a[i][1]), s21_strcspn(a[i][0], a[i][1]));
+////	}
 //#include <string.h>
-//	char dest[20];
-//	//char *src = "";
-//	s21_strcpy(dest,"");
-//	printf("[%s]\n",dest);
+//	//{"this is a test", "hits"}
+//	char *str_1 = "this is a test";
+//	char *charset = " ";
+//	printf("%lu\n", strcspn(str_1, charset));
+//	printf("%lu\n", s21_strcspn(str_1, charset));
 //}
+

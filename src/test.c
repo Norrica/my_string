@@ -34,27 +34,28 @@ START_TEST(test_strspn) {
 END_TEST
 START_TEST(test_strcspn) {
 	char *a[N_TESTS][2] = {
-		{"this is a test", "hits"},
-		{"this is a test", "hits "},
-		{"ololo", "ol"},
-		{"ololo", "lo"},
-		{"ololo", "l"},
+		{"this is a test", "t"},
+		{"this is a test", " "},
 		{"ololo", "o"},
+		{"ololo", "l"},
+		{"ololo", "z"},
 		{"", ""},
 		{" ", " "},
-		{"   ", " "},
+		{" ", ""},
+		{"", " "},
 		{"a", ""},
 		{"", "a"},
 		{"ba", "a"},
-		{"ba", "ab"},
+		{"ba", "b"},
 		{"ab", "ba"},
-		{"abababa", "ba"},
-		{"ababcaba", "ba"},
+		{"ababcaba", "ca"},
+		{"ababcaba", "ac"},
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
-		//printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-		ck_assert_int_eq(strcspn(a[i][0], a[i][1]),
-						 s21_strcspn(a[i][0], a[i][1]));
+		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+		size_t i1 = strcspn(a[i][0], a[i][1]);
+		s21_size_t i2 = s21_strcspn(a[i][0], a[i][1]);
+		ck_assert_int_eq(i1, i2);
 	}
 }
 
@@ -324,6 +325,43 @@ START_TEST(test_strcpy) {
 }
 
 END_TEST
+
+START_TEST(test_strncpy) {
+	typedef struct s {
+	  char str[25];
+	  int n;
+	} test;
+	test a[N_TESTS] = {
+		{"this is test", 4},
+		{"this is test", 4},
+		{"abaaaaaa", 4},
+		{"abaaaaaa", 4},
+		{"abaaaaaa", 4},
+		{"abaaaaaa", 4},
+		{"", 4},
+		{"        ", 4},
+		{"   ", 4},
+		{"   ", 4},
+		{" ", 4},
+		{"close", 4},
+		{"maximax", 4},
+		{"maximax", 4},
+		{"maximax", 4},
+		{"maximax", 4},
+	};
+	for (int i = 0; i < N_TESTS; ++i) {
+		char s1[20];
+		char s2[20];
+		ck_assert_mem_eq(
+			strncpy(s1, a[i].str, a[i].n),
+			s21_strncpy(s2, a[i].str, a[i].n),
+			strlen(s1)
+		);
+	}
+}
+
+END_TEST
+
 START_TEST(test_memmove) {
 	typedef struct s {
 	  char *str;
@@ -706,6 +744,11 @@ Suite *string_suite(void) {
 	strcpy_case = tcase_create("strcpy");
 	tcase_add_test(strcpy_case, test_strcpy);
 	suite_add_tcase(s, strcpy_case);
+
+	TCase *strncpy_case;
+	strncpy_case = tcase_create("strncpy");
+	tcase_add_test(strncpy_case, test_strncpy);
+	suite_add_tcase(s, strncpy_case);
 
 	TCase *strcmp_case;
 	strcmp_case = tcase_create("strcmp");
