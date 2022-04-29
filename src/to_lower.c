@@ -17,4 +17,4 @@ void *to_upper(const char *str) {
 int main() {
     char c[100] = "12312EGORRERER";
     printf("%s", to_upper(c));
-}
+}a
