@@ -133,17 +133,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 	} else if (*str2 == '\0') {
 		return s21_strlen(str1);
 	} else {
-		for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
-			for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
-				if (*s1 == *s2) {
-					return s1 - str1;
-				} else if (*s1 == '\0') {
-					return s1 - str1;
-				} else if (*s1 != *s2) {
-					continue;
-				}
-			}
-		}
+		// TODO
 		return 0;
 	}
 }

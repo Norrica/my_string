@@ -45,9 +45,9 @@ START_TEST(test_strcspn) {
 		{"", " "},
 		{"a", ""},
 		{"", "a"},
-		{"ba", "a"},
-		{"ba", "b"},
-		{"ab", "ba"},
+		{"abcd", "ab"},
+		{"abcd", "abc"},
+		{"abcd", "abcd"},
 		{"ababcaba", "ca"},
 		{"ababcaba", "ac"},
 	};
