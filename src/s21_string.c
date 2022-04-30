@@ -2,6 +2,8 @@
 // Created by Gladis Ariane on 4/28/22.
 //
 
+#include <stdarg.h>
+#include <stdlib.h>
 #include "s21_string.h"
 
 void *s21_memchr(const void *str, int c, size_t n) {
@@ -233,8 +235,8 @@ char *s21_strtok(char *str, const char *delim) {
 		for (s21_size_t i = first; i < second; ++i) {
 			result[i - first] = str[i];
 		}
-		result[first+second]='\0';
-		str[second]='\0';
+		result[first + second] = '\0';
+		str[second] = '\0';
 		return result;
 	} else {
 		if (current == NULL || current[0] == '\0') {
@@ -247,30 +249,193 @@ char *s21_strtok(char *str, const char *delim) {
 	}
 }
 
-#include <string.h>
+char *s21_strerror(int errnum) {
+	char *errors[107] = {
+		"Undefined error: 0",
+		"Operation not permitted",
+		"No such file or directory",
+		"No such process",
+		"Interrupted system call",
+		"Input/output error",
+		"Device not configured",
+		"Argument list too long",
+		"Exec format error",
+		"Bad file descriptor",
+		"No child processes",
+		"Resource deadlock avoided",
+		"Cannot allocate memory",
+		"Permission denied",
+		"Bad address",
+		"Block device required",
+		"Resource busy",
+		"File exists",
+		"Cross-device link",
+		"Operation not supported by device",
+		"Not a directory",
+		"Is a directory",
+		"Invalid argument",
+		"Too many open files in system",
+		"Too many open files",
+		"Inappropriate ioctl for device",
+		"Text file busy",
+		"File too large",
+		"No space left on device",
+		"Illegal seek",
+		"Read-only file system",
+		"Too many links",
+		"Broken pipe",
+		"Numerical argument out of domain",
+		"Result too large",
+		"Resource temporarily unavailable",
+		"Operation now in progress",
+		"Operation already in progress",
+		"Socket operation on non-socket",
+		"Destination address required",
+		"Message too long",
+		"Protocol wrong type for socket",
+		"Protocol not available",
+		"Protocol not supported",
+		"Socket type not supported",
+		"Operation not supported",
+		"Protocol family not supported",
+		"Address family not supported by protocol family",
+		"Address already in use",
+		"Can't assign requested address",
+		"Network is down",
+		"Network is unreachable",
+		"Network dropped connection on reset",
+		"Software caused connection abort",
+		"Connection reset by peer",
+		"No buffer space available",
+		"Socket is already connected",
+		"Socket is not connected",
+		"Can't send after socket shutdown",
+		"Too many references: can't splice",
+		"Operation timed out",
+		"Connection refused",
+		"Too many levels of symbolic links",
+		"File name too long",
+		"Host is down",
+		"No route to host",
+		"Directory not empty",
+		"Too many processes",
+		"Too many users",
+		"Disc quota exceeded",
+		"Stale NFS file handle",
+		"Too many levels of remote in path",
+		"RPC struct is bad",
+		"RPC version wrong",
+		"RPC prog. not avail",
+		"Program version wrong",
+		"Bad procedure for program",
+		"No locks available",
+		"Function not implemented",
+		"Inappropriate file type or format",
+		"Authentication error",
+		"Need authenticator",
+		"Device power is off",
+		"Device error",
+		"Value too large to be stored in data type",
+		"Bad executable (or shared library)",
+		"Bad CPU type in executable",
+		"Shared library version mismatch",
+		"Malformed Mach-o file",
+		"Operation canceled",
+		"Identifier removed",
+		"No message of desired type",
+		"Illegal byte sequence",
+		"Attribute not found",
+		"Bad message",
+		"EMULTIHOP (Reserved)",
+		"No message available on STREAM",
+		"ENOLINK (Reserved)",
+		"No STREAM resources",
+		"Not a STREAM",
+		"Protocol error",
+		"STREAM ioctl timeout",
+		"Operation not supported on socket",
+		"Policy not found",
+		"State not recoverable",
+		"Previous owner died",
+		"Interface output queue is full",
+	};
+	if (errnum > 106 || errnum < 0) {
+		return "Unknown error: ";
+	}
+	return errors[errnum];
+}
 
-//int main() {
-//	char a[30] = ",,,,1,2,3,4,5,6,7,8,9,0,";
-//	//char a[25] = "12345a67890";
-//	char *b = ",";
-//	puts(s21_strtok(a, b));
+void *insert(char *dest, char *src, int x) {
+	char *res;
+	res = (char *) malloc(s21_strlen(dest) + s21_strlen(src) + 1);
+	s21_strncpy(res, dest, x);
+	res[x] = '\0';
+	s21_strcat(res, src);
+	s21_strcat(res, dest + x);
+	s21_strcpy(dest, res);
+	//free(res);
+	return res;
+}
+
+char *str_replace(char *orig, char *rep, char *with) {
+	char *result;
+	char *ins;
+	char *tmp;
+	s21_size_t len_rep;
+	s21_size_t len_with;
+
+	int count;
+
+	if (!orig || !rep)
+		return NULL;
+	len_rep = s21_strlen(rep);
+	if (len_rep == 0)
+		return NULL;
+	if (!with)
+		with = "";
+	len_with = s21_strlen(with);
+
+	ins = orig;
+	for (count = 0; (tmp = s21_strstr(ins, rep)); ++count) {
+		ins = tmp + len_rep;
+	}
+	tmp = result = malloc(s21_strlen(orig) + (len_with - len_rep) * count + 1);
+	if (!result)
+		return NULL;
+
+	while (count--) {
+		size_t len_front;
+		ins = s21_strstr(orig, rep);
+		len_front = ins - orig;
+		tmp = s21_strncpy(tmp, orig, len_front) + len_front;
+		tmp = s21_strcpy(tmp, with) + len_with;
+		orig += len_front + len_rep;
+	}
+	s21_strcpy(tmp, orig);
+	return result;
+}
+
+//c, d, i, f, s, u, %
+//%.5f
+//Это gbpltw
+//int s21_sprintf(char *str, char *fmt, ...) {
+//	va_list args;
+//	va_start(args, fmt);
+//	int va_len = 0;
+//	int va_curr = 0;
+//	for (s21_size_t i = 0; i < s21_strlen(fmt); ++i) {
+//		if (fmt[i] == '%') {
+//			va_len++;
+//		}
+//	}
 //
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	puts(s21_strtok(NULL, b));
-//	//puts(strtok(a, b));
-//	//puts(strtok(NULL, b));
-//	//puts(strtok(NULL, b));
-//	//puts(strtok(NULL, b));
+//	for (s21_size_t i = 0; i < s21_strlen(fmt); ++i) {
+//		if (fmt[i] == '%') {
+//			if (fmt[i + 1] == 'd' || fmt[i + 1] == 'i' || fmt[i + 1] == 'u') {
+//				int next = va_arg(args,int);
+//				str_replace(fmt, "%5d");//
+//				str_replace(fmt, "%432d");//
+//			}
+//		}
+//	}
 //}
