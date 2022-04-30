@@ -14,6 +14,8 @@ clean:
 	-rm s21_string.a
 	-rm s21_string.o
 	-rm test
+	-rm *.gc*
+	-rm -rf report
 
 rebuild: clean build
 
@@ -25,10 +27,9 @@ test: s21_string.a
 	$(CC) $(FLAGS) -lcheck test.c s21_string.a -o test
 
 gcov_report: test
-	lcov --directory . --zerocounters # Прописать директорию в переменной?
 	./test
 	gcov test.c
-	lcov -c --directory . --output-file test.info
+	geninfo . -b . -o test.info
 	genhtml test.info --output-directory report
 
 
