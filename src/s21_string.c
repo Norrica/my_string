@@ -372,7 +372,7 @@ void *insert(char *dest, char *src, int x) {
 	res[x] = '\0';
 	s21_strcat(res, src);
 	s21_strcat(res, dest + x);
-	s21_strcpy(dest, res);
+	s21_strcpy(dest, res); //Удалить если не понадобится
 	//free(res);
 	return res;
 }
