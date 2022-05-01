@@ -3,6 +3,7 @@
 //
 
 #include <stdarg.h>
+#include <math.h>
 
 #include "s21_string.h"
 
@@ -368,109 +369,88 @@ char *s21_strerror(int errnum) {
     return errors[errnum];
 }
 
-void *insert(char *dest, char *src, int x) {
-    char *res;
-    res = (char *) malloc(s21_strlen(dest) + s21_strlen(src) + 1);
-    s21_strncpy(res, dest, x);
-    res[x] = '\0';
-    s21_strcat(res, src);
-    s21_strcat(res, dest + x);
-    s21_strcpy(dest, res); //Удалить если не понадобится
-    //free(res);
+//void *insert(char *dest, char *src, int x) {
+//    char *res;
+//    res = (char *) malloc(s21_strlen(dest) + s21_strlen(src) + 1);
+//    s21_strncpy(res, dest, x);
+//    res[x] = '\0';
+//    s21_strcat(res, src);
+//    s21_strcat(res, dest + x);
+//    s21_strcpy(dest, res); //Удалить если не понадобится
+//    //free(res);
+//    return res;
+//}
+
+//char *str_replace(char *orig, char *rep, char *with) {
+//    char *result;
+//    char *ins;
+//    char *tmp;
+//    s21_size_t len_rep;
+//    s21_size_t len_with;
+//
+//    int count;
+//
+//    if (!orig || !rep)
+//        return NULL;
+//    len_rep = s21_strlen(rep);
+//    if (len_rep == 0)
+//        return NULL;
+//    if (!with)
+//        with = "";
+//    len_with = s21_strlen(with);
+//
+//    ins = orig;
+//    for (count = 0; (tmp = s21_strstr(ins, rep)); ++count) {
+//        ins = tmp + len_rep;
+//    }
+//    tmp = result = malloc(s21_strlen(orig) + (len_with - len_rep) * count + 1);
+//    if (!result)
+//        return NULL;
+//
+//    while (count--) {
+//        size_t len_front;
+//        ins = s21_strstr(orig, rep);
+//        len_front = ins - orig;
+//        tmp = s21_strncpy(tmp, orig, len_front) + len_front;
+//        tmp = s21_strcpy(tmp, with) + len_with;
+//        orig += len_front + len_rep;
+//    }
+//    s21_strcpy(tmp, orig);
+//    return result;
+//}
+
+char *itoa(int num) {
+    char *nums = "0123456789";
+    int temp = num;
+    s21_size_t len = 0;
+    while (temp) {
+        temp /= 10;
+        len++;
+    }
+    char *converted = malloc(len * sizeof(char));
+    s21_size_t i = len - 1;
+    while (num) {
+        converted[i--] = nums[num % 10];
+        num /= 10;
+        len--;
+    }
+    //s21_memset(&converted[s21_strlen(fmt)],)
+    return converted;
+}
+
+char *ftoa(float num, int precision) {
+    int int_part = (int) num;
+    float float_part = num - int_part;
+    if
+    //char buf[50];
+    char *int_res = itoa(int_part);
+    int float_num = (float_part * pow(10, precision));
+    char *float_res = itoa(float_num);//TODO Возможно баг
+    char *res = malloc(s21_strlen(int_res) + 1 + s21_strlen(float_res));
+    s21_strcat(res, int_res);
+    s21_strcat(res, ".");
+    s21_strcat(res, float_res);
     return res;
-}
-
-char *str_replace(char *orig, char *rep, char *with) {
-    char *result;
-    char *ins;
-    char *tmp;
-    s21_size_t len_rep;
-    s21_size_t len_with;
-
-    int count;
-
-    if (!orig || !rep)
-        return NULL;
-    len_rep = s21_strlen(rep);
-    if (len_rep == 0)
-        return NULL;
-    if (!with)
-        with = "";
-    len_with = s21_strlen(with);
-
-    ins = orig;
-    for (count = 0; (tmp = s21_strstr(ins, rep)); ++count) {
-        ins = tmp + len_rep;
-    }
-    tmp = result = malloc(s21_strlen(orig) + (len_with - len_rep) * count + 1);
-    if (!result)
-        return NULL;
-
-    while (count--) {
-        size_t len_front;
-        ins = s21_strstr(orig, rep);
-        len_front = ins - orig;
-        tmp = s21_strncpy(tmp, orig, len_front) + len_front;
-        tmp = s21_strcpy(tmp, with) + len_with;
-        orig += len_front + len_rep;
-    }
-    s21_strcpy(tmp, orig);
-    return result;
-}
-
-char *itoa(int num, char *fmt) {
-    char *nums = "0123456789";
-    int len = 0;
-    int temp = num;
-    while (temp) {
-        temp /= 10;
-        len++;
-    }
-
-    char *converted = malloc(len * sizeof(char));
-    int i = len - 1;
-    while (num) {
-        converted[i--] = nums[num % 10];
-        num /= 10;
-    }
-    char pad;
-    if (fmt[1] != '0')
-        pad = ' ';
-    else if (fmt[1] == '0')
-        pad = '0';
-    while (len--) {
-        converted[len] = pad;
-    }
-    //s21_memset(&converted[s21_strlen(fmt)],)
-    return converted;
-}
-char *ftoa(float num, char *fmt) {
-    //(int)num
-    //num - int(num) ** fmt
-    char *nums = "0123456789";
-    int len = 0;
-    int temp = num;
-    while (temp) {
-        temp /= 10;
-        len++;
-    }
-
-    char *converted = malloc(len * sizeof(char));
-    int i = len - 1;
-    while (num) {
-        converted[i--] = nums[num % 10];
-        num /= 10;
-    }
-    char pad;
-    if (fmt[1] != '0')
-        pad = ' ';
-    else if (fmt[1] == '0')
-        pad = '0';
-    while (len--) {
-        converted[len] = pad;
-    }
-    //s21_memset(&converted[s21_strlen(fmt)],)
-    return converted;
 }
 
 //c, d, i, f, s, u, %
@@ -478,7 +458,7 @@ char *ftoa(float num, char *fmt) {
 //Это gbpltw
 
 int s21_sprintf(char *str, char *fmt, ...) {
-
+    //TODO padding
     va_list args;
     va_start(args, fmt);
     int va_len = 0;
@@ -507,10 +487,11 @@ int s21_sprintf(char *str, char *fmt, ...) {
                 curr = i + len_int + 1;
                 s21_strncpy(curr_fmt, &fmt[i], len_int);
                 int next = va_arg(args, int);
-                s21_strcat(str, itoa(next, curr_fmt));
+                s21_strcat(str, itoa(next));
             }
         }
     }
+    return 0; //TODO remove
 }
 
 //#include <string.h>
@@ -521,10 +502,10 @@ int s21_sprintf(char *str, char *fmt, ...) {
 //
 //
 //}
+#include <stdio.h>
 
 int main() {
-    char str[50];
-    char *fmt = "%d %.6f";
-    s21_sprintf(str, fmt, 20, 20.86754423565756453643);
-    puts(str);
+    printf("%.5f\n", 100.5);
+    char *res = ftoa(100.5, "10.3");
+    puts(res);
 }
