@@ -32,7 +32,11 @@ gcov_report: test
 	geninfo . -b . -o test.info
 	genhtml test.info --output-directory report
 
+clean_atof:
+	-rm my_atof
 
+my_atof.c: clean_atof
+	gcc my_atof.c -o my_atof
 local_debug:
 		$(CC) $(FLAGS) -g s21_string.c -o local_test
 .PHONY : all build clean
