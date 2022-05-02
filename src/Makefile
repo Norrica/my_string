@@ -2,13 +2,15 @@
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -fprofile-arcs -ftest-coverage
 
-TARGET=test.c
+TARGET=test.c my_atof.c
 
 all: build
 
 build: s21_string.a test
 
-debug: FLAGS += -g -O0
+debug:
+FLAGS += -g -O0
+
 
 clean:
 	-rm s21_string.a
@@ -24,19 +26,16 @@ s21_string.a: clean
 	ar rcs s21_string.a s21_string.o
 
 test: s21_string.a
-	$(CC) $(FLAGS) -lcheck test.c s21_string.a -o test
+	FLAGS += -fprofile-arcs -ftest-coverage
+	$(CC) $(FLAGS) -lcheck s21_string.a test.c  -o test
 
 gcov_report: test
 	./test
 	gcov test.c
-	geninfo . -b . -o test.info
+	lcov --directory . --zerocounters
+	lcov -c --directory . --output-file test.info # вынести директорию в отдельную переменную?
 	genhtml test.info --output-directory report
 
-clean_atof:
-	-rm my_atof
-
-my_atof.c: clean_atof
-	gcc my_atof.c -o my_atof
 local_debug:
 		$(CC) $(FLAGS) -g s21_string.c -o local_test
 .PHONY : all build clean

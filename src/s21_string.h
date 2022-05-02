@@ -48,6 +48,15 @@ s21_size_t s21_strspn(const char *str1, const char *str2);
 
 void *insert(char *dest, char *src, int x);
 
-int s21_sprintf(char *str, char* fmt,...);
+int my_atoi(const char *c);
+
+double my_atof(const char *c);
+
+char *my_itoa(int num);
+
+char *my_ftoa(float num, int precision);
+
+
+int s21_sprintf(char *str, char *fmt, ...);
 
 #endif

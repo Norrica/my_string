@@ -418,8 +418,80 @@ char *s21_strerror(int errnum) {
 //    s21_strcpy(tmp, orig);
 //    return result;
 //}
+int my_atoi(const char *c) {
+    char *ch = (char *) c;
+    int res = 0, sign = 1;
+    while (*ch == ' ') {
+        ch++;
+    }
 
-char *itoa(int num) {
+    if (*ch == '-' || *ch == '+') {
+        sign = 1 - 2 * (*ch++ == '-');
+    }
+
+    while (*ch != '\0') {
+        if (*ch >= '0' && *ch <= '9')
+            res = res * 10 + *ch++ - '0';
+        else
+            break;
+    }
+    return res * sign;
+}
+
+double my_atof(const char *c) {
+    char *ch = (char *) c;
+    int start_position = 0, sign = 1, dot_position = 0;
+    // удалить пробелы
+    for (int i = 0; ch[i] != '\0'; i++) {
+        if (ch[i] == ' ')
+            start_position++;
+    }
+
+    // проверить положительное или отрицательное
+    if (ch[start_position] == '-' || ch[start_position] == '+') {
+        sign = 1 - 2 * (ch[start_position] == '-');
+        start_position++;
+    }
+
+    // найти точку - разделитель
+    for (int i = start_position; ch[i] != '\0'; i++) {
+        if (ch[i] == '.') {
+            dot_position = i;
+            break;
+        }
+    }
+
+    // если нет нуля
+    if (!dot_position)
+        return my_atoi(c);
+
+        // если есть нуль, то подсчитать int
+    else {
+        double integer_part = 0;
+        for (int i = start_position;
+             i < dot_position &&
+                 ch[i] != '\0' &&
+                 ch[i] >= '0' &&
+                 ch[i] <= '9';
+             i++, start_position++) {
+            integer_part = integer_part * 10 + (ch[i] - '0');
+        }
+        if (start_position < dot_position) {
+            return integer_part;
+        }
+        // подсчитать float
+        double float_part = 0;
+        for (int i = dot_position + 1;
+             ch[i] != '\0' && ch[i] >= '0' && ch[i] <= '9';
+             i++) {
+            // printf("%d ", ch[i]-'0');
+            float_part = float_part + (ch[i] - '0') * pow(10, dot_position - i);
+        }
+        return (integer_part + float_part) * sign;
+    }
+}
+
+char *my_itoa(int num) {
     char *nums = "0123456789";
     int temp = num;
     s21_size_t len = 0;
@@ -438,13 +510,12 @@ char *itoa(int num) {
     return converted;
 }
 
-char *ftoa(float num, int precision) {
+char *my_ftoa(float num, int precision) {
     int int_part = (int) num;
     float float_part = num - int_part;
-    //char buf[50];
-    char *int_res = itoa(int_part);
+    char *int_res = my_itoa(int_part);
     int float_num = (float_part * pow(10, precision));
-    char *float_res = itoa(float_num);//TODO Возможно баг
+    char *float_res = my_itoa(float_num);
     char *res = malloc(s21_strlen(int_res) + 1 + s21_strlen(float_res));
     s21_strcat(res, int_res);
     s21_strcat(res, ".");
@@ -465,6 +536,8 @@ int s21_sprintf(char *str, char *fmt, ...) {
         if (fmt[i] == '%') {
             if (fmt[i + 1] != '%')
                 va_len++;
+            else
+                ++i;
         }
     }
     s21_size_t is_float;
@@ -481,31 +554,31 @@ int s21_sprintf(char *str, char *fmt, ...) {
                 curr = i + len_float + 1;
                 s21_strncpy(curr_fmt, &fmt[i], len_float);
                 double next = va_arg(args, double);
-                s21_strcat(str, ftoa(next, curr_fmt));
+                s21_strcat(str, ftoa(next, ));
             } else {
                 curr = i + len_int + 1;
                 s21_strncpy(curr_fmt, &fmt[i], len_int);
                 int next = va_arg(args, int);
-                s21_strcat(str, itoa(next));
+                s21_strcat(str, my_itoa(next));
             }
         }
     }
     return 0; //TODO remove
 }
 
-//#include <string.h>
-
-//ftoa(float f){
-//    len = s21_strlen(itoa((int)f));
-//    o = f * len;
-//
-//
-//}
+#include <string.h>
 #include <stdio.h>
 
 int main() {
-    printf("%.5f\n", 100.5);
-    char *res = ftoa(100.5, "10.3");
-    puts(res);
-    printf("%15.6[f",2.5);
+    char str[50];
+    char i[50];
+
+    sscanf("test 123","%s %s", str, i);
+    puts(str);
+    puts(i);
+    //printf("%d\n",i);
+    //int i = 1432;
+    //int a = 2;
+    //printf("or: %lf\n", ftoa(i));
+    //printf("my: %lf", my_ftoa(i));
 }
