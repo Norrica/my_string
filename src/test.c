@@ -329,29 +329,29 @@ START_TEST(test_strncpy) {
 	  int n;
 	} test;
 	test a[N_TESTS] = {
+		{"this is test", 5},
 		{"this is test", 4},
-		{"this is test", 4},
+		{"abaaaaaa", 2},
 		{"abaaaaaa", 4},
-		{"abaaaaaa", 4},
-		{"abaaaaaa", 4},
-		{"abaaaaaa", 4},
+		{"ab", 4},
+		{"ab", 4},
 		{"", 4},
 		{"        ", 4},
 		{"   ", 4},
 		{"   ", 4},
 		{" ", 4},
 		{"close", 4},
-		{"maximax", 4},
-		{"maximax", 4},
-		{"maximax", 4},
-		{"maximax", 4},
+		{"maximax", 2},
+		{"maximax", 2},
+		{"maximax", 2},
+		{"maximax", 2},
 	};
 	for (int i = 0; i < N_TESTS; ++i) {
-		char s1[20];
-		char s2[20];
+		char s1[25]="                       ";
+		char s2[25]="                       ";
 		ck_assert_str_eq(
-			strncpy(s1, a[i].str, a[i].n),
-			s21_strncpy(s2, a[i].str, a[i].n)
+		    strncpy(s1, a[i].str, a[i].n),
+		    strncpy(s2, a[i].str, a[i].n)
 		);
 	}
 }
@@ -641,22 +641,22 @@ START_TEST(test_strtok) {
 	} test;
 
 	test a[N_TESTS] = {
-		{"12345,67890",","},
-		{",1,2,3,4,5,6,7,8,9,0,",","},
-		{"123,456,789,0",","},
-		{",,,,,,,,,1234567890,,,,,,,,,,",","},
-		{"11111",""},
-		{",,,,,,111",","},
-		{"111,,,,,,",","},
-		{",,,,,,111,,,,,,",","},
-		{"lorem.ipsum dolores|ames,lupus",". |,"},
-		{"lorem.ipsum dolores|ames,lupus",". |"},
-		{"lorem.ipsum dolores|ames,lupus",". "},
-		{"lorem.ipsum dolores|ames,lupus",". "},
-		{"lorem.ipsum dolores|ames,lupus","."},
-		{"lorem.ipsum dolores|ames,lupus",",| ."},
-		{"lorem.ipsum dolores|ames,lupus",",| "},
-		{"lorem.ipsum dolores|ames,lupus",",|"},
+		{"12345,67890", ","},
+		{",1,2,3,4,5,6,7,8,9,0,", ","},
+		{"123,456,789,0", ","},
+		{",,,,,,,,,1234567890,,,,,,,,,,", ","},
+		{"11111", ""},
+		{"11111", ","},
+		{",,,,,,111", ","},
+		{"111,,,,,,", ","},
+		{",,,,,,111,,,,,,", ","},
+		{"lorem.ipsum dolores|ames,lupus", ". |,"},
+		{"lorem.ipsum dolores|ames,lupus", ". |"},
+		{"lorem.ipsum dolores|ames,lupus", ". "},
+		{"lorem.ipsum dolores|ames,lupus", ". "},
+		{"lorem.ipsum dolores|ames,lupus", "."},
+		{"lorem.ipsum dolores|ames,lupus", ",| ."},
+		{"lorem.ipsum dolores|ames,lupus", ",| "},
 	};
 
 	for (int i = 0; i < N_TESTS; ++i) {
@@ -797,7 +797,7 @@ Suite *string_suite(void) {
 	strlen_case = tcase_create("strlen");
 	tcase_add_test(strlen_case, test_strlen);
 	suite_add_tcase(s, strlen_case);
-	
+
 	TCase *strtok_case;
 	strtok_case = tcase_create("strtok");
 	tcase_add_test(strtok_case, test_strtok);
