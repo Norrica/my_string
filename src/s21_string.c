@@ -441,7 +441,6 @@ char *itoa(int num) {
 char *ftoa(float num, int precision) {
     int int_part = (int) num;
     float float_part = num - int_part;
-    if
     //char buf[50];
     char *int_res = itoa(int_part);
     int float_num = (float_part * pow(10, precision));
@@ -508,4 +507,5 @@ int main() {
     printf("%.5f\n", 100.5);
     char *res = ftoa(100.5, "10.3");
     puts(res);
+    printf("%15.6[f",2.5);
 }

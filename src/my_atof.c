@@ -57,7 +57,7 @@ double my_atof (const char *c) {
 
 int main() {
     char c[100] = "       1234.22a33";
-    int a = 2;
+    //int a = 2;
     printf("\nor: %lf\n", atof(c));
     printf("my: %lf", my_atof(c));
 }
