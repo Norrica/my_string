@@ -53,7 +53,7 @@ char *s21_strcpy(char *dest, const char *src) {
     return dest;
 }
 
-char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
+char *s21_strncpy(char *dest, const char *src, size n) {
     //char *d = dest;
     //char *s = (char *) src;
     //s21_size_t nn = n;
@@ -115,7 +115,7 @@ char *s21_strpbrk(const char *str1, const char *str2) {
     return 0;
 }
 
-s21_size_t s21_strspn(const char *str1, const char *str2) {
+size s21_strspn(const char *str1, const char *str2) {
     if (str1 == S21_NULL || str2 == S21_NULL
         || *str1 == '\0' || *str2 == '\0') {
         return 0;
@@ -134,7 +134,7 @@ s21_size_t s21_strspn(const char *str1, const char *str2) {
     return 0;
 }
 
-s21_size_t s21_strcspn(const char *str1, const char *str2) {
+size s21_strcspn(const char *str1, const char *str2) {
     if (*str1 == '\0') {
         return 0;
     } else if (*str2 == '\0') {
@@ -180,7 +180,7 @@ char *s21_strcat(char *dest, const char *src) {
     return dest;
 }
 
-char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+char *s21_strncat(char *dest, const char *src, size n) {
     char *ptr = dest;
     while (*ptr != '\0')
         ptr++;
@@ -199,7 +199,7 @@ int s21_strcmp(const char *str1, const char *str2) {
     return *(const unsigned char *) str1 - *(const unsigned char *) str2;
 }
 
-int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
+int s21_strncmp(const char *str1, const char *str2, size n) {
     int result;
     while (n && *str1 && (*str1 == *str2)) {
         str1++;
@@ -213,8 +213,8 @@ int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
     return result;
 }
 
-s21_size_t s21_strlen(const char *str) {
-    s21_size_t len = 0;
+size s21_strlen(const char *str) {
+    size len = 0;
     for (; str[len]; len++);
     return len;
 }
@@ -225,8 +225,8 @@ char *s21_strtok(char *str, const char *delim) {
     if (str != S21_NULL) {
         /*remove delims from start*/
         str = &str[s21_strspn(str, delim)];
-        s21_size_t first = s21_strspn(str, delim);
-        s21_size_t second = s21_strcspn(str, delim);
+        size first = s21_strspn(str, delim);
+        size second = s21_strcspn(str, delim);
         if (second == s21_strlen(str) || first == s21_strlen(str)) {
             if (current != S21_NULL)
                 return str;
@@ -236,7 +236,7 @@ char *s21_strtok(char *str, const char *delim) {
         current = &str[second] + 1;
         result = malloc((first + second)
                             * sizeof(char));//TODO Сделать вместо малок str[second] = '\0'; и strcpy result
-        for (s21_size_t i = first; i < second; ++i) {
+        for (size i = first; i < second; ++i) {
             result[i - first] = str[i];
         }
         result[first + second] = '\0';
@@ -484,7 +484,6 @@ double my_atof(const char *c) {
         for (int i = dot_position + 1;
              ch[i] != '\0' && ch[i] >= '0' && ch[i] <= '9';
              i++) {
-            // printf("%d ", ch[i]-'0');
             float_part = float_part + (ch[i] - '0') * pow(10, dot_position - i);
         }
         return (integer_part + float_part) * sign;
@@ -494,13 +493,13 @@ double my_atof(const char *c) {
 char *my_itoa(int num) {
     char *nums = "0123456789";
     int temp = num;
-    s21_size_t len = 0;
+    size len = 0;
     while (temp) {
         temp /= 10;
         len++;
     }
     char *converted = malloc(len * sizeof(char));
-    s21_size_t i = len - 1;
+    size i = len - 1;
     while (num) {
         converted[i--] = nums[num % 10];
         num /= 10;
@@ -526,13 +525,95 @@ char *my_ftoa(float num, int precision) {
 //c, d, i, f, s, u, %
 //%.5f
 //Это gbpltw
+typedef struct {
+  char type_specifier;
+  char type_length;
+  char flag;
+  int width;
+  int num_width;
+  int precision;
+  int err_flag; /*1 - OK, 0 - ERR*/
+} FMT;
+
+char *const TYPE_SPECIFIERS = "cdifsu";
+char *const LEN_SPECIFIERS = "lh";
+char *const DIGITS = "0123456789";
+char *const PUNCTS = "+-.";
+char *const SIGNS = "+- ";
+char *const ALL_SPECIFIERS = "+-.0123456789cdifsuhl";
+
+void print(char *str) {
+    for (int i = 0; str[i] != '\0'; ++i) {
+        printf("%c", str[i]);
+    }
+    puts("");
+}
+
+typedef enum datatype { CHAR, INT1, INT2, FLOAT, STRING, UINT, ERROR = -1 }
+    datatype;
+
+char find_specifier(char *string) {
+    char *spec = s21_strpbrk(string, TYPE_SPECIFIERS);
+    //if (spec)
+    //    return spec[0];
+    //else
+    //    return '\0';
+    return spec[0];
+}
+
+int find_sign_and_filler(char *string, size len) {
+    char sign/* = s21_strpbrk(string, SIGNS)*/;
+    /*TODO Возможен баг, что мы найдем %3+, который не должен учитываться.*/
+    /*В следующей строке вроде без него*/
+
+    sign = string[0];
+    switch (sign) {
+        case '-':return -1;
+        case '0':return 0; /*Надо заполнять нулями*/
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            return -10; /*Любое число перед + это ошибка. -1 не ошибка.*/
+        case '+':
+        case '\0':          /*Нет явно знака - '+'*/
+        default:return 1;   /*Нет явно знака - '+'*/
+    }
+}
+
+int find_length(char *string, size len) {
+    char *var_len = s21_strpbrk(string, SIGNS);
+    if (var_len) {
+        switch (var_len[0]) {
+            case 'l':return 1;
+            case 'h':return -1;
+        }
+    }
+    return 0;
+}
+
+int find_width(char *string, size len) {
+    /* Найти все символы от + и/или 0(если они есть) до . (если она есть) */
+    /*Вернуть atoi(символов)*/
+    /*Учесть что передается len и за длину формат-строки(от % до d) не заходить*/
+}
+int  find_precision(char *string, size len){
+    /*Аналогично предыдущему, от . до d/f*/
+}
+
+
 
 int s21_sprintf(char *str, char *fmt, ...) {
-    //TODO padding
+    /*TODO padding*/
     va_list args;
     va_start(args, fmt);
     int va_len = 0;
-    for (s21_size_t i = 0; i < s21_strlen(fmt); ++i) {
+    for (size i = 0; i < s21_strlen(fmt); ++i) {
         if (fmt[i] == '%') {
             if (fmt[i + 1] != '%')
                 va_len++;
@@ -540,29 +621,28 @@ int s21_sprintf(char *str, char *fmt, ...) {
                 ++i;
         }
     }
-    s21_size_t is_float;
-    s21_size_t curr = 0;
-    char curr_fmt[50];
-    for (s21_size_t i = 0; i < s21_strlen(fmt); ++i) {
+    /*s21_size_t is_float;*/
+    /*s21_size_t curr = 0;*/
+    for (size i = 0; i < s21_strlen(fmt); ++i) {
+        str[i] = fmt[i];
+        //FMT curr_fmt;
         if (fmt[i] == '%' && fmt[i + 1] != '%') {
-            s21_strncat(str, &fmt[curr], i);
-            s21_size_t len_float = s21_strspn(&fmt[i + 1], "1234567890.");
-            s21_size_t len_int = s21_strspn(&fmt[i + 1], "1234567890");
-            is_float = len_float - len_int;
-
-            if (is_float) {
-                curr = i + len_float + 1;
-                s21_strncpy(curr_fmt, &fmt[i], len_float);
-                double next = va_arg(args, double);
-                s21_strcat(str, ftoa(next, ));
-            } else {
-                curr = i + len_int + 1;
-                s21_strncpy(curr_fmt, &fmt[i], len_int);
-                int next = va_arg(args, int);
-                s21_strcat(str, my_itoa(next));
+            char datatype = find_specifier(&fmt[i] + 1);
+            if (datatype == '\0') {
+                return ERROR;
             }
+            size format_len = s21_strchr(fmt, datatype) - &fmt[i];
+            int sign = find_sign_and_filler(&fmt[i] + 1, format_len);
+            if (sign == -10) return  ERROR;
+            int length = find_length(&fmt[i] + 1, format_len);
+            int width = find_width(&fmt[i] + 1, format_len);
+
+        } else {
+            /*TODO just add % to res_str*/
+            i++;
         }
     }
+
     return 0; //TODO remove
 }
 
@@ -570,15 +650,11 @@ int s21_sprintf(char *str, char *fmt, ...) {
 #include <stdio.h>
 
 int main() {
-    char str[50];
-    char i[50];
+    //printf("%s %d",__FILE__, __LINE__);
 
-    sscanf("test 123","%s %s", str, i);
+    char str[50];
+    char *fmt = "%+0123.5dd";
+    puts("");
+    printf("%0+7d", 5);
     puts(str);
-    puts(i);
-    //printf("%d\n",i);
-    //int i = 1432;
-    //int a = 2;
-    //printf("or: %lf\n", ftoa(i));
-    //printf("my: %lf", my_ftoa(i));
 }

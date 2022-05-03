@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 typedef unsigned long s21_size_t;
+typedef s21_size_t size;
 #define S21_NULL (void *)0
 
 void *s21_memchr(const void *str, int c, s21_size_t n);
@@ -56,6 +57,7 @@ char *my_itoa(int num);
 
 char *my_ftoa(float num, int precision);
 
+char find_specifier(char *string);
 
 int s21_sprintf(char *str, char *fmt, ...);
 
