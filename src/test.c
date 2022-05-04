@@ -30,8 +30,8 @@ START_TEST(test_strspn) {
                          s21_strspn(a[i][0], a[i][1]));
     }
 }
-
 END_TEST
+
 START_TEST(test_strcspn) {
     char *a[N_TESTS][2] = {
         {"this is a test", "t"},
@@ -57,8 +57,8 @@ START_TEST(test_strcspn) {
         ck_assert_int_eq(i1, i2);
     }
 }
-
 END_TEST
+
 START_TEST(test_strstr) {
     char *a[N_TESTS][2] = {
         {"this is test", "is"},
@@ -86,8 +86,8 @@ START_TEST(test_strstr) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strchr) {
     typedef struct s {
       char *str;
@@ -119,8 +119,8 @@ START_TEST(test_strchr) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strrchr) {
     typedef struct s {
       char *str;
@@ -152,8 +152,8 @@ START_TEST(test_strrchr) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strpbrk) {
     char *a[N_TESTS][2] = {
         {"this is test", "is"},
@@ -181,8 +181,8 @@ START_TEST(test_strpbrk) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_memchr) {
     typedef struct s {
       char *str;
@@ -215,8 +215,8 @@ START_TEST(test_memchr) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_memcmp) {
     typedef struct s {
       char *str;
@@ -249,8 +249,8 @@ START_TEST(test_memcmp) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_memcpy) {
     typedef struct s {
       char *str;
@@ -287,8 +287,8 @@ START_TEST(test_memcpy) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strcpy) {
     typedef struct s {
       char str[25];
@@ -320,7 +320,6 @@ START_TEST(test_strcpy) {
         );
     }
 }
-
 END_TEST
 
 START_TEST(test_strncpy) {
@@ -355,7 +354,6 @@ START_TEST(test_strncpy) {
         );
     }
 }
-
 END_TEST
 
 START_TEST(test_memmove) {
@@ -394,8 +392,8 @@ START_TEST(test_memmove) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_memset) {
     typedef struct s {
       char *str;
@@ -432,8 +430,8 @@ START_TEST(test_memset) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strcat) {
     typedef struct s {
       char *str;
@@ -475,8 +473,8 @@ START_TEST(test_strcat) {
         //printf("[%s] : [%s]\n", curr1,curr2);
     }
 }
-
 END_TEST
+
 START_TEST(test_strncat) {
     typedef struct s {
       char *str;
@@ -536,8 +534,8 @@ START_TEST(test_strncat) {
         //printf("[%s] : [%s]\n", curr1, curr2);
     }
 }
-
 END_TEST
+
 START_TEST(test_strcmp) {
     char *a[N_TESTS][2] = {
         {"this is test", "this is test"},
@@ -565,8 +563,8 @@ START_TEST(test_strcmp) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strncmp) {
     typedef struct s {
       char *str;
@@ -599,8 +597,8 @@ START_TEST(test_strncmp) {
         );
     }
 }
-
 END_TEST
+
 START_TEST(test_strlen) {
     typedef struct s {
       char *str;
@@ -631,7 +629,6 @@ START_TEST(test_strlen) {
         );
     }
 }
-
 END_TEST
 
 START_TEST(test_strtok) {
@@ -672,7 +669,6 @@ START_TEST(test_strtok) {
         //printf("[%s] : [%s]\n", curr1,curr2);
     }
 }
-
 END_TEST
 
 //START_TEST(NAME_HERE) {
