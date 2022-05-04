@@ -25,7 +25,7 @@ START_TEST(test_strspn) {
         {"ababcaba", "ba"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_int_eq(strspn(a[i][0], a[i][1]),
                          s21_strspn(a[i][0], a[i][1]));
     }
@@ -79,7 +79,7 @@ START_TEST(test_strstr) {
         {"maximax", "ix"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_ptr_eq(
             strstr(a[i][0], a[i][1]),
             s21_strstr(a[i][0], a[i][1])
@@ -112,7 +112,7 @@ START_TEST(test_strchr) {
         {"maximax", 'i'},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_ptr_eq(
             strchr(a[i].str, a[i].c),
             s21_strchr(a[i].str, a[i].c)
@@ -145,7 +145,7 @@ START_TEST(test_strrchr) {
         {"maximax", 'i'},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_ptr_eq(
             strrchr(a[i].str, a[i].c),
             s21_strrchr(a[i].str, a[i].c)
@@ -174,7 +174,7 @@ START_TEST(test_strpbrk) {
         {"maximax", "ix"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_ptr_eq(
             strpbrk(a[i][0], a[i][1]),
             s21_strpbrk(a[i][0], a[i][1])
@@ -208,7 +208,7 @@ START_TEST(test_memchr) {
         {"maximax", 'm', 3},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_ptr_eq(
             memchr(a[i].str, a[i].c, a[i].n),
             s21_memchr(a[i].str, a[i].c, a[i].n)
@@ -242,7 +242,7 @@ START_TEST(test_memcmp) {
         {"maximax", "ix", 7},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_int_eq(
             memcmp(a[i].str, a[i].c, a[i].n),
             s21_memcmp(a[i].str, a[i].c, a[i].n)
@@ -276,7 +276,7 @@ START_TEST(test_memcpy) {
         {"maximax", "ix", 7},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         char s1[20];
         strcpy(s1, a[i].str);
         char s2[20];
@@ -383,7 +383,7 @@ START_TEST(test_memmove) {
         {"maximax", "ix", 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         char s1[20];
         strcpy(s1, a[i].str);
         char s2[20];
@@ -421,7 +421,7 @@ START_TEST(test_memset) {
         {"maximax", 48, 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         char s1[20];
         strcpy(s1, a[i].str);
         char s2[20];
@@ -558,7 +558,7 @@ START_TEST(test_strcmp) {
         {"maximax", "ix"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_int_eq(
             strcmp(a[i][0], a[i][1]),
             s21_strcmp(a[i][0], a[i][1])
@@ -592,7 +592,7 @@ START_TEST(test_strncmp) {
         {"maximax", "ix", 5},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_int_eq(
             strncmp(a[i].str, a[i].c, a[i].n),
             s21_strncmp(a[i].str, a[i].c, a[i].n)
@@ -624,7 +624,7 @@ START_TEST(test_strlen) {
         {"maximax"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-//		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      printf("[%s] : [%s]\n", a[i][0], a[i][1]);
         ck_assert_int_eq(
             strlen(a[i].str),
             s21_strlen(a[i].str)
@@ -676,31 +676,31 @@ START_TEST(test_strtok) {
 END_TEST
 
 //START_TEST(NAME_HERE) {
-//	char *a[N_TESTS][2] = {
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//		{"", ""},
-//	};
-//	for (int i = 0; i < N_TESTS; ++i) {
-////		printf("[%s] : [%s]\n", a[i][0], a[i][1]);
-//		ck_assert_ptr_eq(
-//			string.h_function(a[i][0], a[i][1]),
-//			s21_string.h_function(a[i][0], a[i][1])
-//		)
-//	}
+//  char *a[N_TESTS][2] = {
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//      {"", ""},
+//  };
+//  for (int i = 0; i < N_TESTS; ++i) {
+////        printf("[%s] : [%s]\n", a[i][0], a[i][1]);
+//      ck_assert_ptr_eq(
+//          string.h_function(a[i][0], a[i][1]),
+//          s21_string.h_function(a[i][0], a[i][1])
+//      )
+//  }
 //}
 //END_TEST
 
@@ -802,10 +802,10 @@ Suite *string_suite(void) {
     strtok_case = tcase_create("strtok");
     tcase_add_test(strtok_case, test_strtok);
     suite_add_tcase(s, strtok_case);
-    //TCase *NEW	CASE;
-    //NEW CASE = tcase_create("NAME HERE");
-    //tcase_add_test(NEW CASE, NAME HERE);
-    //suite_add_tcase(s, NEW CASE);
+    //  TCase *NEW  CASE;
+    //  NEW CASE = tcase_create("NAME HERE");
+    //  tcase_add_test(NEW CASE, NAME HERE);
+    //  suite_add_tcase(s, NEW CASE);
     return s;
 }
 

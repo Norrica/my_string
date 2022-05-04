@@ -42,9 +42,9 @@ void *s21_memcpy(void *dest, const void *src, size_t n) {
 }
 
 char *s21_strcpy(char *dest, const char *src) {
-    //if (s21_strlen(dest) < s21_strlen(src)) {
-    //	return S21_NULL;
-    //}
+    //  if (s21_strlen(dest) < s21_strlen(src)) {
+    //    return S21_NULL;
+    //  }
     char *d = dest;
     char *s = (char *) src;
     for (; *d || *s; d++, s++) {
@@ -54,13 +54,13 @@ char *s21_strcpy(char *dest, const char *src) {
 }
 
 char *s21_strncpy(char *dest, const char *src, size n) {
-    //char *d = dest;
-    //char *s = (char *) src;
-    //s21_size_t nn = n;
-    //for (; (*d && *s) || nn; d++, s++, nn--) {
-    //    *d = *s;
-    //}
-    //return dest;
+    //  char *d = dest;
+    //  char *s = (char *) src;
+    //  s21_size_t nn = n;
+    //  for (; (*d && *s) || nn; d++, s++, nn--) {
+    //      *d = *s;
+    //  }
+    //  return dest;
     return s21_memcpy(dest, src, n);
 }
 
@@ -235,7 +235,7 @@ char *s21_strtok(char *str, const char *delim) {
         }
         current = &str[second] + 1;
         result = malloc((first + second)
-                            * sizeof(char));//TODO Сделать вместо малок str[second] = '\0'; и strcpy result
+                            * sizeof(char));  // TODO(gladissar) Сделать вместо малок str[second] = '\0'; и strcpy result
         for (size i = first; i < second; ++i) {
             result[i - first] = str[i];
         }
@@ -254,7 +254,10 @@ char *s21_strtok(char *str, const char *delim) {
 }
 
 char *s21_strerror(int errnum) {
-    char *errors[107] = {
+    char ret_val[50];
+    char *ret_val_p = ret_val;
+#if defined(__APPLE__) && defined(__MACH__)
+      char *mac_errors[107] = {
         "Undefined error: 0",
         "Operation not permitted",
         "No such file or directory",
@@ -364,9 +367,154 @@ char *s21_strerror(int errnum) {
         "Interface output queue is full",
     };
     if (errnum > 106 || errnum < 0) {
-        return "Unknown error: ";
+        s21_strcpy(ret_val, "Unknown error: ");
+    } else {
+        s21_strcpy(ret_val, mac_errors[errnum]);
     }
-    return errors[errnum];
+#endif
+
+#if defined(__linux__)
+    char *linux_errors[132] = {
+        "Undefined error: 0",
+        "Operation is not permitted",
+        "No such file or directory exists",
+        "No such process exists",
+        "Interrupted system cal",
+        "Input/output error",
+        "No such device or address exists.",
+        "Argument list is too long",
+        "Exec format error",
+        "Bad file descriptor",
+        "No child process exists",
+        "Resource is temporarily unavailable",
+        "System cannot allocate memory",
+        "Permission is denied",
+        "Bad address",
+        "Block device is required",
+        "Device or resource is busy",
+        "File already exists",
+        "Invalid cross-device link",
+        "No such device",
+        "Not a directory",
+        "A directory",
+        "An invalid argument",
+        "Too many open files in system",
+        "Too many open files",
+        "An inappropriate ioctl for device",
+        "Text file is busy",
+        "File is too large",
+        "No space left on device",
+        "Illegal seek",
+        "Read-only file system",
+        "Too many links",
+        "Case of broken pipe",
+        "Numerical argument is out of domain",
+        "Numerical result is out of range",
+        "Resource deadlock is avoided",
+        "File name is too long",
+        "No locks are available",
+        "Function is not implemented",
+        "Directory is not empty",
+        "Too many levels of symbolic links",
+        "No message of desired type",
+        "Identifier is removed",
+        "Channel number is out of range",
+        "Level 2 is not synchronized",
+        "Level 3 is halted",
+        "Level 3 is reset",
+        "Link number is out of range",
+        "Protocol driver is not attached",
+        "No CSI structure available",
+        "Level 2 is halted",
+        "Invalid exchange",
+        "Invalid request descriptor",
+        "Exchange is full",
+        "No anode",
+        "Invalid request code",
+        "Invalid slot",
+        "Bad font file format",
+        "Device is not a stream",
+        "No data available",
+        "Timer is expired",
+        "Out of streams resources",
+        "Machine is not on the network",
+        "Package is not installed",
+        "Object is remote",
+        "The link has been severed",
+        "Advertise error",
+        "Srmount error",
+        "Communication error on send",
+        "Protocol error",
+        "Multihop attempted",
+        "Rfs specific error",
+        "Bad message",
+        "Value is too large for defined data type",
+        "Name is not unique on network",
+        "File descriptor is in bad state",
+        "Remote address is changed",
+        "Cannot access a needed shared library",
+        "Accessing a corrupted shared library",
+        ".Lib section in a.out is corrupted",
+        "Attempting to link in too many shared libraries",
+        "Cannot exec a shared library directly",
+        "An invalid or incomplete multibyte or wide character",
+        "Interrupted system call should be restarted",
+        "Streams pipe error",
+        "Too many users",
+        "Socket operation on non-socket",
+        "Destination address is required",
+        "Message is too long",
+        "Protocol is wrong type for socket",
+        "Protocol is not available",
+        "Protocol is not supported",
+        "Socket type is not supported",
+        "Operation is not supported",
+        "Protocol family is not supported",
+        "Address family is not supported by protocol",
+        "Address is already in use",
+        "System cannot assign requested address",
+        "Network is down",
+        "Network is unreachable",
+        "Network has dropped connection on reset",
+        "Software caused connection abort",
+        "Connection is reset by peer",
+        "No buffer space available",
+        "Transport endpoint is already connected",
+        "Transport endpoint is not connected",
+        "System cannot send after transport endpoint shutdown",
+        "Too many references: cannot splice.",
+        "Connection is timed out",
+        "Connection is refused",
+        "Host is down",
+        "No route to host",
+        "Operation is already in progress",
+        "Operation is now in progress",
+        "Stale file handle",
+        "Structure needs cleaning",
+        "Not a XENIX named type file",
+        "No XENIX semaphores are available",
+        "Named type file",
+        "Remote I/O error",
+        "Disk quota is exceeded",
+        "No medium found",
+        "Wrong medium type",
+        "Operation is cancelled",
+        "Required key is not available",
+        "Key has expired",
+        "Key has been revoked",
+        "Key was rejected by service",
+        "Owner is died",
+        "No recoverable state",
+        "Operation is not possible due to RF-kill",
+        "Memory page has hardware error",
+    };
+    if (errnum > 131 || errnum < 0) {
+        s21_strcpy(ret_val, "Unknown error: ");
+    } else {
+        s21_strcpy(ret_val, linux_errors[errnum]);
+    }
+#endif
+    return ret_val_p;
 }
 
 //void *insert(char *dest, char *src, int x) {
@@ -602,7 +750,7 @@ int find_width(char *string, size len) {
     /*Вернуть atoi(символов)*/
     /*Учесть что передается len и за длину формат-строки(от % до d) не заходить*/
 }
-int  find_precision(char *string, size len){
+int  find_precision(char *string, size len) {
     /*Аналогично предыдущему, от . до d/f*/
 }
 
@@ -646,15 +794,15 @@ int s21_sprintf(char *str, char *fmt, ...) {
     return 0; //TODO remove
 }
 
-#include <string.h>
-#include <stdio.h>
+/* #include <string.h> */
+/* #include <stdio.h> */
 
-int main() {
-    //printf("%s %d",__FILE__, __LINE__);
+/* int main() { */
+/*     //printf("%s %d",__FILE__, __LINE__); */
 
-    char str[50];
-    char *fmt = "%+0123.5dd";
-    puts("");
-    printf("%0+7d", 5);
-    puts(str);
-}
+/*     char str[50]; */
+/*     char *fmt = "%+0123.5dd"; */
+/*     puts(""); */
+/*     printf("%0+7d", 5); */
+/*     puts(str); */
+/* } */
