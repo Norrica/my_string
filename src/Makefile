@@ -18,6 +18,7 @@ clean:
 	-rm test
 	-rm *.gc*
 	-rm -rf report
+	-rm *.info
 
 rebuild: clean build
 
@@ -32,8 +33,7 @@ test: s21_string.a
 gcov_report: test
 	./test
 	gcov test.c
-	lcov --directory . --zerocounters
-	lcov -c --directory . --output-file test.info # вынести директорию в отдельную переменную?
+	geninfo . -b . -o ./test.info
 	genhtml test.info --output-directory report
 
 local_debug:
