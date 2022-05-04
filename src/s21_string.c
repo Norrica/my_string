@@ -703,15 +703,21 @@ char *my_ftoa(float num, int precision) {
 //  %.5f
 //  Это gbpltw
 typedef struct {
-  char type_specifier;
+  char type_specifier; /*c, d, i, f, s, u, %*/
   char type_length;
-  char flag;
-  int width;
-  int num_width;
+  int sign;
+  int pad0;
+  int pad_;
+
+  int str_width; /*00005 or 05*/
+  int num_len; /*l,r*/
   int precision;
   int err_flag; /*1 - OK, 0 - ERR*/
 } FMT;
 
+void init_FMT(FMT *fmt){
+    *fmt = {'\0',}
+}
 char *const TYPE_SPECIFIERS = "cdifsu";
 char *const LEN_SPECIFIERS = "lh";
 char *const DIGITS = "0123456789";
@@ -738,30 +744,26 @@ char find_specifier(char *string) {
     return spec[0];
 }
 
-int find_sign_and_filler(char *string, size len) {
+int find_sign(char *string, size len) {
     char sign/* = s21_strpbrk(string, SIGNS)*/;
-    /*TODO Возможен баг, что мы найдем %3+, который не должен учитываться.*/
+    /*TODO Возможен баг, что мы найдем %3d+, который не должен учитываться.*/
     /*В следующей строке вроде без него*/
 
     sign = string[0];
     switch (sign) {
         case '-':return -1;
-        case '0':return 0; /*Надо заполнять нулями*/
-        case '1':
-        case '2':
-        case '3':
-        case '4':
-        case '5':
-        case '6':
-        case '7':
-        case '8':
-        case '9':return -10; /*Любое число перед + это ошибка. -1 не ошибка.*/
         case '+':
-        case '\0':          /*Нет явно знака - '+'*/
         default:return 1;   /*Нет явно знака - '+'*/
     }
 }
-
+int find_filler(char *string, size len) {
+    char filler = string[0];
+    switch (filler) {
+        case '0':return 0; /*Надо заполнять нулями*/
+        case ' ':return 1;/*Заполнять пробелами*/
+        default:return -1;
+    }
+}
 int find_length(char *string, size len) {
     char *var_len = s21_strpbrk(string, SIGNS);
     if (var_len) {
@@ -782,6 +784,7 @@ int find_precision(char *string, size len) {
     /*Аналогично предыдущему, от . до d/f*/
 }
 
+/* % 12.5f*/
 int s21_sprintf(char *str, char *fmt, ...) {
     /*TODO padding*/
     va_list args;
@@ -798,35 +801,31 @@ int s21_sprintf(char *str, char *fmt, ...) {
     /*s21_size_t is_float;*/
     /*s21_size_t curr = 0;*/
     for (size i = 0; i < s21_strlen(fmt); ++i) {
-        str[i] = fmt[i];
         /*FMT curr_fmt;*/
         if (fmt[i] == '%' && fmt[i + 1] != '%') {
             char datatype = find_specifier(&fmt[i] + 1);
             if (datatype == '\0') {
                 return ERROR;
             }
-            size format_len = s21_strchr(fmt, datatype) - &fmt[i];
-            int sign = find_sign_and_filler(&fmt[i] + 1, format_len);
+            size format_len = s21_strchr(fmt, datatype) - &fmt[i]; /*if len NULL - return error*/
+            int sign = find_sign(&fmt[i] + 1, format_len);
             if (sign == -10) return ERROR;
             int length = find_length(&fmt[i] + 1, format_len);
             int width = find_width(&fmt[i] + 1, format_len);
         } else {
-            /*TODO just add % to res_str*/
-            i++;
+            str[i] = fmt[i];
         }
     }
     return 0; /*TODO remove*/
 }
-//
-//  #include <string.h>
-//  #include <stdio.h>
-//
-//  int main() {
-//      //printf("%s %d",__FILE__, __LINE__);
-//
-//      char str[50];
-//      char *fmt = "%+0123.5dd";
-//      puts("");
-//      printf("%0+7d", 5);
-//      puts(str);
-//  }
+#include <string.h>
+#include <stdio.h>
+
+int main() {
+    //printf("%s %d",__FILE__, __LINE__);
+    char str[50];
+    char *fmt = "%+0123.5dd";
+    puts("");
+    printf("%7u", 5);
+    puts(str);
+}

@@ -109,7 +109,7 @@ The only support for strings in the programming language proper is that the comp
 
 where:
 - str − This is the C string that the function processes as its source to retrieve the data;
-- format − This is the C string that contains one or more of the following items: Whitespace character, Non-whitespace character and Format specifiers. A format specifier for print functions follows this prototype: %[flags][width][.precision][length]specifier. A format specifier for scan functions follows this prototype: %[*][width][length]specifier.
+- format − This is the C string that contains one or more of the following items: Whitespace character, Non-whitespace character and Format specifiers. A format specifier for print functions follows this prototype: %[flags][char_width][.precision][length]specifier. A format specifier for scan functions follows this prototype: %[*][char_width][length]specifier.
 
 ### sprintf And sscanf Specifiers
 
@@ -136,18 +136,18 @@ where:
 
 | No. | Flags | Description |
 | --- | --- | --- |
-| 1 | - | Left-justify within the given field width; Right justification is the default (see width sub-specifier). |
+| 1 | - | Left-justify within the given field char_width; Right justification is the default (see char_width sub-specifier). |
 | 2 | + | Forces to precede the result with a plus or minus sign (+ or -) even for positive numbers. By default, only negative numbers are preceded with a -ve sign. |
 | 3 | (space) | If no sign is going to be written, a blank space is inserted before the value. |
 | 4 | # | Used with o, x or X specifiers the value is preceded with 0, 0x or 0X respectively for values different than zero. Used with e, E and f, it forces the written output to contain a decimal point even if no digits would follow. By default, if no digits follow, no decimal point is written. Used with g or G the result is the same as with e or E but trailing zeros are not removed. |
-| 5 | 0 | Left-pads the number with zeroes (0) instead of spaces, where padding is specified (see width sub-specifier). |
+| 5 | 0 | Left-pads the number with zeroes (0) instead of spaces, where padding is specified (see char_width sub-specifier). |
 
 ### sprintf And sscanf Width Description
 
 | No. |	Width | Description |
 | --- | --- | --- |
 | 1	| (number) | Minimum number of characters to be printed. If the value to be printed is shorter than this number, the result is padded with blank spaces. The value is not truncated even if the result is larger. |
-| 2 | * | In sprintf the * sign means, that the width is not specified in the format string, but as an additional integer value argument preceding the argument that has to be formatted. In sscanf the * sign placed after % and before the format specifier reads data of the specified type, but suppresses their assignment. |
+| 2 | * | In sprintf the * sign means, that the char_width is not specified in the format string, but as an additional integer value argument preceding the argument that has to be formatted. In sscanf the * sign placed after % and before the format specifier reads data of the specified type, but suppresses their assignment. |
 
 ### sprintf Precision Description
 

@@ -37,5 +37,5 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) $(FLAGS) s21_string.c -o local_test
+		$(CC) s21_string.c -o local_test
 .PHONY : all build clean
