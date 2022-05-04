@@ -4,7 +4,6 @@
 
 #include <stdarg.h>
 #include <math.h>
-
 #include "s21_string.h"
 
 void *s21_memchr(const void *str, int c, size_t n) {
@@ -120,7 +119,6 @@ size s21_strspn(const char *str1, const char *str2) {
         || *str1 == '\0' || *str2 == '\0') {
         return 0;
     }
-
     for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
         for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
             if (*s1 == *s2) {
@@ -215,7 +213,7 @@ int s21_strncmp(const char *str1, const char *str2, size n) {
 
 size s21_strlen(const char *str) {
     size len = 0;
-    for (; str[len]; len++);
+    for (; str[len]; len++) {}
     return len;
 }
 
@@ -234,8 +232,9 @@ char *s21_strtok(char *str, const char *delim) {
                 return S21_NULL;
         }
         current = &str[second] + 1;
-        result = malloc((first + second)
-                            * sizeof(char));  // TODO(gladissar) Сделать вместо малок str[second] = '\0'; и strcpy result
+        /*TODO(gladissar)
+         * Сделать вместо малок str[second] = '\0'; и strcpy result*/
+        result = malloc((first + second) * sizeof(char));
         for (size i = first; i < second; ++i) {
             result[i - first] = str[i];
         }
@@ -257,7 +256,7 @@ char *s21_strerror(int errnum) {
     char ret_val[50];
     char *ret_val_p = ret_val;
 #if defined(__APPLE__) && defined(__MACH__)
-      char *mac_errors[107] = {
+    char *mac_errors[107] = {
         "Undefined error: 0",
         "Operation not permitted",
         "No such file or directory",
@@ -372,7 +371,6 @@ char *s21_strerror(int errnum) {
         s21_strcpy(ret_val, mac_errors[errnum]);
     }
 #endif
-
 #if defined(__linux__)
     char *linux_errors[132] = {
         "Undefined error: 0",
@@ -519,11 +517,12 @@ char *s21_strerror(int errnum) {
 
 void *s21_to_lower(const char *str) {
     s21_size_t len = s21_strlen(str);
-    char *result = malloc(len*sizeof(char));
+    char *result = malloc(len * sizeof(char));
     if (result == S21_NULL) {
-        return S21_NULL; }
+        return S21_NULL;
+    }
     s21_strcpy(result, str);
-    for (int i=0; i<len; i++) {
+    for (int i = 0; i < len; i++) {
         if (str[i] >= 65 && str[i] <= 90)
             result[i] = str[i] + 32;
         else
@@ -534,11 +533,12 @@ void *s21_to_lower(const char *str) {
 
 void *s21_to_upper(const char *str) {
     s21_size_t len = s21_strlen(str);
-    char *result = malloc(len*sizeof(char));
+    char *result = malloc(len * sizeof(char));
     if (result == S21_NULL) {
-        return S21_NULL; }
+        return S21_NULL;
+    }
     s21_strcpy(result, str);
-    for (int i=0; str[i]!= '\0'; i++)
+    for (int i = 0; str[i] != '\0'; i++)
         if (str[i] >= 97 && str[i] <= 122)
             result[i] = str[i] - 32;
         else
@@ -552,7 +552,8 @@ void *s21_trim(const char *src, const char *trim_chars) {
     temp = malloc(s21_strlen(src));
     void *p = NULL;
     s21_strcpy(temp, src);
-    for (i = s21_strlen(temp) - 1; i >= 0 && s21_strchr(trim_chars, temp[i]) != NULL; i--) {
+    for (i = s21_strlen(temp) - 1;
+         i >= 0 && s21_strchr(trim_chars, temp[i]) != NULL; i--) {
         temp[i] = '\0';
     }
     while (temp[0] != '\0' && s21_strchr(trim_chars, temp[0]) != NULL) {
@@ -569,12 +570,12 @@ void *s21_insert(const char *src, const char *str, size_t start_index) {
     int total_length = s21_strlen(src) + s21_strlen(str);
     if (s21_strlen(src) >= start_index) {
         temp = malloc(total_length);
-        for (int i=0; i < s21_strlen(src); i++) {
+        for (int i = 0; i < s21_strlen(src); i++) {
             temp[i] = src[i];
             counter++;
         }
-        for (int i = start_index; i < total_length; i++ ) {
-            temp[i] = str[i-start_index];
+        for (int i = start_index; i < total_length; i++) {
+            temp[i] = str[i - start_index];
         }
         for (int i = start_index + s21_strlen(str); i < total_length; i++) {
             temp[i] = src[i - s21_strlen(str)];
@@ -585,66 +586,27 @@ void *s21_insert(const char *src, const char *str, size_t start_index) {
     return p;
 }
 
-//void *insert(char *dest, char *src, int x) {
-//    char *res;
-//    res = (char *) malloc(s21_strlen(dest) + s21_strlen(src) + 1);
-//    s21_strncpy(res, dest, x);
-//    res[x] = '\0';
-//    s21_strcat(res, src);
-//    s21_strcat(res, dest + x);
-//    s21_strcpy(dest, res); //Удалить если не понадобится
-//    //free(res);
-//    return res;
-//}
+void *insert(char *dest, char *src, int x) {
+    char *res;
+    res = (char *) malloc(s21_strlen(dest) + s21_strlen(src) + 1);
+    s21_strncpy(res, dest, x);
+    res[x] = '\0';
+    s21_strcat(res, src);
+    s21_strcat(res, dest + x);
+    s21_strcpy(dest, res); /*Удалить если не понадобится*/
+    //  free(res);
+    return res;
+}
 
-//char *str_replace(char *orig, char *rep, char *with) {
-//    char *result;
-//    char *ins;
-//    char *tmp;
-//    s21_size_t len_rep;
-//    s21_size_t len_with;
-//
-//    int count;
-//
-//    if (!orig || !rep)
-//        return NULL;
-//    len_rep = s21_strlen(rep);
-//    if (len_rep == 0)
-//        return NULL;
-//    if (!with)
-//        with = "";
-//    len_with = s21_strlen(with);
-//
-//    ins = orig;
-//    for (count = 0; (tmp = s21_strstr(ins, rep)); ++count) {
-//        ins = tmp + len_rep;
-//    }
-//    tmp = result = malloc(s21_strlen(orig) + (len_with - len_rep) * count + 1);
-//    if (!result)
-//        return NULL;
-//
-//    while (count--) {
-//        size_t len_front;
-//        ins = s21_strstr(orig, rep);
-//        len_front = ins - orig;
-//        tmp = s21_strncpy(tmp, orig, len_front) + len_front;
-//        tmp = s21_strcpy(tmp, with) + len_with;
-//        orig += len_front + len_rep;
-//    }
-//    s21_strcpy(tmp, orig);
-//    return result;
-//}
 int my_atoi(const char *c) {
     char *ch = (char *) c;
     int res = 0, sign = 1;
     while (*ch == ' ') {
         ch++;
     }
-
     if (*ch == '-' || *ch == '+') {
         sign = 1 - 2 * (*ch++ == '-');
     }
-
     while (*ch != '\0') {
         if (*ch >= '0' && *ch <= '9')
             res = res * 10 + *ch++ - '0';
@@ -657,19 +619,19 @@ int my_atoi(const char *c) {
 double my_atof(const char *c) {
     char *ch = (char *) c;
     int start_position = 0, sign = 1, dot_position = 0;
-    // удалить пробелы
+    /*удалить пробелы*/
     for (int i = 0; ch[i] != '\0'; i++) {
         if (ch[i] == ' ')
             start_position++;
     }
 
-    // проверить положительное или отрицательное
+    /*проверить положительное или отрицательное*/
     if (ch[start_position] == '-' || ch[start_position] == '+') {
         sign = 1 - 2 * (ch[start_position] == '-');
         start_position++;
     }
 
-    // найти точку - разделитель
+    /*найти точку - разделитель*/
     for (int i = start_position; ch[i] != '\0'; i++) {
         if (ch[i] == '.') {
             dot_position = i;
@@ -677,12 +639,11 @@ double my_atof(const char *c) {
         }
     }
 
-    // если нет нуля
-    if (!dot_position)
+    /*если нет нуля*/
+    if (!dot_position) {
         return my_atoi(c);
-
-        // если есть нуль, то подсчитать int
-    else {
+    } else {
+        /*если есть нуль, то подсчитать int*/
         double integer_part = 0;
         for (int i = start_position;
              i < dot_position &&
@@ -695,7 +656,7 @@ double my_atof(const char *c) {
         if (start_position < dot_position) {
             return integer_part;
         }
-        // подсчитать float
+        /*подсчитать float*/
         double float_part = 0;
         for (int i = dot_position + 1;
              ch[i] != '\0' && ch[i] >= '0' && ch[i] <= '9';
@@ -721,7 +682,7 @@ char *my_itoa(int num) {
         num /= 10;
         len--;
     }
-    //s21_memset(&converted[s21_strlen(fmt)],)
+    /*s21_memset(&converted[s21_strlen(fmt)],)*/
     return converted;
 }
 
@@ -738,9 +699,9 @@ char *my_ftoa(float num, int precision) {
     return res;
 }
 
-//c, d, i, f, s, u, %
-//%.5f
-//Это gbpltw
+//  c, d, i, f, s, u, %
+//  %.5f
+//  Это gbpltw
 typedef struct {
   char type_specifier;
   char type_length;
@@ -770,10 +731,10 @@ typedef enum datatype { CHAR, INT1, INT2, FLOAT, STRING, UINT, ERROR = -1 }
 
 char find_specifier(char *string) {
     char *spec = s21_strpbrk(string, TYPE_SPECIFIERS);
-    //if (spec)
-    //    return spec[0];
-    //else
-    //    return '\0';
+    //  if (spec)
+    //      return spec[0];
+    //  else
+    //      return '\0';
     return spec[0];
 }
 
@@ -794,8 +755,7 @@ int find_sign_and_filler(char *string, size len) {
         case '6':
         case '7':
         case '8':
-        case '9':
-            return -10; /*Любое число перед + это ошибка. -1 не ошибка.*/
+        case '9':return -10; /*Любое число перед + это ошибка. -1 не ошибка.*/
         case '+':
         case '\0':          /*Нет явно знака - '+'*/
         default:return 1;   /*Нет явно знака - '+'*/
@@ -818,11 +778,9 @@ int find_width(char *string, size len) {
     /*Вернуть atoi(символов)*/
     /*Учесть что передается len и за длину формат-строки(от % до d) не заходить*/
 }
-int  find_precision(char *string, size len) {
+int find_precision(char *string, size len) {
     /*Аналогично предыдущему, от . до d/f*/
 }
-
-
 
 int s21_sprintf(char *str, char *fmt, ...) {
     /*TODO padding*/
@@ -841,7 +799,7 @@ int s21_sprintf(char *str, char *fmt, ...) {
     /*s21_size_t curr = 0;*/
     for (size i = 0; i < s21_strlen(fmt); ++i) {
         str[i] = fmt[i];
-        //FMT curr_fmt;
+        /*FMT curr_fmt;*/
         if (fmt[i] == '%' && fmt[i + 1] != '%') {
             char datatype = find_specifier(&fmt[i] + 1);
             if (datatype == '\0') {
@@ -849,28 +807,26 @@ int s21_sprintf(char *str, char *fmt, ...) {
             }
             size format_len = s21_strchr(fmt, datatype) - &fmt[i];
             int sign = find_sign_and_filler(&fmt[i] + 1, format_len);
-            if (sign == -10) return  ERROR;
+            if (sign == -10) return ERROR;
             int length = find_length(&fmt[i] + 1, format_len);
             int width = find_width(&fmt[i] + 1, format_len);
-
         } else {
             /*TODO just add % to res_str*/
             i++;
         }
     }
-
-    return 0; //TODO remove
+    return 0; /*TODO remove*/
 }
-
-/* #include <string.h> */
-/* #include <stdio.h> */
-
-/* int main() { */
-/*     //printf("%s %d",__FILE__, __LINE__); */
-
-/*     char str[50]; */
-/*     char *fmt = "%+0123.5dd"; */
-/*     puts(""); */
-/*     printf("%0+7d", 5); */
-/*     puts(str); */
-/* } */
+//
+//  #include <string.h>
+//  #include <stdio.h>
+//
+//  int main() {
+//      //printf("%s %d",__FILE__, __LINE__);
+//
+//      char str[50];
+//      char *fmt = "%+0123.5dd";
+//      puts("");
+//      printf("%0+7d", 5);
+//      puts(str);
+//  }

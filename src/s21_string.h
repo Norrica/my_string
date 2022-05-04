@@ -1,12 +1,11 @@
-#ifndef S21_STRING_H
-#define S21_STRING_H
+#ifndef SRC_S21_STRING_H_
+#define SRC_S21_STRING_H_
 #include <stdio.h>
 #include <stdlib.h>
 
 typedef unsigned long s21_size_t;
 typedef s21_size_t size;
 #define S21_NULL (void *)0
-
 void *s21_memchr(const void *str, int c, s21_size_t n);
 
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
@@ -61,4 +60,4 @@ char find_specifier(char *string);
 
 int s21_sprintf(char *str, char *fmt, ...);
 
-#endif
+#endif  //  SRC_S21_STRING_H_

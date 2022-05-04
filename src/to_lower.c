@@ -6,7 +6,7 @@ void *to_lower(const char *str) {
     if (result == S21_NULL) {
         return S21_NULL; }
     s21_strcpy(result, str);
-    for (int i=0; i<len; i++) {
+    for (int i=0; i < len; i++) {
         if (str[i] >= 65 && str[i] <= 90)
             result[i] = str[i] + 32;
         else

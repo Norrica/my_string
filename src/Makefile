@@ -1,6 +1,6 @@
 #all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS = -Wall -Werror -Wextra -fprofile-arcs -ftest-coverage
+FLAGS = -Wall -Werror -Wextra
 
 TARGET=test.c my_atof.c
 
@@ -9,7 +9,7 @@ all: build
 build: s21_string.a test
 
 debug:
-FLAGS += -g -O0
+	FLAGS += -g -O0
 
 
 clean:
@@ -37,5 +37,5 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) -Wall -Werror -Wextra s21_string.c -o local_test
+		$(CC) $(FLAGS) s21_string.c -o local_test
 .PHONY : all build clean
