@@ -369,6 +369,74 @@ char *s21_strerror(int errnum) {
     return errors[errnum];
 }
 
+void *s21_to_lower(const char *str) {
+    s21_size_t len = s21_strlen(str);
+    char *result = malloc(len*sizeof(char));
+    if (result == S21_NULL) {
+        return S21_NULL; }
+    s21_strcpy(result, str);
+    for (int i=0; i<len; i++) {
+        if (str[i] >= 65 && str[i] <= 90)
+            result[i] = str[i] + 32;
+        else
+            result[i] = str[i];
+    }
+    return result;
+}
+
+void *s21_to_upper(const char *str) {
+    s21_size_t len = s21_strlen(str);
+    char *result = malloc(len*sizeof(char));
+    if (result == S21_NULL) {
+        return S21_NULL; }
+    s21_strcpy(result, str);
+    for (int i=0; str[i]!= '\0'; i++)
+        if (str[i] >= 97 && str[i] <= 122)
+            result[i] = str[i] - 32;
+        else
+            result[i] = str[i];
+    return result;
+}
+
+void *s21_trim(const char *src, const char *trim_chars) {
+    static char *temp;
+    int i;
+    temp = malloc(s21_strlen(src));
+    void *p = NULL;
+    s21_strcpy(temp, src);
+    for (i = s21_strlen(temp) - 1; i >= 0 && s21_strchr(trim_chars, temp[i]) != NULL; i--) {
+        temp[i] = '\0';
+    }
+    while (temp[0] != '\0' && s21_strchr(trim_chars, temp[0]) != NULL) {
+        s21_memmove(&temp[0], &temp[1], s21_strlen(temp));
+    }
+    p = temp;
+    return p;
+}
+
+void *s21_insert(const char *src, const char *str, size_t start_index) {
+    static char *temp;
+    void *p = S21_NULL;
+    int counter = 0;
+    int total_length = s21_strlen(src) + s21_strlen(str);
+    if (s21_strlen(src) >= start_index) {
+        temp = malloc(total_length);
+        for (int i=0; i < s21_strlen(src); i++) {
+            temp[i] = src[i];
+            counter++;
+        }
+        for (int i = start_index; i < total_length; i++ ) {
+            temp[i] = str[i-start_index];
+        }
+        for (int i = start_index + s21_strlen(str); i < total_length; i++) {
+            temp[i] = src[i - s21_strlen(str)];
+        }
+        temp[total_length] = '\0';
+        p = temp;
+    }
+    return p;
+}
+
 //void *insert(char *dest, char *src, int x) {
 //    char *res;
 //    res = (char *) malloc(s21_strlen(dest) + s21_strlen(src) + 1);
