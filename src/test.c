@@ -3,28 +3,32 @@
 #include "s21_string.h"
 #include <check.h>
 
-#define N_TESTS 16
+#define N_TESTS 50
 
-
+typedef struct values {
+    const void *str
+    int c
+    size_t n
+};
 START_TEST(test_memchr) {
     typedef struct s {
-        char *str;
-        char c;
-        int n;
+        const void *str;
+        int c;
+        size_t n;
     } test;
     test a[N_TESTS] = {
-            {"ololo", 'o', 1},
-            {"", ' ', 1},
-            {"   ", ' ', 1},
-            {" ", ' ', 1},
-            {"this is test", 'i', 1},
-            {"aaaaaabaaaaaa", 'b', 1},
-            {"aaaaaabaaaaaa", 'a', 1},
-            {"aaaaaabaaaaaa", 'b', 7},
-            {"aaaaaabaaaaaa", 'a', 7},
-            {"close", 'x', 5},
-            {"close", 'c', 3},
-            {"close", 'l', 3},
+            {"Since we are creating", 'e', 21},
+            {"a library to handle money", 'l', 3},
+            {"we will first create an interface", 'i', 4},
+            {"this is test", 'x', 12},
+            {"void *memchr(const void *str, int c, size_t n)", '*', 46},
+            {"Autotools works. If you need help ", 'A', 35},
+            {"Check distribution; you don’t need $", '$', 36},
+            {"time cutting and pasting or (w", '\0', 31},
+            {"it\0says to build these programs only", 's', 36},
+            {"function\0in ‘main.c’ should be main() itself. In ", '\0', 49},
+            {"a\nlibrary to handle money, we will first create", ' ', 47},
+            {"Note\nthat one could do something similar ", '\n', 41},
             {"maximax", 'x', 1},
             {"maximax", 'm', 1},
             {"maximax", 'x', 3},
