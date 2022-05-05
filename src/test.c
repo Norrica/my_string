@@ -5,11 +5,6 @@
 
 #define N_TESTS 50
 
-typedef struct values {
-    const void *str
-    int c
-    size_t n
-};
 START_TEST(test_memchr) {
     typedef struct s {
         const void *str;
@@ -25,14 +20,48 @@ START_TEST(test_memchr) {
             {"Autotools works. If you need help ", 'A', 35},
             {"Check distribution; you don’t need $", '$', 36},
             {"time cutting and pasting or (w", '\0', 31},
-            {"it\0says to build these programs only", 's', 36},
-            {"function\0in ‘main.c’ should be main() itself. In ", '\0', 49},
-            {"a\nlibrary to handle money, we will first create", ' ', 47},
-            {"Note\nthat one could do something similar ", '\n', 41},
-            {"maximax", 'x', 1},
-            {"maximax", 'm', 1},
-            {"maximax", 'x', 3},
-            {"maximax", 'm', 3},
+            {"it\0says\0to buil\nthese programs only", 's', 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0', 49},
+            {"a\nlibrary\nto handle\0money, we will first create", ' ', 47},
+            {"Note\nthat\none could\0do something similar ", '\n', 41},
+            {"you   can redistribute it and/or", ' ', 32},
+            {"FOR A PARTICULAR PURPOSE", 'p', 24},
+            {"WITHOUT ANY WARRANTY", 'W', 20},
+            {" to writing code says that we should write the unit test befor", ' ', 62},
+            {"Of course, we can’t do classes with C ", ' ', 38},
+            {"ays that we should write the unit ", '\n', 34},
+            {"Check     to specifically     assert      ", '\t', 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t', 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"', 54},
+            {"Check to\nspecifically\0assert     \t", '\t', 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", '\0', 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", '\n', 56},
+            {"2020-06-21 08:52:50.000000000 -0700", '-', 35},
+            {"кто прочитал тот 10x", '1', 20},
+            {"chisto по преколу написал", 'h', 25},
+            {"@@ -1,24 +1,31 @@", '@', 9999999999999999},
+            {"errors are, in a way, unit test failures of their own, tell", 't', 0},
+            {"get a whole host of compilation err", 'e', 1},
+            {"ely write code that won", 'e', -1},
+            {"dit the sources so that the unit test compiles, we are actually ", 'u', -64},
+            {"", ' ', 1},
+            {"", ' ', 0},
+            {" ", ' ', 1},
+            {" ", ' ', 0},
+            {"\0", '\0', 1},
+            {"", '\0', 1},
+            {"\n", ' ', 1},
+            {"\n", '\n', 1},
+            {"\n\0", '\0', 2},
+            {"\0\n", '\n', 2},
+            {"0", '\0', 1},
+            {"n", '\n', 1},
+            {"е", 'e', 1},
+            {"---", '-', 3},
+            {"--.", '.', 3},
+            {"([{}])", '(', 4},
+            {"([{}])", '{', 4},
+            {"([{}])", ']', 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
@@ -46,30 +75,68 @@ START_TEST(test_memcmp) {
     typedef struct s {
         char *str;
         char *c;
-        int n;
+        size_t n;
     } test;
+    /*
+     * TODO:
+     * test.c:134:F:memcmp:test_memcmp:0: Assertion 'memcmp(a[i].str, a[i].c, a[i].n) == s21_memcmp(a[i].str, a[i].c, a[i].n)' failed: memcmp(a[i].str, a[i].c, a[i].n) == 107, s21_memcmp(a[i].str, a[i].c, a[i].n) == -149
+     */
     test a[N_TESTS] = {
-            {"this is test", "is", 1},
-            {"this is test", "is", 10},
-            {"abaaaaaa", "baa", 1},
-            {"abaaaaaa", "baa", 3},
-            {"abaaaaaa", "baa", 4},
-            {"abaaaaaa", "ab", 1},
+            {"Since we are creating", "Since we are creating", 21},
+            {"a library to handle money", "a library to handle money", 24},
+            {"we will first create an interface", "we will first create an interface", 33},
+            {"this is test", "this", 12},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
+            {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
+            {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
+            {"Note\nthat\none could\0do something similar ", "Note\n", 41},
+            {"you   can redistribute it and/or", "you can", 32},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p", 24},
+            {"WITHOUT ANY WARRANTY", "WITHOUT ", 20},
+            {" to writing code says that we should write the unit test befor", " ", 62},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
+            {"ays that we should write the unit ", "ays\n", 34},
+            {"Check     to specifically     assert      ", "Check     to  specifically", 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
+            {"кто прочитал тот 10x", "кто прочитал тот", 20},
+            {"chisto по преколу написал", "chisto", 25},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
+            {"errors are, in a way, unit test failures of their own, tell", "errors", 	9999999999999999},
+            {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
+            {"ely write code that won", "ely write code that won", 1},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
             {"", "", 1},
-            {"", "    ", 1},
-            {"   ", "", 1},
-            {"   ", " ", 1},
+            {"", " ", 0},
             {" ", " ", 1},
-            {"close", "x", 5},
-            {"maximax", "ax", 7},
-            {"maximax", "max", 7},
-            {"maximax", "im", 7},
-            {"maximax", "ix", 7},
+            {" ", " ", 0},
+            {"\0", "\0", 1},
+            {"", "\0", 1},
+            {"\n", " ", 1},
+            {"\n", "\n", 1},
+            {"\n\0", "\0", 2},
+            {"\0\n", "\n", 2},
+            {"0", "\0", 1},
+            {"n", "\n", 1},
+            {"е", "e", 1},
+            {"---", "-", 3},
+            {"--.", ".", 3},
+            {"([{}])", "(", 4},
+            {"([{}])", "([", 4},
+            {"([{}])", "([{}]", 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_int_eq(
                 memcmp(a[i].str, a[i].c, a[i].n),
-                s21_memcmp(a[i].str, a[i].c, a[i].n));
+                memcmp(a[i].str, a[i].c, a[i].n));
     }
 }
 END_TEST
@@ -78,30 +145,64 @@ START_TEST(test_memcpy) {
     typedef struct s {
         char *str;
         char *c;
-        int n;
+        size_t n;
     } test;
     test a[N_TESTS] = {
-            {"this is test", "is", 1},
-            {"this is test", "is", 10},
-            {"abaaaaaa", "baa", 1},
-            {"abaaaaaa", "baa", 3},
-            {"abaaaaaa", "baa", 4},
-            {"abaaaaaa", "ab", 1},
+            {"Since we are creating", "Since we are creating", 21},
+            {"a library to handle money", "a l", 3},
+            {"we will first create an interface", "we wi", 4},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
+            {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
+            {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
+            {"Note\nthat\none could\0do something similar ", "Note\n", 41},
+            {"you   can redistribute it and/or", "you can", 32},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p", 7},
+            {"WITHOUT ANY WARRANTY", "WITHOUT ", 8},
+            {" to writing code says that we should write the unit test befor", " ", 62},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
+            {"ays that we should write the unit ", "ays\n", 34},
+            {"Check     to specifically     assert      ", "Check     to  specifically", 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
+            {"кто прочитал тот 10x", "10x", 3},
+            {"chisto по преколу написал", "chisto по", 9},
+            {"это же mixer", "это же mixer", 12},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
+            {"errors are, in a way, unit test failures of their own, tell", "errors", 	150},
+            {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
+            {"ely write code that won", "ely write code that won", 1},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
             {"", "", 1},
-            {"", "    ", 1},
-            {"   ", "", 1},
-            {"   ", " ", 1},
+            {"", " ", 0},
             {" ", " ", 1},
-            {"close", "x", 5},
-            {"maximax", "ax", 7},
-            {"maximax", "max", 7},
-            {"maximax", "im", 7},
-            {"maximax", "ix", 7},
+            {" ", " ", 0},
+            {"\0", "\0", 1},
+            {"", "\0", 1},
+            {"\n", " ", 1},
+            {"\n", "\n", 1},
+            {"\n\0", "\0", 2},
+            {"\0\n", "\n", 2},
+            {"0", "\0", 1},
+            {"n", "\n", 1},
+            {"е", "e", 1},
+            {"---", "-", 3},
+            {"--.", ".", 3},
+            {"([{}])", "(", 4},
+            {"([{}])", "([", 4},
+            {"([{}])", "([{}]", 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        char s1[20];
+        char s1[150];
         strcpy(s1, a[i].str);
-        char s2[20];
+        char s2[150];
         strcpy(s2, a[i].str);
         ck_assert_str_eq(
                 memcpy(s1, a[i].c, a[i].n),
@@ -109,7 +210,8 @@ START_TEST(test_memcpy) {
     }
 }
 END_TEST
-
+#undef N_TESTS
+#define N_TESTS 16
 START_TEST(test_memmove) {
     typedef struct s {
         char *str;
@@ -369,7 +471,6 @@ START_TEST(test_strncmp) {
     }
 }
 END_TEST
-
 START_TEST(test_strcpy) {
     typedef struct s {
         char str[25];
@@ -401,7 +502,6 @@ START_TEST(test_strcpy) {
     }
 }
 END_TEST
-
 START_TEST(test_strncpy) {
     typedef struct s {
         char str[25];
@@ -434,7 +534,6 @@ START_TEST(test_strncpy) {
     }
 }
 END_TEST
-
 START_TEST(test_strcspn) {
     char *a[N_TESTS][2] = {
         {"this is a test", "t"},
@@ -461,9 +560,13 @@ START_TEST(test_strcspn) {
     }
 }
 END_TEST
+<<<<<<< HEAD
+//strerror
+=======
 
 //  strerror
 
+>>>>>>> 954445e58abfef60e494057da75ab38ca2d4fa2f
 START_TEST(test_strlen) {
     typedef struct s {
         char *str;
@@ -493,7 +596,6 @@ START_TEST(test_strlen) {
     }
 }
 END_TEST
-
 START_TEST(test_strpbrk) {
     char *a[N_TESTS][2] = {
             {"this is test", "is"},
@@ -520,7 +622,6 @@ START_TEST(test_strpbrk) {
     }
 }
 END_TEST
-
 START_TEST(test_strrchr) {
     typedef struct s {
         char *str;
@@ -573,11 +674,10 @@ START_TEST(test_strspn) {
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_int_eq(strspn(a[i][0], a[i][1]),
-                         s21_strspn(a[i][0], a[i][1]));
+                         strspn(a[i][0], a[i][1]));
     }
 }
 END_TEST
-
 START_TEST(test_strstr) {
     char *a[N_TESTS][2] = {
         {"this is test", "is"},
@@ -604,7 +704,6 @@ START_TEST(test_strstr) {
     }
 }
 END_TEST
-
 START_TEST(test_strtok) {
     typedef struct s {
       char *str;
@@ -640,8 +739,6 @@ START_TEST(test_strtok) {
     }
 }
 END_TEST
-
-
 Suite *string_suite(void) {
     Suite *s;
     s = suite_create("s21_string");
