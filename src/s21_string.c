@@ -702,21 +702,23 @@ char *my_ftoa(float num, int precision) {
 //  c, d, i, f, s, u, %
 //  %.5f
 //  Это gbpltw
+typedef int bool;
+#define true 1;
+#define false 0;
 typedef struct {
+  int fmt_str_len; /*optional*/
   char type_specifier; /*c, d, i, f, s, u, %*/
-  char type_length;
-  int sign;
-  int pad0;
-  int pad_;
-
-  int str_width; /*00005 or 05*/
-  int num_len; /*l,r*/
+  int sign; /* + - ' '*/ /* ' ' - всегда +1 пробел слева*/
+  char pad_with; /* ' ' or '0' */
+  int l_pad_len;
+  int r_pad_len;
   int precision;
-  int err_flag; /*1 - OK, 0 - ERR*/
+
+
 } FMT;
 
-void init_FMT(FMT *fmt){
-    *fmt = {'\0',}
+void init_FMT(FMT *fmt) {
+    //*fmt = {'\0',}
 }
 char *const TYPE_SPECIFIERS = "cdifsu";
 char *const LEN_SPECIFIERS = "lh";
@@ -800,8 +802,8 @@ int s21_sprintf(char *str, char *fmt, ...) {
     }
     /*s21_size_t is_float;*/
     /*s21_size_t curr = 0;*/
+    FMT curr_fmt;
     for (size i = 0; i < s21_strlen(fmt); ++i) {
-        /*FMT curr_fmt;*/
         if (fmt[i] == '%' && fmt[i + 1] != '%') {
             char datatype = find_specifier(&fmt[i] + 1);
             if (datatype == '\0') {
@@ -818,6 +820,8 @@ int s21_sprintf(char *str, char *fmt, ...) {
     }
     return 0; /*TODO remove*/
 }
+
+#ifdef DEV
 #include <string.h>
 #include <stdio.h>
 
@@ -825,7 +829,12 @@ int main() {
     //printf("%s %d",__FILE__, __LINE__);
     char str[50];
     char *fmt = "%+0123.5dd";
-    puts("");
-    printf("%7u", 5);
-    puts(str);
+    //puts("");
+    float o = 50;
+    for (int i = 0; i < 10; ++i) {
+        o/=10;
+    }
+    printf("%.10f\n",o);
+    printf("%100.10d", 5);
 }
+#endif

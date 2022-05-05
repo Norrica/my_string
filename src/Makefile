@@ -1,16 +1,17 @@
 #all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS = -Wall -Werror -Wextra
+FLAGS =   #-Wall -Werror -Wextra
 
-TARGET=test.c my_atof.c
+TARGET=test.c
 
 all: build
-
+.DBG: FLAGS += -g -O0
 build: s21_string.a test
 
-debug:
-	FLAGS += -g -O0
-
+debug:FLAGS += -DDEV
+debug:FLAGS += -g -O0
+debug: local_debug
+	./local_test
 
 clean:
 	-rm s21_string.a
@@ -27,9 +28,9 @@ s21_string.a: clean
 	ar rcs s21_string.a s21_string.o
 
 test: s21_string.a
-	FLAGS += -fprofile-arcs -ftest-coverage
 	$(CC) $(FLAGS) -lcheck s21_string.a test.c  -o test
 
+gcov_report:FLAGS += -fprofile-arcs -ftest-coverage
 gcov_report: test
 	./test
 	gcov test.c
@@ -37,5 +38,6 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) s21_string.c -o local_test
+		$(CC) $(FLAGS) s21_string.c -o local_test
+
 .PHONY : all build clean
