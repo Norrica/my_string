@@ -210,8 +210,7 @@ START_TEST(test_memcpy) {
     }
 }
 END_TEST
-#undef N_TESTS
-#define N_TESTS 16
+
 START_TEST(test_memmove) {
     typedef struct s {
         char *str;
@@ -219,27 +218,61 @@ START_TEST(test_memmove) {
         int n;
     } test;
     test a[N_TESTS] = {
-            {"this is test", "is", 1},
-            {"this is test", "is", 10},
-            {"abaaaaaa", "baa", 1},
-            {"abaaaaaa", "baa", 3},
-            {"abaaaaaa", "baa", 4},
-            {"abaaaaaa", "ab", 1},
+            {"Since we are creating", "Since we are creating", 21},
+            {"a library to handle money", "a l", 3},
+            {"we will first create an interface", "we wi", 4},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
+            {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
+            {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
+            {"Note\nthat\none could\0do something similar ", "Note\n", 41},
+            {"you   can redistribute it and/or", "you can", 32},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p", 7},
+            {"WITHOUT ANY WARRANTY", "WITHOUT ", 8},
+            {" to writing code says that we should write the unit test befor", " ", 62},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
+            {"ays that we should write the unit ", "ays\n", 34},
+            {"Check     to specifically     assert      ", "Check     to  specifically", 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
+            {"кто прочитал тот 10x", "10x", 3},
+            {"chisto по преколу написал", "chisto по", 9},
+            {"это же mixer", "это же mixer", 12},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
+            {"errors are, in a way, unit test failures of their own, tell", "errors", 	150},
+            {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
+            {"ely write code that won", "ely write code that won", 1},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
             {"", "", 1},
-            {"", "    ", 1},
-            {"   ", "", 1},
-            {"   ", " ", 1},
+            {"", " ", 0},
             {" ", " ", 1},
-            {"close", "x", 4},
-            {"maximax", "ax", 4},
-            {"maximax", "max", 4},
-            {"maximax", "im", 4},
-            {"maximax", "ix", 4},
+            {" ", " ", 0},
+            {"\0", "\0", 1},
+            {"", "\0", 1},
+            {"\n", " ", 1},
+            {"\n", "\n", 1},
+            {"\n\0", "\0", 2},
+            {"\0\n", "\n", 2},
+            {"0", "\0", 1},
+            {"n", "\n", 1},
+            {"е", "e", 1},
+            {"---", "-", 3},
+            {"--.", ".", 3},
+            {"([{}])", "(", 4},
+            {"([{}])", "([", 4},
+            {"([{}])", "([{}]", 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        char s1[20];
+        char s1[150];
         strcpy(s1, a[i].str);
-        char s2[20];
+        char s2[150];
         strcpy(s2, a[i].str);
         ck_assert_str_eq(
                 memmove(s1, a[i].c, a[i].n),
@@ -247,7 +280,8 @@ START_TEST(test_memmove) {
     }
 }
 END_TEST
-
+#undef N_TESTS
+#define N_TESTS 16
 START_TEST(test_memset) {
     typedef struct s {
         char *str;
@@ -560,13 +594,7 @@ START_TEST(test_strcspn) {
     }
 }
 END_TEST
-<<<<<<< HEAD
-//strerror
-=======
-
 //  strerror
-
->>>>>>> 954445e58abfef60e494057da75ab38ca2d4fa2f
 START_TEST(test_strlen) {
     typedef struct s {
         char *str;
