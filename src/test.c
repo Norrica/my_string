@@ -462,7 +462,7 @@ START_TEST(test_strcspn) {
 }
 END_TEST
 
-//strerror
+//  strerror
 
 START_TEST(test_strlen) {
     typedef struct s {

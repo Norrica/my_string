@@ -713,12 +713,10 @@ typedef struct {
   int l_pad_len;
   int r_pad_len;
   int precision;
-
-
 } FMT;
 
 void init_FMT(FMT *fmt) {
-    //*fmt = {'\0',}
+    //  *fmt = {'\0',}
 }
 char *const TYPE_SPECIFIERS = "cdifsu";
 char *const LEN_SPECIFIERS = "lh";
@@ -826,15 +824,15 @@ int s21_sprintf(char *str, char *fmt, ...) {
 #include <stdio.h>
 
 int main() {
-    //printf("%s %d",__FILE__, __LINE__);
+    //  printf("%s %d",__FILE__, __LINE__);
     char str[50];
     char *fmt = "%+0123.5dd";
-    //puts("");
+    //  puts("");
     float o = 50;
     for (int i = 0; i < 10; ++i) {
         o/=10;
     }
-    printf("%.10f\n",o);
+    printf("%.10f\n", o);
     printf("%100.10d", 5);
 }
 #endif
