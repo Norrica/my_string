@@ -88,6 +88,7 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                 case 'c': {}
                     *(buf++) = va_arg(va, int);
                     break;
+                case 'i':
                 case 'd': {}
                     int num = va_arg(va, int);
                     if (num < 0) {
@@ -95,8 +96,6 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                         flags |= PUT_MINUS;
                     }
                     buf = sitoa(buf, num, width, flags | BASE_10);
-                    break;
-                case 'u':buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
                     break;
                 case 'X': {}
                     buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
@@ -112,6 +111,8 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                     if (p)
                         while (*p)
                             *(buf++) = *(p++);
+                    break;
+                case 'u':buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
                     break;
                 case 'm': {}
                     const uint8_t *m = va_arg(va, const uint8_t *);
@@ -163,9 +164,9 @@ int my_sprintf(char *buf, const char *fmt, ...) {
 int main(int argc, char *argv[]) {
     char b[256];
     char c[256];
-    int val = 0xA;
-       sprintf(c, "%5X", val);
-    my_sprintf(b, "%5X", val);
+    int val = 10;
+    my_sprintf(b, "%b", val);
+       sprintf(c, "%b", val);
     puts(b);
     puts(c);
 }
