@@ -1,7 +1,3 @@
-//
-// Created by Gladis Ariane on 4/28/22.
-//
-
 #include <stdarg.h>
 #include <math.h>
 #include "s21_string.h"
@@ -52,6 +48,7 @@ char *s21_strcpy(char *dest, const char *src) {
     return dest;
 }
 
+//TODO проверить
 char *s21_strncpy(char *dest, const char *src, size n) {
     //  char *d = dest;
     //  char *s = (char *) src;
@@ -60,7 +57,12 @@ char *s21_strncpy(char *dest, const char *src, size n) {
     //      *d = *s;
     //  }
     //  return dest;
-    return s21_memcpy(dest, src, n);
+    char *d = dest;
+    int count = 0;
+    while((*dest++ = *src++) && count++ <(int)n) {
+    }
+    return d;
+    //return s21_memcpy(dest, src, n);
 }
 
 void *s21_memmove(void *dest, const void *src, size_t n) {
@@ -107,49 +109,38 @@ char *s21_strrchr(const char *str, int c) {
     return res;
 }
 
+//TODO проверить
 char *s21_strpbrk(const char *str1, const char *str2) {
-    while (*str1)
-        if (s21_strchr(str2, *str1++))
-            return (char *) --str1;
-    return 0;
+    int flag = 0;
+    char *res = S21_NULL;
+    while (*str1 != '\0' && !flag) {
+        for (int i = 0; i < (int)s21_strlen(str2); i++) {
+            if (*str1 == *(str2 + i)) {
+                flag = 1;
+                res = (char *)str1;
+            }
+        }
+        str1++;
+    }
+    return res;
 }
 
+//TODO проверить
 size s21_strspn(const char *str1, const char *str2) {
-    if (str1 == S21_NULL || str2 == S21_NULL
-        || *str1 == '\0' || *str2 == '\0') {
-        return 0;
+    size_t res = 0;
+    while (*str1 && s21_strchr(str2, *str1++)) {
+        res++;
     }
-    for (char *s1 = (char *) str1; s1 != S21_NULL; s1++) {
-        for (char *s2 = (char *) str2; s2 != S21_NULL; s2++) {
-            if (*s1 == *s2) {
-                s2 = (char *) str2 - 1;
-                s1++;
-            } else if (*s2 == '\0' || *s1 == '\0') {
-                return s1 - str1;
-            }
-        }
-    }
-    return 0;
+    return res;
 }
 
+//TODO проверить
 size s21_strcspn(const char *str1, const char *str2) {
-    if (*str1 == '\0') {
-        return 0;
-    } else if (*str2 == '\0') {
-        return s21_strlen(str1);
-    } else {
-        char *s1 = (char *) str1;
-        char *s2 = (char *) str2;
-        while (*s1 != '\0') {
-            if (*s1 == *s2++) {
-                return s1 - str1;
-            } else if (*s2 == '\0') {
-                s2 = (char *) str2;
-                s1++;
-            }
-        }
-        return s21_strlen(str1);
+    size_t count = 0;
+    while (*str1 && !s21_strchr(str2, *str1++)) {
+        count++;
     }
+    return count;
 }
 
 char *s21_strstr(const char *str, const char *substr) {
@@ -218,36 +209,20 @@ size s21_strlen(const char *str) {
 }
 
 char *s21_strtok(char *str, const char *delim) {
-    static char *current;
-    char *result;
-    if (str != S21_NULL) {
-        /*remove delims from start*/
-        str = &str[s21_strspn(str, delim)];
-        size first = s21_strspn(str, delim);
-        size second = s21_strcspn(str, delim);
-        if (second == s21_strlen(str) || first == s21_strlen(str)) {
-            if (current != S21_NULL)
-                return str;
-            else
-                return S21_NULL;
+    char *s21_strtok(char *str, const char *delim) {
+        int i = 0;
+        while (str[i] != '\0') {
+            for (int j = 0; j < (int) s21_strlen(delim); j++) {
+                if (str[i] == delim[j]) {
+                    str[i] = '\0';
+                }
+            }
+            i++;
         }
-        current = &str[second] + 1;
-        /*TODO(gladissar)
-         * Сделать вместо малок str[second] = '\0'; и strcpy result*/
-        result = malloc((first + second) * sizeof(char));
-        for (size i = first; i < second; ++i) {
-            result[i - first] = str[i];
-        }
-        result[first + second] = '\0';
-        str[second] = '\0';
-        return result;
-    } else {
-        if (current == S21_NULL || current[0] == '\0') {
+        if (*str == '\0') {
             return S21_NULL;
         } else {
-            result = s21_strtok(current, delim);
-            current = &current[s21_strspn(current, result)];
-            return result;
+            return str;
         }
     }
 }
