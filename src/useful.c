@@ -27,22 +27,28 @@ enum flag_itoa {
   PUT_MINUS = 4,
   BASE_2 = 8,
   BASE_10 = 16,
-  /*Добавить флаг на флоат*/
+  FLOAT = 32,
+  BIG_HEX = 64
 };
 
 static char *sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags) {
     unsigned int base;
+    char hex_size;
     if (flags & BASE_2)
         base = 2;
     else if (flags & BASE_10)
         base = 10;
-    else
+    else {
         base = 16;
+        if (flags & BIG_HEX) {
+            hex_size = 'A';
+        } else { hex_size = 'a'; }
+    }
     char tmp[32];
     char *p = tmp;
     do {
         int rem = num % base;
-        *p++ = (rem <= 9) ? (rem + '0') : (rem + 'a' - 0xA);
+        *p++ = (rem <= 9) ? (rem + '0') : (rem + hex_size - 0xA);
     } while ((num /= base));
     width -= p - tmp;
     char fill = (flags & FILL_ZERO) ? '0' : ' ';
@@ -92,7 +98,11 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                     break;
                 case 'u':buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
                     break;
-                case 'x':buf = sitoa(buf, va_arg(va, unsigned int), width, flags);
+                case 'X': {}
+                    buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
+                    break;
+                case 'x': {}
+                    buf = sitoa(buf, va_arg(va, unsigned int), width, flags);
                     break;
                 case 'b':buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
                     break;
@@ -153,9 +163,9 @@ int my_sprintf(char *buf, const char *fmt, ...) {
 int main(int argc, char *argv[]) {
     char b[256];
     char c[256];
-    int val = 10;
-       sprintf(c, "%07+d", val);
-    my_sprintf(b, "%07+d", val);
+    int val = 0xA;
+       sprintf(c, "%5X", val);
+    my_sprintf(b, "%5X", val);
     puts(b);
     puts(c);
 }
