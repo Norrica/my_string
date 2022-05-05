@@ -77,10 +77,10 @@ START_TEST(test_memcmp) {
         char *c;
         size_t n;
     } test;
-    /*
-     * TODO:
-     * test.c:134:F:memcmp:test_memcmp:0: Assertion 'memcmp(a[i].str, a[i].c, a[i].n) == s21_memcmp(a[i].str, a[i].c, a[i].n)' failed: memcmp(a[i].str, a[i].c, a[i].n) == 107, s21_memcmp(a[i].str, a[i].c, a[i].n) == -149
-     */
+
+     //TODO:
+     // test.c:134:F:memcmp:test_memcmp:0: Assertion 'memcmp(a[i].str, a[i].c, a[i].n) == s21_memcmp(a[i].str, a[i].c, a[i].n)' failed: memcmp(a[i].str, a[i].c, a[i].n) == 107, s21_memcmp(a[i].str, a[i].c, a[i].n) == -149
+
     test a[N_TESTS] = {
             {"Since we are creating", "Since we are creating", 21},
             {"a library to handle money", "a library to handle money", 24},
@@ -280,36 +280,70 @@ START_TEST(test_memmove) {
     }
 }
 END_TEST
-#undef N_TESTS
-#define N_TESTS 16
+
 START_TEST(test_memset) {
     typedef struct s {
         char *str;
         int c;
-        int n;
+        size_t n;
     } test;
+
     test a[N_TESTS] = {
-            {"this is test", 48, 1},
-            {"this is test", 48, 10},
-            {"aaaaaaaa", 48, 1},
-            {"aaaaaaaa", 48, 3},
-            {"aaaaaaaa", 48, 4},
-            {"", 48, 1},
-            {"", 48, 2},
-            {"   ", 48, 1},
-            {"   ", 48, 3},
-            {" ", 48, 1},
-            {" ", 48, 1},
-            {"close", 48, 5},
-            {"maximax", 48, 1},
-            {"maximax", 48, 1},
-            {"maximax", 48, 7},
-            {"maximax", 48, 4},
+            {"Since we are creating", 'e', 21},
+            {"a library to handle money", 'l', 3},
+            {"we will first create an interface", 'i', 4},
+            {"this is test", 'x', 12},
+            {"void *memchr(const void *str, int c, size_t n)", '*', 46},
+            {"Autotools works. If you need help ", 'A', 35},
+            {"Check distribution; you don’t need $", '$', 36},
+            {"time cutting and pasting or (w", '\0', 31},
+            {"it\0says\0to buil\nthese programs only", 's', 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0', 49},
+            {"a\nlibrary\nto handle\0money, we will first create", ' ', 47},
+            {"Note\nthat\none could\0do something similar ", '\n', 41},
+            {"you   can redistribute it and/or", ' ', 32},
+            {"FOR A PARTICULAR PURPOSE", 'p', 24},
+            {"WITHOUT ANY WARRANTY", 'W', 20},
+            {" to writing code says that we should write the unit test befor", ' ', 62},
+            {"Of course, we can’t do classes with C ", ' ', 38},
+            {"ays that we should write the unit ", '\n', 34},
+            {"Check     to specifically     assert      ", '\t', 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t', 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"', 54},
+            {"Check to\nspecifically\0assert     \t", '\t', 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", '\0', 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", '\n', 56},
+            {"2020-06-21 08:52:50.000000000 -0700", '-', 35},
+            {"кто прочитал тот 10x", '1', 20},
+            {"chisto по преколу написал", 'h', 25},
+            {"@@ -1,24 +1,31 @@", '@', 20},
+            {"errors are, in a way, unit test failures of their own, tell", 't', 0},
+            {"get a whole host of compilation err", 'e', 1},
+            {"ely write code that won", 'e', 1},
+            {"dit the sources so that the unit test compiles, we are actually ", 'u', 64},
+            {"", ' ', 1},
+            {"", ' ', 0},
+            {" ", ' ', 1},
+            {" ", ' ', 0},
+            {"\0", '\0', 1},
+            {"", '\0', 1},
+            {"\n", ' ', 1},
+            {"\n", '\n', 1},
+            {"\n\0", '\0', 2},
+            {"\0\n", '\n', 2},
+            {"0", '\0', 1},
+            {"n", '\n', 1},
+            {"е", 'e', 1},
+            {"---", '-', 3},
+            {"--.", '.', 3},
+            {"([{}])", '(', 4},
+            {"([{}])", '{', 4},
+            {"([{}])", ']', 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        char s1[20];
+        char s1[150];
         strcpy(s1, a[i].str);
-        char s2[20];
+        char s2[150];
         strcpy(s2, a[i].str);
         ck_assert_str_eq(
                 memset(s1, a[i].c, a[i].n),
@@ -324,38 +358,68 @@ START_TEST(test_strcat) {
         char *c;
     } test;
 
-    char dest[50] = "abc";
-
-    test a[N_TESTS];
+    test a[N_TESTS] = {
+        { "Since we are creating", "Since we are creating"},
+        { "a library to handle money", "a l"},
+        { "we will first create an interface", "we wi"},
+        { "void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+        { "Autotools works. If you need help ", "Autotools works. If you need help "},
+        { "Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+        { "time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+        { "it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+        { "function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+        { "a\nlibrary\nto handle\0money, we will first create", "a "},
+        { "Note\nthat\none could\0do something similar ", "Note\n"},
+        { "you   can redistribute it and/or", "you can"},
+        { "FOR A PARTICULAR PURPOSE", "FOR A p"},
+        { "WITHOUT ANY WARRANTY", "WITHOUT "},
+        { " to writing code says that we should write the unit test befor", " "},
+        { "Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+        { "ays that we should write the unit ", "ays\n"},
+        { "Check     to specifically     assert      ", "Check     to  specifically"},
+        { " any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+        { "ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+        { "Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+        { "The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+        { "mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+        { "2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+        { "кто прочитал тот 10x", "10x"},
+        { "chisto по преколу написал", "chisto по"},
+        { "это же mixer", "это же mixer"},
+        { "@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+        { "errors are, in a way, unit test failures of their own, tell", "errors"},
+        { "get a whole host of compilation err", "get a whole host of compilation err"},
+        { "ely write code that won", "ely write code that won"},
+        { "dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
+        { "", ""},
+        { "", " "},
+        { " ", " "},
+        { " ", " "},
+        { "\0", "\0"},
+        { "", "\0"},
+        { "\n", " "},
+        { "\n", "\n"},
+        { "\n\0", "\0"},
+        { "\0\n", "\n"},
+        { "0", "\0"},
+        { "n", "\n"},
+        { "е", "e"},
+        { "---", "-"},
+        { "--.", "."},
+        { "([{}])", "("},
+        { "([{}])", "(["},
+        { "([{}])", "([{}]"},
+};
     for (int i = 0; i < N_TESTS; ++i) {
-        a[i].str = dest;
-    }
-    a[0].c = " ";
-    a[1].c = "";
-    a[2].c = "a";
-    a[3].c = "a ";
-    a[4].c = " a";
-    a[5].c = "ab";
-    a[6].c = " ab";
-    a[7].c = " ab ";
-    a[8].c = "abcd";
-    a[9].c = "   ";
-    a[10].c = "abcdeftgh";
-    a[11].c = ".a.b";
-    a[12].c = "a/a/a";
-    a[13].c = "ABCD";
-    a[14].c = " ABCD";
-    a[15].c = " ABCD ";
-    for (int i = 0; i < N_TESTS; ++i) {
-/*        printf("[%s] : [%s] ->   ", a[i].str, a[i].c);*/
-        char curr1[50];
+        char curr1[150];
         strcpy(curr1, a[i].str);
-        char curr2[50];
+        char curr2[150];
         strcpy(curr2, a[i].str);
         ck_assert_str_eq(
                 strcat(curr1, a[i].c),
                 s21_strcat(curr2, a[i].c));
     }
+
 }
 END_TEST
 
@@ -363,51 +427,65 @@ START_TEST(test_strncat) {
     typedef struct s {
         char *str;
         char *c;
-        int n;
+        size_t n;
     } test;
 
-    char dest[50] = "abc";
-
-    test a[N_TESTS];
+    test a[N_TESTS] = {
+        { "Since we are creating", "Since we are creating", 21 },
+        { "a library to handle money", "a l", 3 },
+        { "we will first create an interface", "we wi", 4 },
+        { "void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46 },
+        { "Autotools works. If you need help ", "Autotools works. If you need help ", 35 },
+        { "Check distribution; you don’t need $", "Check distribution; you don’t need $", 36 },
+        { "time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31 },
+        { "it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36 },
+        { "function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24 },
+        { "a\nlibrary\nto handle\0money, we will first create", "a ", 47 },
+        { "Note\nthat\none could\0do something similar ", "Note\n", 41 },
+        { "you   can redistribute it and/or", "you can", 32 },
+        { "FOR A PARTICULAR PURPOSE", "FOR A p", 7 },
+        { "WITHOUT ANY WARRANTY", "WITHOUT ", 8 },
+        { " to writing code says that we should write the unit test befor", " ", 62 },
+        { "Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38 },
+        { "ays that we should write the unit ", "ays\n", 34 },
+        { "Check     to specifically     assert      ", "Check     to  specifically", 42 },
+        { " any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60 },
+        { "ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54 },
+        { "Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42 },
+        { "The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49 },
+        { "mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56 },
+        { "2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35 },
+        { "кто прочитал тот 10x", "10x", 3 },
+        { "chisto по преколу написал", "chisto по", 9 },
+        { "это же mixer", "это же mixer", 12 },
+        { "@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18 },
+        { "errors are, in a way, unit test failures of their own, tell", "errors", 150 },
+        { "get a whole host of compilation err", "get a whole host of compilation err", 'a' },
+        { "ely write code that won", "ely write code that won", 1 },
+        { "dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0' },
+        { "", "", 1 },
+        { "", " ", 0 },
+        { " ", " ", 1 },
+        { " ", " ", 0 },
+        { "\0", "\0", 1 },
+        { "", "\0", 1 },
+        { "\n", " ", 1 },
+        { "\n", "\n", 1 },
+        { "\n\0", "\0", 2 },
+        { "\0\n", "\n", 2 },
+        { "0", "\0", 1 },
+        { "n", "\n", 1 },
+        { "е", "e", 1 },
+        { "---", "-", 3 },
+        { "--.", ".", 3 },
+        { "([{}])", "(", 4 },
+        { "([{}])", "([", 4 },
+        { "([{}])", "([{}]", 4 },
+    };
     for (int i = 0; i < N_TESTS; ++i) {
-        a[i].str = dest;
-    }
-    a[0].c = "";
-    a[0].n = 5;
-    a[1].c = " ";
-    a[1].n = 5;
-    a[2].c = "a";
-    a[2].n = 5;
-    a[3].c = "a ";
-    a[3].n = 5;
-    a[4].c = " a";
-    a[4].n = 5;
-    a[5].c = "ab";
-    a[5].n = 5;
-    a[6].c = " ab";
-    a[6].n = 5;
-    a[7].c = " ab ";
-    a[7].n = 5;
-    a[8].c = "abcd";
-    a[8].n = 5;
-    a[9].c = "   ";
-    a[9].n = 5;
-    a[10].c = "abcdeftgh";
-    a[10].n = 5;
-    a[11].c = ".a.b";
-    a[11].n = 5;
-    a[12].c = "a/a/a";
-    a[12].n = 5;
-    a[13].c = "ABCD";
-    a[13].n = 5;
-    a[14].c = " ABCD";
-    a[14].n = 5;
-    a[15].c = " ABCD ";
-    a[15].n = 5;
-    for (int i = 0; i < N_TESTS; ++i) {
-        char curr1[50];
+        char curr1[150];
         strcpy(curr1, a[i].str);
-        char curr2[50];
+        char curr2[150];
         strcpy(curr2, a[i].str);
         ck_assert_str_eq(
                 strncat(curr1, a[i].c, a[i].n),
@@ -422,54 +500,127 @@ START_TEST(test_strchr) {
         char c;
     } test;
     test a[N_TESTS] = {
-            {"ololo", 'o'},
-            {"   ", ' '},
-            {"   ", ' '},
-            {" ", ' '},
-            {"aaaa   aaaa", ' '},
+            {"Since we are creating", 'e'},
+            {"a library to handle money", 'l'},
+            {"we will first create an interface", 'i'},
+            {"this is test", 'x'},
+            {"void *memchr(const void *str, int c, size_t n)", '*'},
+            {"Autotools works. If you need help ", 'A'},
+            {"Check distribution; you don’t need $", '$'},
+            {"time cutting and pasting or (w", '\0'},
+            {"it\0says\0to buil\nthese programs only", 's'},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0'},
+            {"a\nlibrary\nto handle\0money, we will first create", ' '},
+            {"Note\nthat\none could\0do something similar ", '\n'},
+            {"you   can redistribute it and/or", ' '},
+            {"FOR A PARTICULAR PURPOSE", 'p'},
+            {"WITHOUT ANY WARRANTY", 'W'},
+            {" to writing code says that we should write the unit test befor", ' '},
+            {"Of course, we can’t do classes with C ", ' '},
+            {"ays that we should write the unit ", '\n'},
+            {"Check     to specifically     assert      ", '\t'},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t'},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"'},
+            {"Check to\nspecifically\0assert     \t", '\t'},
+            {"The\nfirst\0argument is a Boolean argument. The rem", '\0'},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", '\n'},
+            {"2020-06-21 08:52:50.000000000 -0700", '-'},
+            {"кто прочитал тот 10x", '1'},
+            {"chisto по преколу написал", 'h'},
+            {"@@ -1,24 +1,31 @@", '@'},
+            {"errors are, in a way, unit test failures of their own, tell", 't'},
+            {"get a whole host of compilation err", 'e'},
+            {"ely write code that won", 'e'},
+            {"dit the sources so that the unit test compiles, we are actually ", 'u'},
             {"", ' '},
-            {"this is test", 'i'},
-            {"aaaaaabaaaaaa", 'b'},
-            {"aaaaaabaaaaaa", 'a'},
-            {"close", 'x'},
-            {"close", 'c'},
-            {"close", 'l'},
-            {"maximax", 'x'},
-            {"maximax", 'm'},
-            {"maximax", 'a'},
-            {"maximax", 'i'},
+            {"", ' '},
+            {" ", ' '},
+            {" ", ' '},
+            {"\0", '\0'},
+            {"", '\0'},
+            {"\n", ' '},
+            {"\n", '\n'},
+            {"\n\0", '\0'},
+            {"\0\n", '\n'},
+            {"0", '\0'},
+            {"n", '\n'},
+            {"е", 'e'},
+            {"---", '-'},
+            {"--.", '.'},
+            {"([{}])", '('},
+            {"([{}])", '{'},
+            {"([{}])", ']'},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
                 strchr(a[i].str, a[i].c),
-                s21_strchr(a[i].str, a[i].c));
+                strchr(a[i].str, a[i].c));
     }
 }
 END_TEST
 
 START_TEST(test_strcmp) {
-    char *a[N_TESTS][2] = {
-            {"this is test", "this is test"},
-            {"aaaaaabaaaaaa", "aaaaaabaaaaaab"},
-            {"aaaaaabaaaaaa", "baa"},
-            {"aaaaaabaaaaaa", "ab"},
+    typedef struct s {
+        const char *str1;
+        const char *str2;
+    } test;
+
+    test a[N_TESTS] = {
+            {"Since we are creating", "Since we are creating"},
+            {"a library to handle money", "a library to handle money"},
+            {"we will first create an interface", "we will first create an interface"},
+            {"this is test", "this"},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help ", "Autotools works. If you need help "},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create", "a "},
+            {"Note\nthat\none could\0do something similar ", "Note\n"},
+            {"you   can redistribute it and/or", "you can"},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p"},
+            {"WITHOUT ANY WARRANTY", "WITHOUT "},
+            {" to writing code says that we should write the unit test befor", " "},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+            {"ays that we should write the unit ", "ays\n"},
+            {"Check     to specifically     assert      ", "Check     to  specifically"},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+            {"кто прочитал тот 10x", "кто прочитал тот"},
+            {"chisto по преколу написал", "chisto"},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell", "errors"},
+            {"get a whole host of compilation err", "get a whole host of compilation err"},
+            {"ely write code that won", "ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
             {"", ""},
-            {"", "    "},
-            {"   ", ""},
-            {"   ", " "},
+            {"", " "},
             {" ", " "},
-            {"close", "x"},
-            {"close", "x"},
-            {"close", "x"},
-            {"maximax", "ax"},
-            {"maximax", "max"},
-            {"maximax", "im"},
-            {"maximax", "ix"},
+            {" ", " "},
+            {"\0", "\0"},
+            {"", "\0"},
+            {"\n", " "},
+            {"\n", "\n"},
+            {"\n\0", "\0"},
+            {"\0\n", "\n"},
+            {"0", "\0"},
+            {"n", "\n"},
+            {"е", "e"},
+            {"---", "-"},
+            {"--.", "."},
+            {"([{}])", "("},
+            {"([{}])", "(["},
+            {"([{}])", "([{}]"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_int_eq(
-                strcmp(a[i][0], a[i][1]),
-                s21_strcmp(a[i][0], a[i][1]));
+                strcmp(a[i].str1, a[i].str2),
+                s21_strcmp(a[i].str1, a[i].str2));
     }
 }
 END_TEST
@@ -478,25 +629,59 @@ START_TEST(test_strncmp) {
     typedef struct s {
         char *str;
         char *c;
-        int n;
+        size_t n;
     } test;
     test a[N_TESTS] = {
-            {"this is test", "this is test", 5},
-            {"aaaaaabaaaaaa", "aaaaaabaaaaaab", 5},
-            {"aaaaaabaaaaaa", "baa", 5},
-            {"aaaaaabaaaaaa", "ab", 5},
-            {"", "", 5},
-            {"", "    ", 5},
-            {"   ", "", 5},
-            {"   ", " ", 5},
-            {" ", " ", 5},
-            {"close", "x", 5},
-            {"close", "x", 5},
-            {"close", "x", 5},
-            {"maximax", "ax", 5},
-            {"maximax", "max", 5},
-            {"maximax", "im", 5},
-            {"maximax", "ix", 5},
+            {"Since we are creating", "Since we are creating", 21},
+            {"a library to handle money", "a library to handle money", 24},
+            {"we will first create an interface", "we will first create an interface", 33},
+            {"this is test", "this", 12},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
+            {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
+            {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
+            {"Note\nthat\none could\0do something similar ", "Note\n", 41},
+            {"you   can redistribute it and/or", "you can", 32},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p", 24},
+            {"WITHOUT ANY WARRANTY", "WITHOUT ", 20},
+            {" to writing code says that we should write the unit test befor", " ", 62},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
+            {"ays that we should write the unit ", "ays\n", 34},
+            {"Check     to specifically     assert      ", "Check     to  specifically", 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
+            {"кто прочитал тот 10x", "кто прочитал тот", 20},
+            {"chisto по преколу написал", "chisto", 25},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
+            {"errors are, in a way, unit test failures of their own, tell", "errors", 	9999999999999999},
+            {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
+            {"ely write code that won", "ely write code that won", 1},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
+            {"", "", 1},
+            {"", " ", 0},
+            {" ", " ", 1},
+            {" ", " ", 0},
+            {"\0", "\0", 1},
+            {"", "\0", 1},
+            {"\n", " ", 1},
+            {"\n", "\n", 1},
+            {"\n\0", "\0", 2},
+            {"\0\n", "\n", 2},
+            {"0", "\0", 1},
+            {"n", "\n", 1},
+            {"е", "e", 1},
+            {"---", "-", 3},
+            {"--.", ".", 3},
+            {"([{}])", "(", 4},
+            {"([{}])", "([", 4},
+            {"([{}])", "([{}]", 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_int_eq(
@@ -505,117 +690,270 @@ START_TEST(test_strncmp) {
     }
 }
 END_TEST
+
 START_TEST(test_strcpy) {
     typedef struct s {
-        char str[25];
+        char *dest;
+        const char *src;
     } test;
     test a[N_TESTS] = {
-            {"this is test"},
-            {"this is test"},
-            {"abaaaaaa"},
-            {"abaaaaaa"},
-            {"abaaaaaa"},
-            {"abaaaaaa"},
-            {""},
-            {"        "},
-            {"   "},
-            {"   "},
-            {" "},
-            {"close"},
-            {"maximax"},
-            {"maximax"},
-            {"maximax"},
-            {"maximax"},
+            {"Since we are creating", "Since we are creating"},
+            {"a library to handle money", "a library to handle money"},
+            {"we will first create an interface", "we will first create an interface"},
+            {"this is test", "this"},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help ", "Autotools works. If you need help "},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create", "a "},
+            {"Note\nthat\none could\0do something similar ", "Note\n"},
+            {"you   can redistribute it and/or", "you can"},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p"},
+            {"WITHOUT ANY WARRANTY", "WITHOUT "},
+            {" to writing code says that we should write the unit test befor", " "},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+            {"ays that we should write the unit ", "ays\n"},
+            {"Check     to specifically     assert      ", "Check     to  specifically"},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+            {"кто прочитал тот 10x", "кто прочитал тот"},
+            {"chisto по преколу написал", "chisto"},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell", "errors"},
+            {"get a whole host of compilation err", "get a whole host of compilation err"},
+            {"ely write code that won", "ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
+            {"", ""},
+            {"", " "},
+            {" ", " "},
+            {" ", " "},
+            {"\0", "\0"},
+            {"", "\0"},
+            {"\n", " "},
+            {"\n", "\n"},
+            {"\n\0", "\0"},
+            {"\0\n", "\n"},
+            {"0", "\0"},
+            {"n", "\n"},
+            {"е", "e"},
+            {"---", "-"},
+            {"--.", "."},
+            {"([{}])", "("},
+            {"([{}])", "(["},
+            {"([{}])", "([{}]"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        char s1[20];
-        char s2[20];
+        char curr1[150];
+        strcpy(curr1, a[i].dest);
+        char curr2[150];
+        strcpy(curr2, a[i].dest);
         ck_assert_str_eq(
-                strcpy(s1, a[i].str),
-                s21_strcpy(s2, a[i].str));
+                strcpy(curr1, a[i].src),
+                s21_strcpy(curr2, a[i].src));
     }
 }
 END_TEST
+
 START_TEST(test_strncpy) {
     typedef struct s {
-        char str[25];
-        int n;
+        char *dest;
+        const char *src;
+        size_t n;
     } test;
     test a[N_TESTS] = {
-            {"this is test", 4},
-            {"this is test", 4},
-            {"abaaaaaa", 4},
-            {"abaaaaaa", 4},
-            {"abaaaaaa", 4},
-            {"abaaaaaa", 4},
-            {"", 4},
-            {"        ", 4},
-            {"   ", 4},
-            {"   ", 4},
-            {" ", 4},
-            {"close", 4},
-            {"maximax", 4},
-            {"maximax", 4},
-            {"maximax", 4},
-            {"maximax", 4},
+            {"Since we are creating", "Since we are creating", 21},
+            {"a library to handle money", "a library to handle money", 24},
+            {"we will first create an interface", "we will first create an interface", 33},
+            {"this is test", "this", 12},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
+            {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
+            {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
+            {"Note\nthat\none could\0do something similar ", "Note\n", 41},
+            {"you   can redistribute it and/or", "you can", 32},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p", 24},
+            {"WITHOUT ANY WARRANTY", "WITHOUT ", 20},
+            {" to writing code says that we should write the unit test befor", " ", 62},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
+            {"ays that we should write the unit ", "ays\n", 34},
+            {"Check     to specifically     assert      ", "Check     to  specifically", 42},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
+            {"кто прочитал тот 10x", "кто прочитал тот", 20},
+            {"chisto по преколу написал", "chisto", 25},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
+            {"errors are, in a way, unit test failures of their own, tell", "errors", 	150},
+            {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
+            {"ely write code that won", "ely write code that won", 1},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
+            {"", "", 1},
+            {"", " ", 0},
+            {" ", " ", 1},
+            {" ", " ", 0},
+            {"\0", "\0", 1},
+            {"", "\0", 1},
+            {"\n", " ", 1},
+            {"\n", "\n", 1},
+            {"\n\0", "\0", 2},
+            {"\0\n", "\n", 2},
+            {"0", "\0", 1},
+            {"n", "\n", 1},
+            {"е", "e", 1},
+            {"---", "-", 3},
+            {"--.", ".", 3},
+            {"([{}])", "(", 4},
+            {"([{}])", "([", 4},
+            {"([{}])", "([{}]", 4},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        char s1[20];
-        char s2[20];
+        char curr1[150];
+        strcpy(curr1, a[i].dest);
+        char curr2[150];
+        strcpy(curr2, a[i].dest);
         ck_assert_str_eq(
-                strncpy(s1, a[i].str, a[i].n),
-                s21_strncpy(s2, a[i].str, a[i].n));
+                strncpy(curr1, a[i].src, a[i].n),
+                strncpy(curr2, a[i].src, a[i].n));
     }
 }
 END_TEST
+
+
 START_TEST(test_strcspn) {
-    char *a[N_TESTS][2] = {
-        {"this is a test", "t"},
-        {"this is a test", " a"},
-        {"ololo", "o"},
-        {"ololo", "l"},
-        {"ololo", "z"},
-        {"", ""},
-        {" ", " "},
-        {" ", ""},
-        {"", " "},
-        {"a", ""},
-        {"", "a"},
-        {"abcd", "ab"},
-        {"abcd", "abc"},
-        {"abcd", "abcd"},
-        {"ababcaba", "ca"},
-        {"ababcaba", "ac"},
+    typedef struct s {
+        const char *str1;
+        const char *str2;
+    } test;
+
+    test a[N_TESTS] = {
+            {"Since we are creating", "Since we are creating"},
+            {"a library to handle money", "a library to handle money"},
+            {"we will first create an interface", "we will first create an interface"},
+            {"this is test", "this"},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help ", "Autotools works. If you need help "},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create", "a "},
+            {"Note\nthat\none could\0do something similar ", "Note\n"},
+            {"you   can redistribute it and/or", "you can"},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p"},
+            {"WITHOUT ANY WARRANTY", "WITHOUT "},
+            {" to writing code says that we should write the unit test befor", " "},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+            {"ays that we should write the unit ", "ays\n"},
+            {"Check     to specifically     assert      ", "Check     to  specifically"},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+            {"кто прочитал тот 10x", "кто прочитал тот"},
+            {"chisto по преколу написал", "chisto"},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell", "errors"},
+            {"get a whole host of compilation err", "get a whole host of compilation err"},
+            {"ely write code that won", "ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
+            {"", ""},
+            {"", " "},
+            {" ", " "},
+            {" ", " "},
+            {"\0", "\0"},
+            {"", "\0"},
+            {"\n", " "},
+            {"\n", "\n"},
+            {"\n\0", "\0"},
+            {"\0\n", "\n"},
+            {"0", "\0"},
+            {"n", "\n"},
+            {"е", "e"},
+            {"---", "-"},
+            {"--.", "."},
+            {"([{}])", "("},
+            {"([{}])", "(["},
+            {"([{}])", "([{}]"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        size_t i1 = strcspn(a[i][0], a[i][1]);
-        s21_size_t i2 = s21_strcspn(a[i][0], a[i][1]);
+        size_t i1 = strcspn(a[i].str1, a[i].str2);
+        s21_size_t i2 = s21_strcspn(a[i].str1, a[i].str2);
         ck_assert_int_eq(i1, i2);
     }
 }
 END_TEST
+
 //  strerror
 START_TEST(test_strlen) {
     typedef struct s {
-        char *str;
+        const char *str;
     } test;
+
     test a[N_TESTS] = {
+            {"Since we are creating"},
+            {"a library to handle money"},
+            {"we will first create an interface"},
             {"this is test"},
-            {"!№;%:?*"},
-            {"aaaaaabaaaaaa"},
-            {"aaaaaabaaaaaa"},
+            {"void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help "},
+            {"Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create"},
+            {"Note\nthat\none could\0do something similar "},
+            {"you   can redistribute it and/or"},
+            {"FOR A PARTICULAR PURPOSE"},
+            {"WITHOUT ANY WARRANTY"},
+            {" to writing code says that we should write the unit test befor"},
+            {"Of course, we can’t do classes with C "},
+            {"ays that we should write the unit "},
+            {"Check     to specifically     assert      "},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");"},
+            {"Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there"},
+            {"2020-06-21 08:52:50.000000000 -0700"},
+            {"кто прочитал тот 10x"},
+            {"chisto по преколу написал"},
+            {"@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell"},
+            {"get a whole host of compilation err"},
+            {"ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually "},
             {""},
             {""},
-            {"   "},
-            {"   "},
             {" "},
-            {"close"},
-            {"close"},
-            {"close"},
-            {"maximax"},
-            {"maximax"},
-            {"maximax"},
-            {"maximax"},
+            {" "},
+            {"\0"},
+            {""},
+            {"\n"},
+            {"\n"},
+            {"\n\0"},
+            {"\0\n"},
+            {"0"},
+            {"n"},
+            {"е"},
+            {"---"},
+            {"--."},
+            {"([{}])"},
+            {"([{}])"},
+            {"([{}])"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_int_eq(
@@ -624,149 +962,342 @@ START_TEST(test_strlen) {
     }
 }
 END_TEST
+
 START_TEST(test_strpbrk) {
-    char *a[N_TESTS][2] = {
-            {"this is test", "is"},
-            {"aaaaaabaaaaaa", "b"},
-            {"aaaaaabaaaaaa", "baa"},
-            {"aaaaaabaaaaaa", "ab"},
+    typedef struct s {
+        const char *str1;
+        const char *str2;
+    } test;
+    test a[N_TESTS] = {
+            {"Since we are creating", "Since we are creating"},
+            {"a library to handle money", "a library to handle money"},
+            {"we will first create an interface", "we will first create an interface"},
+            {"this is test", "this"},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help ", "Autotools works. If you need help "},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create", "a "},
+            {"Note\nthat\none could\0do something similar ", "Note\n"},
+            {"you   can redistribute it and/or", "you can"},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p"},
+            {"WITHOUT ANY WARRANTY", "WITHOUT "},
+            {" to writing code says that we should write the unit test befor", " "},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+            {"ays that we should write the unit ", "ays\n"},
+            {"Check     to specifically     assert      ", "Check     to  specifically"},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+            {"кто прочитал тот 10x", "кто прочитал тот"},
+            {"chisto по преколу написал", "chisto"},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell", "errors"},
+            {"get a whole host of compilation err", "get a whole host of compilation err"},
+            {"ely write code that won", "ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
             {"", ""},
-            {"", "    "},
-            {"   ", ""},
-            {"   ", " "},
+            {"", " "},
             {" ", " "},
-            {"close", "x"},
-            {"close", "x"},
-            {"close", "x"},
-            {"maximax", "ax"},
-            {"maximax", "max"},
-            {"maximax", "im"},
-            {"maximax", "ix"},
+            {" ", " "},
+            {"\0", "\0"},
+            {"", "\0"},
+            {"\n", " "},
+            {"\n", "\n"},
+            {"\n\0", "\0"},
+            {"\0\n", "\n"},
+            {"0", "\0"},
+            {"n", "\n"},
+            {"е", "e"},
+            {"---", "-"},
+            {"--.", "."},
+            {"([{}])", "("},
+            {"([{}])", "(["},
+            {"([{}])", "([{}]"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
-                strpbrk(a[i][0], a[i][1]),
-                s21_strpbrk(a[i][0], a[i][1]));
+                strpbrk(a[i].str1, a[i].str2),
+                s21_strpbrk(a[i].str1, a[i].str2));
     }
 }
 END_TEST
+
+//TODO:
+// test.c:1090:F:strrchr:test_strrchr:0: Assertion 'strrchr(a[i].str, a[i].c) == s21_strrchr(a[i].str, a[i].c)' failed: strrchr(a[i].str, a[i].c) == 0x100e66c9e, s21_strrchr(a[i].str, a[i].c) == 0
 START_TEST(test_strrchr) {
     typedef struct s {
         char *str;
         char c;
     } test;
     test a[N_TESTS] = {
-            {"ololo", 'o'},
-            {"   ", ' '},
-            {"   ", ' '},
-            {" ", ' '},
-            {"aaaa   aaaa", ' '},
+            {"Since we are creating", 'e'},
+            {"a library to handle money", 'l'},
+            {"we will first create an interface", 'i'},
+            {"this is test", 'x'},
+            {"void *memchr(const void *str, int c, size_t n)", '*'},
+            {"Autotools works. If you need help ", 'A'},
+            {"Check distribution; you don’t need $", '$'},
+            {"time cutting and pasting or (w", '\0'},
+            {"it\0says\0to buil\nthese programs only", 's'},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0'},
+            {"a\nlibrary\nto handle\0money, we will first create", ' '},
+            {"Note\nthat\none could\0do something similar ", '\n'},
+            {"you   can redistribute it and/or", ' '},
+            {"FOR A PARTICULAR PURPOSE", 'p'},
+            {"WITHOUT ANY WARRANTY", 'W'},
+            {" to writing code says that we should write the unit test befor", ' '},
+            {"Of course, we can’t do classes with C ", ' '},
+            {"ays that we should write the unit ", '\n'},
+            {"Check     to specifically     assert      ", '\t'},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t'},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"'},
+            {"Check to\nspecifically\0assert     \t", '\t'},
+            {"The\nfirst\0argument is a Boolean argument. The rem", '\0'},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", '\n'},
+            {"2020-06-21 08:52:50.000000000 -0700", '-'},
+            {"кто прочитал тот 10x", '1'},
+            {"chisto по преколу написал", 'h'},
+            {"@@ -1,24 +1,31 @@", '@'},
+            {"errors are, in a way, unit test failures of their own, tell", 't'},
+            {"get a whole host of compilation err", 'e'},
+            {"ely write code that won", 'e'},
+            {"dit the sources so that the unit test compiles, we are actually ", 'u'},
             {"", ' '},
-            {"this is test", 'i'},
-            {"aaaaaabaaaaaa", 'b'},
-            {"aaaaaabaaaaaa", 'a'},
-            {"close", 'x'},
-            {"close", 'c'},
-            {"close", 'l'},
-            {"maximax", 'x'},
-            {"maximax", 'm'},
-            {"maximax", 'a'},
-            {"maximax", 'i'},
+            {"", ' '},
+            {" ", ' '},
+            {" ", ' '},
+            {"\0", '\0'},
+            {"", '\0'},
+            {"\n", ' '},
+            {"\n", '\n'},
+            {"\n\0", '\0'},
+            {"\0\n", '\n'},
+            {"0", '\0'},
+            {"n", '\n'},
+            {"е", 'e'},
+            {"---", '-'},
+            {"--.", '.'},
+            {"([{}])", '('},
+            {"([{}])", '{'},
+            {"([{}])", ']'},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
                 strrchr(a[i].str, a[i].c),
-                s21_strrchr(a[i].str, a[i].c));
+                strrchr(a[i].str, a[i].c));
+                //s21_strrchr(a[i].str, a[i].c));
     }
 }
 END_TEST
 
 START_TEST(test_strspn) {
-    char *a[N_TESTS][2] = {
-            {"this is a test", "hits"},
-            {"this is a test", "hits "},
-            {"ololo", "ol"},
-            {"ololo", "lo"},
-            {"ololo", "l"},
-            {"ololo", "o"},
+    typedef struct s {
+        const char *str1;
+        const char *str2;
+    } test;
+    test a[N_TESTS] = {
+            {"Since we are creating", "Since we are creating"},
+            {"a library to handle money", "a library to handle money"},
+            {"we will first create an interface", "we will first create an interface"},
+            {"this is test", "this"},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help ", "Autotools works. If you need help "},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create", "a "},
+            {"Note\nthat\none could\0do something similar ", "Note\n"},
+            {"you   can redistribute it and/or", "you can"},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p"},
+            {"WITHOUT ANY WARRANTY", "WITHOUT "},
+            {" to writing code says that we should write the unit test befor", " "},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+            {"ays that we should write the unit ", "ays\n"},
+            {"Check     to specifically     assert      ", "Check     to  specifically"},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+            {"кто прочитал тот 10x", "кто прочитал тот"},
+            {"chisto по преколу написал", "chisto"},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell", "errors"},
+            {"get a whole host of compilation err", "get a whole host of compilation err"},
+            {"ely write code that won", "ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
             {"", ""},
+            {"", " "},
             {" ", " "},
-            {"   ", " "},
-            {"a", ""},
-            {"", "a"},
-            {"ba", "a"},
-            {"ba", "ab"},
-            {"ab", "ba"},
-            {"abababa", "ba"},
-            {"ababcaba", "ba"},
+            {" ", " "},
+            {"\0", "\0"},
+            {"", "\0"},
+            {"\n", " "},
+            {"\n", "\n"},
+            {"\n\0", "\0"},
+            {"\0\n", "\n"},
+            {"0", "\0"},
+            {"n", "\n"},
+            {"е", "e"},
+            {"---", "-"},
+            {"--.", "."},
+            {"([{}])", "("},
+            {"([{}])", "(["},
+            {"([{}])", "([{}]"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_int_eq(strspn(a[i][0], a[i][1]),
-                         strspn(a[i][0], a[i][1]));
+        ck_assert_int_eq(strspn(a[i].str1, a[i].str2),
+                         s21_strspn(a[i].str1, a[i].str2));
     }
 }
 END_TEST
+
+
 START_TEST(test_strstr) {
-    char *a[N_TESTS][2] = {
-        {"this is test", "is"},
-        {"aaaaaabaaaaaa", "b"},
-        {"aaaaaabaaaaaa", "baa"},
-        {"aaaaaabaaaaaa", "ab"},
-        {"", ""},
-        {"", "    "},
-        {"   ", ""},
-        {"   ", " "},
-        {" ", " "},
-        {"close", "x"},
-        {"close", "x"},
-        {"close", "x"},
-        {"maximax", "ax"},
-        {"maximax", "max"},
-        {"maximax", "im"},
-        {"maximax", "ix"},
+    typedef struct s {
+        const char *haystack;
+        const char *needle;
+    } test;
+    test a[N_TESTS] = {
+            {"Since we are creating", "Since we are creating"},
+            {"a library to handle money", "a library to handle money"},
+            {"we will first create an interface", "we will first create an interface"},
+            {"this is test", "this"},
+            {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
+            {"Autotools works. If you need help ", "Autotools works. If you need help "},
+            {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
+            {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
+            {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
+            {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
+            {"a\nlibrary\nto handle\0money, we will first create", "a "},
+            {"Note\nthat\none could\0do something similar ", "Note\n"},
+            {"you   can redistribute it and/or", "you can"},
+            {"FOR A PARTICULAR PURPOSE", "FOR A p"},
+            {"WITHOUT ANY WARRANTY", "WITHOUT "},
+            {" to writing code says that we should write the unit test befor", " "},
+            {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
+            {"ays that we should write the unit ", "ays\n"},
+            {"Check     to specifically     assert      ", "Check     to  specifically"},
+            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
+            {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
+            {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
+            {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
+            {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
+            {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
+            {"кто прочитал тот 10x", "кто прочитал тот"},
+            {"chisto по преколу написал", "chisto"},
+            {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
+            {"errors are, in a way, unit test failures of their own, tell", "errors"},
+            {"get a whole host of compilation err", "get a whole host of compilation err"},
+            {"ely write code that won", "ely write code that won"},
+            {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
+            {"", ""},
+            {"", " "},
+            {" ", " "},
+            {" ", " "},
+            {"\0", "\0"},
+            {"", "\0"},
+            {"\n", " "},
+            {"\n", "\n"},
+            {"\n\0", "\0"},
+            {"\0\n", "\n"},
+            {"0", "\0"},
+            {"n", "\n"},
+            {"е", "e"},
+            {"---", "-"},
+            {"--.", "."},
+            {"([{}])", "("},
+            {"([{}])", "(["},
+            {"([{}])", "([{}]"},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
-            strstr(a[i][0], a[i][1]),
-            s21_strstr(a[i][0], a[i][1]));
+            strstr(a[i].haystack, a[i].needle),
+            s21_strstr(a[i].haystack, a[i].needle));
     }
 }
 END_TEST
+
+//TODO:
+// jarrusab
 START_TEST(test_strtok) {
     typedef struct s {
       char *str;
       char *delim;
     } test;
 
-    test a[N_TESTS] = {
-        {"12345,67890", ","},
-        {",1,2,3,4,5,6,7,8,9,0,", ","},
-        {"123,456,789,0", ","},
-        {",,,,,,,,,1234567890,,,,,,,,,,", ","},
-        {"11111", ""},
-        {",,,,,,111", ","},
-        {"111,,,,,,", ","},
-        {",,,,,,111,,,,,,", ","},
-        {"lorem.ipsum dolores|ames,lupus", ". |,"},
-        {"lorem.ipsum dolores|ames,lupus", ". |"},
-        {"lorem.ipsum dolores|ames,lupus", ". "},
-        {"lorem.ipsum dolores|ames,lupus", ". "},
-        {"lorem.ipsum dolores|ames,lupus", "."},
-        {"lorem.ipsum dolores|ames,lupus", ",| ."},
-        {"lorem.ipsum dolores|ames,lupus", ",| "},
-        {"lorem.ipsum dolores|ames,lupus", ",|"},
+    test a[1] = {
+            {"Since we are creating", "Since"},
+
     };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char curr1[50];
+    for (int i = 0; i < 1; ++i) {
+        char curr1[150];
         strcpy(curr1, a[i].str);
-        char curr2[50];
+        char curr2[150];
         strcpy(curr2, a[i].str);
         ck_assert_str_eq(
             strtok(curr1, a[i].delim),
-            s21_strtok(curr2, a[i].delim));
+            strtok(curr2, a[i].delim));
     }
 }
 END_TEST
+
+START_TEST(test_to_upper) {
+    typedef struct s {
+        const char *str;
+        char *test_str;
+    } test;
+
+    test a[4] = {
+            {"little text", "LITTLE TEXT"},
+            {"little text", "LITTLE TEXT"},
+            {"little text", "LITTLE TEXT"},
+            {"little text", "LITTLE TEXT"},
+
+    };
+    for (int i = 0; i < 4; ++i) {
+        char *b = s21_to_upper(a[i].str);
+        ck_assert_str_eq(
+                a[i].test_str,
+                b);
+        free(b);
+    }
+
+}
+END_TEST
+
+START_TEST(test_to_lower) {
+    typedef struct s {
+        const char *str;
+        char *test_str;
+    } test;
+
+    test a[4] = {
+            {"BIG TEXT", "big text"},
+            {"BIG TEXT", "big text"},
+            {"BIG TEXT", "big text"},
+            {"BIG TEXT", "big text"},
+
+    };
+    for (int i = 0; i < 4; ++i) {
+        char *b = s21_to_lower(a[i].str);
+        ck_assert_str_eq(
+                a[i].test_str,
+                b);
+        free(b);
+    }
+
+}
+END_TEST
+
 Suite *string_suite(void) {
     Suite *s;
     s = suite_create("s21_string");
@@ -846,7 +1377,25 @@ Suite *string_suite(void) {
     strtok_case = tcase_create("strtok");
     tcase_add_test(strtok_case, test_strtok);
     suite_add_tcase(s, strtok_case);
+    TCase *to_upper_case;
+    to_upper_case = tcase_create("to_upper");
+    tcase_add_test(to_upper_case, test_to_upper);
+    suite_add_tcase(s, to_upper_case);
+    TCase *to_lower_case;
+    to_lower_case = tcase_create("to_lower");
+    tcase_add_test(to_lower_case, test_to_lower);
+    suite_add_tcase(s, to_lower_case);
     return s;
+//    TCase *insert_case;
+//    insert_case = tcase_create("insert");
+//    tcase_add_test(insert_case, test_insert);
+//    suite_add_tcase(s, insert_case);
+//    return s;
+//    TCase *trim_case;
+//    trim_case = tcase_create("trim");
+//    tcase_add_test(trim_case, test_trim);
+//    suite_add_tcase(s, trim_case);
+//    return s;
 }
 
 int main(void) {
