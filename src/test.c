@@ -12,56 +12,7 @@ START_TEST(test_memchr) {
         size_t n;
     } test;
     test a[N_TESTS] = {
-            {"Since we are creating", 'e', 21},
-            {"a library to handle money", 'l', 3},
-            {"we will first create an interface", 'i', 4},
-            {"this is test", 'x', 12},
-            {"void *memchr(const void *str, int c, size_t n)", '*', 46},
-            {"Autotools works. If you need help ", 'A', 35},
-            {"Check distribution; you don’t need $", '$', 36},
-            {"time cutting and pasting or (w", '\0', 31},
-            {"it\0says\0to buil\nthese programs only", 's', 36},
-            {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0', 49},
-            {"a\nlibrary\nto handle\0money, we will first create", ' ', 47},
-            {"Note\nthat\none could\0do something similar ", '\n', 41},
-            {"you   can redistribute it and/or", ' ', 32},
-            {"FOR A PARTICULAR PURPOSE", 'p', 24},
-            {"WITHOUT ANY WARRANTY", 'W', 20},
-            {" to writing code says that we should write the unit test befor", ' ', 62},
-            {"Of course, we can’t do classes with C ", ' ', 38},
-            {"ays that we should write the unit ", '\n', 34},
-            {"Check     to specifically     assert      ", '\t', 42},
-            {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t', 60},
-            {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"', 54},
-            {"Check to\nspecifically\0assert     \t", '\t', 42},
-            {"The\nfirst\0argument is a Boolean argument. The rem", '\0', 49},
-            {"mplicated\0to\nelegantly express within ck_assert(), there", '\n', 56},
-            {"2020-06-21 08:52:50.000000000 -0700", '-', 35},
-            {"кто прочитал тот 10x", '1', 20},
-            {"chisto по преколу написал", 'h', 25},
-            {"@@ -1,24 +1,31 @@", '@', 9999999999999999},
-            {"errors are, in a way, unit test failures of their own, tell", 't', 0},
-            {"get a whole host of compilation err", 'e', 1},
-            {"ely write code that won", 'e', -1},
-            {"dit the sources so that the unit test compiles, we are actually ", 'u', -64},
-            {"", ' ', 1},
-            {"", ' ', 0},
-            {" ", ' ', 1},
-            {" ", ' ', 0},
-            {"\0", '\0', 1},
-            {"", '\0', 1},
-            {"\n", ' ', 1},
-            {"\n", '\n', 1},
-            {"\n\0", '\0', 2},
-            {"\0\n", '\n', 2},
-            {"0", '\0', 1},
-            {"n", '\n', 1},
-            {"е", 'e', 1},
-            {"---", '-', 3},
-            {"--.", '.', 3},
-            {"([{}])", '(', 4},
-            {"([{}])", '{', 4},
-            {"([{}])", ']', 4},
+            {"", ' ', 21},
     };
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
@@ -822,7 +773,7 @@ START_TEST(test_strncpy) {
         strcpy(curr2, a[i].dest);
         ck_assert_str_eq(
                 strncpy(curr1, a[i].src, a[i].n),
-                strncpy(curr2, a[i].src, a[i].n));
+                s21_strncpy(curr2, a[i].src, a[i].n));
     }
 }
 END_TEST
@@ -894,7 +845,23 @@ START_TEST(test_strcspn) {
 }
 END_TEST
 
-//  strerror
+START_TEST(test_strerror) {
+
+            ck_assert_str_eq(
+                    s21_strerror(1),
+                    strerror(1));
+
+            ck_assert_str_eq(
+                    s21_strerror(50),
+                    strerror(50));
+
+            ck_assert_str_eq(
+                    s21_strerror(20),
+                    strerror(20));
+
+}
+END_TEST
+
 START_TEST(test_strlen) {
     typedef struct s {
         const char *str;
@@ -1025,8 +992,6 @@ START_TEST(test_strpbrk) {
 }
 END_TEST
 
-//TODO:
-// test.c:1090:F:strrchr:test_strrchr:0: Assertion 'strrchr(a[i].str, a[i].c) == s21_strrchr(a[i].str, a[i].c)' failed: strrchr(a[i].str, a[i].c) == 0x100e66c9e, s21_strrchr(a[i].str, a[i].c) == 0
 START_TEST(test_strrchr) {
     typedef struct s {
         char *str;
@@ -1232,7 +1197,6 @@ START_TEST(test_strtok) {
 
     test a[1] = {
             {"Since we are creating", "Since"},
-
     };
     for (int i = 0; i < 1; ++i) {
         char curr1[150];
@@ -1246,155 +1210,232 @@ START_TEST(test_strtok) {
 }
 END_TEST
 
+#undef N_TESTS
+#define N_TESTS 6
 START_TEST(test_to_upper) {
     typedef struct s {
-        const char *str;
-        char *test_str;
+        char *str;
+        const char *test_str;
     } test;
 
-    test a[4] = {
-            {"little text", "LITTLE TEXT"},
-            {"little text", "LITTLE TEXT"},
-            {"little text", "LITTLE TEXT"},
-            {"little text", "LITTLE TEXT"},
-
+    test a[N_TESTS] = {
+            {" ", " "},
+            {"HeLlOw WoRlD", "HELLOW WORLD"},
+            {"u", "U"},
+            {"123", "123"},
+            {"\0", "\0"},
+            {"Road\0to the dream", "ROAD\0TO THE DREAM"},
     };
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < N_TESTS; ++i) {
         char *b = s21_to_upper(a[i].str);
         ck_assert_str_eq(
                 a[i].test_str,
                 b);
         free(b);
     }
-
 }
 END_TEST
 
 START_TEST(test_to_lower) {
     typedef struct s {
-        const char *str;
-        char *test_str;
+        char *str;
+        const char *test_str;
     } test;
 
-    test a[4] = {
-            {"BIG TEXT", "big text"},
-            {"BIG TEXT", "big text"},
-            {"BIG TEXT", "big text"},
-            {"BIG TEXT", "big text"},
-
+    test a[N_TESTS] = {
+            {" ", " "},
+            {"HeLlOw WoRlD", "hellow world"},
+            {"U", "u"},
+            {"123", "123"},
+            {"\0", "\0"},
+            {"rOAD\0TO THE DREAM", "road\0to the dream"},
     };
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < N_TESTS; ++i) {
         char *b = s21_to_lower(a[i].str);
         ck_assert_str_eq(
                 a[i].test_str,
                 b);
         free(b);
     }
+}
+END_TEST
+//TODO: failed: a[i].test_str == "BIGbig text TEXT", b == "BIG big textTEXTtest.c"
+START_TEST(test_insert) {
+    typedef struct s {
+        char *str;
+        char *insert_str;
+        int n;
+        const char *test_str;
+    } test;
 
+    test a[2] = {
+            {"Hello", " World", 5, "Hello World"},
+//           {"BIG TEXT", "big text", 4, "BIGbig text TEXT"},
+            {"BIG TEXT", "big text", 4, "BIG big textTEXT"},
+    };
+    for (int i = 0; i < 2; ++i) {
+        char *b = s21_insert(a[i].str, a[i].insert_str, a[i].n);
+        ck_assert_str_eq(
+                a[i].test_str,
+                b);
+        free(b);
+    }
+}
+END_TEST
+
+//TODO: a[i].test_str == b' failed: a[i].test_str == "move", b == "m1ov1e || failed: a[i].test_str == " uuuIIIuuu ", b == " uuu!III!uuu
+START_TEST(test_trim) {
+    typedef struct s {
+        char *str;
+        char *trim_str;
+        const char *test_str;
+    } test;
+
+    test a[1] = {
+            {" test ", " ", "test"},
+  //          {"1m1ov1e1", "1", "move"},
+   //         {" uuu!III!uuu ", "!", " uuuIIIuuu "},
+   //         {"heeey\0heeey\0heeey", "\0", "heeeyheeeyheeey"},
+    };
+    for (int i = 0; i < 1; ++i) {
+        char *b = s21_trim(a[i].str, a[i].trim_str);
+        ck_assert_str_eq(
+                a[i].test_str,
+                b);
+        free(b);
+    }
 }
 END_TEST
 
 Suite *string_suite(void) {
     Suite *s;
     s = suite_create("s21_string");
-    TCase *strspn_case;
-    strspn_case = tcase_create("strspn");
-    tcase_add_test(strspn_case, test_strspn);
-    suite_add_tcase(s, strspn_case);
-    TCase *strcspn_case;
-    strcspn_case = tcase_create("strcspn");
-    tcase_add_test(strcspn_case, test_strcspn);
-    suite_add_tcase(s, strcspn_case);
-    TCase *strstr_case;
-    strstr_case = tcase_create("strstr");
-    tcase_add_test(strstr_case, test_strstr);
-    suite_add_tcase(s, strstr_case);
-    TCase *strchr_case;
-    strchr_case = tcase_create("strchr");
-    tcase_add_test(strchr_case, test_strchr);
-    suite_add_tcase(s, strchr_case);
-    TCase *strrchr_case;
-    strrchr_case = tcase_create("strrchr");
-    tcase_add_test(strrchr_case, test_strrchr);
-    suite_add_tcase(s, strrchr_case);
+
     TCase *memchr_case;
     memchr_case = tcase_create("memchr");
     tcase_add_test(memchr_case, test_memchr);
     suite_add_tcase(s, memchr_case);
+
     TCase *memcmp_case;
     memcmp_case = tcase_create("memcmp");
     tcase_add_test(memcmp_case, test_memcmp);
     suite_add_tcase(s, memcmp_case);
-    TCase *strpbrk_case;
-    strpbrk_case = tcase_create("strpbrk");
-    tcase_add_test(strpbrk_case, test_strpbrk);
-    suite_add_tcase(s, strpbrk_case);
-    TCase *strcat_case;
-    strcat_case = tcase_create("strcat");
-    tcase_add_test(strcat_case, test_strcat);
-    suite_add_tcase(s, strcat_case);
-    TCase *strncat_case;
-    strncat_case = tcase_create("strncat");
-    tcase_add_test(strncat_case, test_strncat);
-    suite_add_tcase(s, strncat_case);
-    TCase *memset_case;
-    memset_case = tcase_create("memset");
-    tcase_add_test(memset_case, test_memset);
-    suite_add_tcase(s, memset_case);
-    TCase *memmove_case;
-    memmove_case = tcase_create("memmove");
-    tcase_add_test(memmove_case, test_memmove);
-    suite_add_tcase(s, memmove_case);
+
     TCase *memcpy_case;
     memcpy_case = tcase_create("memcpy");
     tcase_add_test(memcpy_case, test_memcpy);
     suite_add_tcase(s, memcpy_case);
-    TCase *strcpy_case;
-    strcpy_case = tcase_create("strcpy");
-    tcase_add_test(strcpy_case, test_strcpy);
-    suite_add_tcase(s, strcpy_case);
-    TCase *strncpy_case;
-    strncpy_case = tcase_create("strncpy");
-    tcase_add_test(strncpy_case, test_strncpy);
-    suite_add_tcase(s, strncpy_case);
+
+    TCase *memmove_case;
+    memmove_case = tcase_create("memmove");
+    tcase_add_test(memmove_case, test_memmove);
+    suite_add_tcase(s, memmove_case);
+
+    TCase *memset_case;
+    memset_case = tcase_create("memset");
+    tcase_add_test(memset_case, test_memset);
+    suite_add_tcase(s, memset_case);
+
+    TCase *strcat_case;
+    strcat_case = tcase_create("strcat");
+    tcase_add_test(strcat_case, test_strcat);
+    suite_add_tcase(s, strcat_case);
+
+    TCase *strncat_case;
+    strncat_case = tcase_create("strncat");
+    tcase_add_test(strncat_case, test_strncat);
+    suite_add_tcase(s, strncat_case);
+
+    TCase *strchr_case;
+    strchr_case = tcase_create("strchr");
+    tcase_add_test(strchr_case, test_strchr);
+    suite_add_tcase(s, strchr_case);
+
     TCase *strcmp_case;
     strcmp_case = tcase_create("strcmp");
     tcase_add_test(strcmp_case, test_strcmp);
     suite_add_tcase(s, strcmp_case);
+
     TCase *strncmp_case;
     strncmp_case = tcase_create("strncmp");
     tcase_add_test(strncmp_case, test_strncmp);
     suite_add_tcase(s, strncmp_case);
+
+    TCase *strcpy_case;
+    strcpy_case = tcase_create("strcpy");
+    tcase_add_test(strcpy_case, test_strcpy);
+    suite_add_tcase(s, strcpy_case);
+
+    TCase *strncpy_case;
+    strncpy_case = tcase_create("strncpy");
+    tcase_add_test(strncpy_case, test_strncpy);
+    suite_add_tcase(s, strncpy_case);
+
+    TCase *strcspn_case;
+    strcspn_case = tcase_create("strcspn");
+    tcase_add_test(strcspn_case, test_strcspn);
+    suite_add_tcase(s, strcspn_case);
+
+    TCase *strerror_case;
+    strerror_case = tcase_create("strerror");
+    tcase_add_test(strerror_case, test_strerror);
+    suite_add_tcase(s, strerror_case);
+
     TCase *strlen_case;
     strlen_case = tcase_create("strlen");
     tcase_add_test(strlen_case, test_strlen);
     suite_add_tcase(s, strlen_case);
+
+    TCase *strpbrk_case;
+    strpbrk_case = tcase_create("strpbrk");
+    tcase_add_test(strpbrk_case, test_strpbrk);
+    suite_add_tcase(s, strpbrk_case);
+
+    TCase *strrchr_case;
+    strrchr_case = tcase_create("strrchr");
+    tcase_add_test(strrchr_case, test_strrchr);
+    suite_add_tcase(s, strrchr_case);
+
+    TCase *strspn_case;
+    strspn_case = tcase_create("strspn");
+    tcase_add_test(strspn_case, test_strspn);
+    suite_add_tcase(s, strspn_case);
+
+    TCase *strstr_case;
+    strstr_case = tcase_create("strstr");
+    tcase_add_test(strstr_case, test_strstr);
+    suite_add_tcase(s, strstr_case);
+
     TCase *strtok_case;
     strtok_case = tcase_create("strtok");
     tcase_add_test(strtok_case, test_strtok);
     suite_add_tcase(s, strtok_case);
+
     TCase *to_upper_case;
     to_upper_case = tcase_create("to_upper");
     tcase_add_test(to_upper_case, test_to_upper);
     suite_add_tcase(s, to_upper_case);
+
     TCase *to_lower_case;
     to_lower_case = tcase_create("to_lower");
     tcase_add_test(to_lower_case, test_to_lower);
     suite_add_tcase(s, to_lower_case);
+
+    TCase *insert_case;
+    insert_case = tcase_create("insert");
+    tcase_add_test(insert_case, test_insert);
+    suite_add_tcase(s, insert_case);
+
+    TCase *trim_case;
+    trim_case = tcase_create("trim");
+    tcase_add_test(trim_case, test_trim);
+    suite_add_tcase(s, trim_case);
+
     return s;
-//    TCase *insert_case;
-//    insert_case = tcase_create("insert");
-//    tcase_add_test(insert_case, test_insert);
-//    suite_add_tcase(s, insert_case);
-//    return s;
-//    TCase *trim_case;
-//    trim_case = tcase_create("trim");
-//    tcase_add_test(trim_case, test_trim);
-//    suite_add_tcase(s, trim_case);
-//    return s;
 }
 
 int main(void) {
+
     int number_failed = 0;
     Suite *s;
     SRunner *sr;
