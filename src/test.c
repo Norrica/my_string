@@ -78,9 +78,6 @@ START_TEST(test_memcmp) {
         size_t n;
     } test;
 
-     //TODO:
-     // test.c:134:F:memcmp:test_memcmp:0: Assertion 'memcmp(a[i].str, a[i].c, a[i].n) == s21_memcmp(a[i].str, a[i].c, a[i].n)' failed: memcmp(a[i].str, a[i].c, a[i].n) == 107, s21_memcmp(a[i].str, a[i].c, a[i].n) == -149
-
     test a[N_TESTS] = {
             {"Since we are creating", "Since we are creating", 21},
             {"a library to handle money", "a library to handle money", 24},
@@ -136,7 +133,7 @@ START_TEST(test_memcmp) {
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_int_eq(
                 memcmp(a[i].str, a[i].c, a[i].n),
-                memcmp(a[i].str, a[i].c, a[i].n));
+                s21_memcmp(a[i].str, a[i].c, a[i].n));
     }
 }
 END_TEST
@@ -1090,8 +1087,7 @@ START_TEST(test_strrchr) {
     for (int i = 0; i < N_TESTS; ++i) {
         ck_assert_ptr_eq(
                 strrchr(a[i].str, a[i].c),
-                strrchr(a[i].str, a[i].c));
-                //s21_strrchr(a[i].str, a[i].c));
+                s21_strrchr(a[i].str, a[i].c));
     }
 }
 END_TEST

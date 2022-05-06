@@ -18,11 +18,13 @@ void *s21_memchr(const void *str, int c, size_t n) {
 
 int s21_memcmp(const void *str1, const void *str2, size_t n) {
     int result = 0;
-    const char *s1 = str1, *s2 = str2;
-    while (n--) {
-        if (*s1++ != *s2++) {
-            result = *--s1 - *--s2;
-            break;
+    unsigned const char *s1 = str1, *s2 = str2;
+    if (n != 0) {
+        while (n-- != 0) {
+            if (*s1++ != *s2++) {
+                result = *--s1 - *--s2;
+                break;
+            }
         }
     }
     return result;
@@ -89,24 +91,29 @@ void *s21_memset(void *str, int c, size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    char *p = (char *) str;
-    while (*p != c && *p != '\0')
-        p++;
-    if (*p) {
-        return p;
-    } else {
-        return S21_NULL;
-    }
+    char *result = S21_NULL;
+    do {
+        if (*str == c)
+        {
+            result = (char*)str;
+        }
+    } while (*str++);
+    return result;
 }
 
 char *s21_strrchr(const char *str, int c) {
-    char *res = S21_NULL;
-    for (int i = 0; str[i] != '\0'; ++i) {
-        if (str[i] == c) {
-            res = (char *) &str[i];
-        }
+    const char *ptr, *found;
+    c = (unsigned char) c;
+
+    if (c == '\0')
+        return s21_strchr (str, '\0');
+    found = S21_NULL;
+    while ((ptr = s21_strchr (str, c)) != S21_NULL)
+    {
+        found = ptr;
+        str = ptr + 1;
     }
-    return res;
+    return (char *) found;
 }
 
 //TODO проверить
