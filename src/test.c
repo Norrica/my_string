@@ -1196,18 +1196,26 @@ START_TEST(test_strtok) {
       char *delim;
     } test;
 
-    test a[1] = {
+    test a[6] = {
             {"Since we are creating", " "},
+            {"Since", " "},
+            {"Since1we1are1reating", "1"},
+            {"Since\0we\0are\0creating", "\0"},
+            {"S1in1ce\0w1e\0a1re\0cre1ating", "1"},
+            {"Since - we - are- creating", "-"},
     };
-    for (int i = 0; i < 1; ++i) {
+    for (int i = 0; i < 6; ++i) {
         char curr1[150];
         strcpy(curr1, a[i].str);
         char curr2[150];
         strcpy(curr2, a[i].str);
         ck_assert_str_eq(
-            s21_strtok(curr1, a[i].delim),
+                s21_strtok(curr1, a[i].delim),
             strtok(curr2, a[i].delim));
     }
+    ck_assert_str_eq(
+            s21_strtok(NULL, a[2].delim),
+            strtok(NULL, a[2].delim));
 }
 END_TEST
 
@@ -1294,9 +1302,9 @@ START_TEST(test_trim) {
 
     test a[1] = {
             {" test ", " ", "test"},
-  //          {"1m1ov1e1", "1", "move"},
-   //         {" uuu!III!uuu ", "!", " uuuIIIuuu "},
-   //         {"heeey\0heeey\0heeey", "\0", "heeeyheeeyheeey"},
+//           {"1m1ov1e1", "1", "move"},
+//           {" uuu!III!uuu ", "!", " uuuIIIuuu "},
+//            {"heeey\0heeey\0heeey", "\0", "heeeyheeeyheeey"},
     };
     for (int i = 0; i < 1; ++i) {
         char *b = s21_trim(a[i].str, a[i].trim_str);
@@ -1445,10 +1453,5 @@ int main(void) {
     srunner_run_all(sr, CK_NORMAL);
     number_failed = srunner_ntests_failed(sr);
     srunner_free(sr);
-    char a[11];
-    s21_itoa(-11, a);
-    char result[100];
-    s21_strcat(result, a);
-    printf("%s\n", result);
     return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }

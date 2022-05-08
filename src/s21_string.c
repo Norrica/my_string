@@ -1,5 +1,6 @@
 #include <stdarg.h>
 #include <math.h>
+#include <ctype.h>
 #include "s21_string.h"
 
 void *s21_memchr(const void *str, int c, size_t n) {
@@ -359,22 +360,58 @@ void *s21_to_upper(const char *str) {
     return result;
 }
 
-void *s21_trim(const char *src, const char *trim_chars) {
-    static char *temp;
-    int i;
-    temp = malloc(s21_strlen(src));
-    void *p = NULL;
-    s21_strcpy(temp, src);
-    for (i = s21_strlen(temp) - 1;
-         i >= 0 && s21_strchr(trim_chars, temp[i]) != NULL; i--) {
-        temp[i] = '\0';
+
+int isthere(char c, const char *trim_chars) {
+    int res = 0;
+    if ((trim_chars != S21_NULL) && (s21_strlen(trim_chars) > 0)) {
+        int len = s21_strlen(trim_chars);
+        for (int i = 0; i <=len; i++) {
+            if (trim_chars[i] == c) {
+                res = 1;
+            }
+        }
+    } else {
+        res = isspace(c);
     }
-    while (temp[0] != '\0' && s21_strchr(trim_chars, temp[0]) != NULL) {
-        s21_memmove(&temp[0], &temp[1], s21_strlen(temp));
-    }
-    p = temp;
-    return p;
+    return res;
 }
+
+void *s21_trim(const char *src, const char *trim_chars)  {
+    char *result = S21_NULL;
+    int i = 0, start_n = -1, temp = 0;
+    if (src != S21_NULL) {
+        int len = s21_strlen(src);
+        int last_n = len;
+        while (i <= len) {
+            if (isthere(src[i], trim_chars) == 1) {
+                start_n = i;
+                i++;
+            } else {
+                i = len+1;
+            }
+        }
+        i = len-1;
+        while (i >= 0) {
+            if (isthere(src[i], trim_chars) == 1) {
+                last_n = i;
+                i--;
+            } else {
+                i = -1;
+            }
+        }
+        i = 0;
+        result = (char *)calloc(1, sizeof(char*));
+        for (int j = start_n+1; j < last_n; j++) {
+            result = (char *)realloc(result, (temp+2)*sizeof(char*));
+            result[temp] = src[j];
+            temp++;
+        }
+        result[temp] = '\0';
+    }
+    return result;
+}
+
+
 
 
 //int my_atoi(const char *c) {
