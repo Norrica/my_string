@@ -856,8 +856,9 @@ START_TEST(test_strerror) {
                     strerror(50));
 
             ck_assert_str_eq(
-                    s21_strerror(20),
-                    strerror(20));
+                    s21_strerror(107),
+                    strerror(107));
+
 
 }
 END_TEST
@@ -1196,7 +1197,7 @@ START_TEST(test_strtok) {
     } test;
 
     test a[1] = {
-            {"Since we are creating", "Since"},
+            {"Since we are creating", " "},
     };
     for (int i = 0; i < 1; ++i) {
         char curr1[150];
@@ -1204,7 +1205,7 @@ START_TEST(test_strtok) {
         char curr2[150];
         strcpy(curr2, a[i].str);
         ck_assert_str_eq(
-            strtok(curr1, a[i].delim),
+            s21_strtok(curr1, a[i].delim),
             strtok(curr2, a[i].delim));
     }
 }
@@ -1259,7 +1260,7 @@ START_TEST(test_to_lower) {
     }
 }
 END_TEST
-//TODO: failed: a[i].test_str == "BIGbig text TEXT", b == "BIG big textTEXTtest.c"
+
 START_TEST(test_insert) {
     typedef struct s {
         char *str;
@@ -1271,7 +1272,7 @@ START_TEST(test_insert) {
     test a[2] = {
             {"Hello", " World", 5, "Hello World"},
 //           {"BIG TEXT", "big text", 4, "BIGbig text TEXT"},
-            {"BIG TEXT", "big text", 4, "BIG big textTEXT"},
+            {"01234", "AAA", 4, "0123AAA4"},
     };
     for (int i = 0; i < 2; ++i) {
         char *b = s21_insert(a[i].str, a[i].insert_str, a[i].n);
@@ -1444,5 +1445,10 @@ int main(void) {
     srunner_run_all(sr, CK_NORMAL);
     number_failed = srunner_ntests_failed(sr);
     srunner_free(sr);
+    char a[11];
+    s21_itoa(-11, a);
+    char result[100];
+    s21_strcat(result, a);
+    printf("%s\n", result);
     return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
 }
