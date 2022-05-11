@@ -1,6 +1,8 @@
 #include <stdarg.h>
 #include <math.h>
 #include <ctype.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include "s21_string.h"
 
 void *s21_memchr(const void *str, int c, size_t n) {
@@ -365,10 +367,11 @@ int isthere(char c, const char *trim_chars) {
 
 void *s21_trim(const char *src, const char *trim_chars) {
     char *result = S21_NULL;
-    int i = 0, start_n = -1, temp = 0;
     if (src != S21_NULL) {
         int len = s21_strlen(src);
         int last_n = len;
+        int i = 0;
+        int start_n = -1;
         while (i <= len) {
             if (isthere(src[i], trim_chars) == 1) {
                 start_n = i;
@@ -386,8 +389,8 @@ void *s21_trim(const char *src, const char *trim_chars) {
                 i = -1;
             }
         }
-        i = 0;
-        result = (char *) calloc(1, sizeof(char *));
+        result = (char *) calloc(1, sizeof(char));
+        int temp = 0;
         for (int j = start_n + 1; j < last_n; j++) {
             char *tmp = (char *) realloc(result, (temp + 2) * sizeof(char *));
             if (!tmp) {
@@ -404,226 +407,179 @@ void *s21_trim(const char *src, const char *trim_chars) {
 }
 
 
-
-
-// int my_atoi(const char *c) {
-//    char *ch = (char *) c;
-//    int res = 0, sign = 1;
-//    while (*ch == ' ') {
-//        ch++;
-//    }
-//    if (*ch == '-' || *ch == '+') {
-//        sign = 1 - 2 * (*ch++ == '-');
-//    }
-//    while (*ch != '\0') {
-//        if (*ch >= '0' && *ch <= '9')
-//            res = res * 10 + *ch++ - '0';
-//        else
-//            break;
-//    }
-//    return res * sign;
-//}
-//
-// double my_atof(const char *c) {
-//    char *ch = (char *) c;
-//    int start_position = 0, sign = 1, dot_position = 0;
-//    /*удалить пробелы*/
-//    for (int i = 0; ch[i] != '\0'; i++) {
-//        if (ch[i] == ' ')
-//            start_position++;
-//    }
-//
-//    /*проверить положительное или отрицательное*/
-//    if (ch[start_position] == '-' || ch[start_position] == '+') {
-//        sign = 1 - 2 * (ch[start_position] == '-');
-//        start_position++;
-//    }
-//
-//    /*найти точку - разделитель*/
-//    for (int i = start_position; ch[i] != '\0'; i++) {
-//        if (ch[i] == '.') {
-//            dot_position = i;
-//            break;
-//        }
-//    }
-//
-//    /*если нет нуля*/
-//    if (!dot_position) {
-//        return my_atoi(c);
-//    } else {
-//        /*если есть нуль, то подсчитать int*/
-//        double integer_part = 0;
-//        for (int i = start_position;
-//             i < dot_position &&
-//                 ch[i] != '\0' &&
-//                 ch[i] >= '0' &&
-//                 ch[i] <= '9';
-//             i++, start_position++) {
-//            integer_part = integer_part * 10 + (ch[i] - '0');
-//        }
-//        if (start_position < dot_position) {
-//            return integer_part;
-//        }
-//        /*подсчитать float*/
-//        double float_part = 0;
-//        for (int i = dot_position + 1;
-//             ch[i] != '\0' && ch[i] >= '0' && ch[i] <= '9';
-//             i++) {
-//            float_part = float_part + (ch[i] - '0') * pow(10, dot_position - i);
-//        }
-//        return (integer_part + float_part) * sign;
-//    }
-//}
-//
-
-//
-// char *my_ftoa(float num, int precision) {
-//    int int_part = (int) num;
-//    float float_part = num - int_part;
-//    char *int_res = my_itoa(int_part);
-//    int float_num = (float_part * pow(10, precision));
-//    char *float_res = my_itoa(float_num);
-//    char *res = malloc(s21_strlen(int_res) + 1 + s21_strlen(float_res));
-//    s21_strcat(res, int_res);
-//    s21_strcat(res, ".");
-//    s21_strcat(res, float_res);
-//    return res;
-//}
-//
-////  c, d, i, f, s, u, %
-////  %.5f
-////  Это gbpltw
-// typedef int bool;
-// #define true 1;
-// #define false 0;
-// typedef struct {
-//  int fmt_str_len; /*optional*/
-//  char type_specifier; /*c, d, i, f, s, u, %*/
-//  int sign; /* + - ' '*/ /* ' ' - всегда +1 пробел слева*/
-//  char pad_with; /* ' ' or '0' */
-//  int l_pad_len;
-//  int r_pad_len;
-//  int precision;
-// } FMT;
-//
-// void init_FMT(FMT *fmt) {
-//    //  *fmt = {'\0',}
-//}
-// char *const TYPE_SPECIFIERS = "cdifsu";
-// char *const LEN_SPECIFIERS = "lh";
-// char *const DIGITS = "0123456789";
-// char *const PUNCTS = "+-.";
-// char *const SIGNS = "+- ";
-// char *const ALL_SPECIFIERS = "+-.0123456789cdifsuhl";
-//
-// void print(char *str) {
-//    for (int i = 0; str[i] != '\0'; ++i) {
-//        printf("%c", str[i]);
-//    }
-//    puts("");
-//}
-//
-// typedef enum datatype { CHAR, INT1, INT2, FLOAT, STRING, UINT, ERROR = -1 }
-//    datatype;
-//
-// char find_specifier(char *string) {
-//    char *spec = s21_strpbrk(string, TYPE_SPECIFIERS);
-//    //  if (spec)
-//    //      return spec[0];
-//    //  else
-//    //      return '\0';
-//    return spec[0];
-//}
-//
-// int find_sign(char *string, size len) {
-//    char sign/* = s21_strpbrk(string, SIGNS)*/;
-//    /*TODO Возможен баг, что мы найдем %3d+, который не должен учитываться.*/
-//    /*В следующей строке вроде без него*/
-//
-//    sign = string[0];
-//    switch (sign) {
-//        case '-':return -1;
-//        case '+':
-//        default:return 1;   /*Нет явно знака - '+'*/
-//    }
-//}
-// int find_filler(char *string, size len) {
-//    char filler = string[0];
-//    switch (filler) {
-//        case '0':return 0; /*Надо заполнять нулями*/
-//        case ' ':return 1;/*Заполнять пробелами*/
-//        default:return -1;
-//    }
-//}
-// int find_length(char *string, size len) {
-//    char *var_len = s21_strpbrk(string, SIGNS);
-//    if (var_len) {
-//        switch (var_len[0]) {
-//            case 'l':return 1;
-//            case 'h':return -1;
-//        }
-//    }
-//    return 0;
-//}
-//
-// int find_width(char *string, size len) {
-//    /* Найти все символы от + и/или 0(если они есть) до . (если она есть) */
-//    /*Вернуть atoi(символов)*/
-//    /*Учесть что передается len и за длину формат-строки(от % до d) не заходить*/
-//}
-// int find_precision(char *string, size len) {
-//    /*Аналогично предыдущему, от . до d/f*/
-//}
-//
-///* % 12.5f*/
-// int s21_sprintf(char *str, char *fmt, ...) {
-//    /*TODO padding*/
-//    va_list args;
-//    va_start(args, fmt);
-//    int va_len = 0;
-//    for (size i = 0; i < s21_strlen(fmt); ++i) {
-//        if (fmt[i] == '%') {
-//            if (fmt[i + 1] != '%')
-//                va_len++;
-//            else
-//                ++i;
-//        }
-//    }
-//    /*s21_size_t is_float;*/
-//    /*s21_size_t curr = 0;*/
-//    FMT curr_fmt;
-//    for (size i = 0; i < s21_strlen(fmt); ++i) {
-//        if (fmt[i] == '%' && fmt[i + 1] != '%') {
-//            char datatype = find_specifier(&fmt[i] + 1);
-//            if (datatype == '\0') {
-//                return ERROR;
-//            }
-//            size format_len = s21_strchr(fmt, datatype) - &fmt[i]; /*if len NULL - return error*/
-//            int sign = find_sign(&fmt[i] + 1, format_len);
-//            if (sign == -10) return ERROR;
-//            int length = find_length(&fmt[i] + 1, format_len);
-//            int width = find_width(&fmt[i] + 1, format_len);
-//        } else {
-//            str[i] = fmt[i];
-//        }
-//    }
-//    return 0; /*TODO remove*/
-//}
-
-#ifdef DEVstring
-#include <string.h>
-#include <stdio.h>
-
-int main() {
-    //  printf("%s %d",__FILE__, __LINE__);
-    char str[50];
-    char *fmt = "%+0123.5dd";
-    //  puts("");
-    float o = 50;
-    for (int i = 0; i < 10; ++i) {
-        o/=10;
+char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
+    char fill = (flags & FILL_ZERO) ? '0' : ' ';
+    if (precision == 0)
+        precision = 6;
+    int int_part = (int) num;
+    double float_part = num - int_part;
+    char int_res[50];
+    s21_itoa(int_part, int_res);
+    long long float_num = float_part * pow(10, precision);
+    char float_res[50];
+    s21_itoa(float_num, float_res);
+    char res_buf[100];
+    s21_strcat(res_buf, int_res);
+    s21_strcat(res_buf, ".");
+    s21_strcat(res_buf, float_res);
+    s21_size_t res_len = s21_strlen(res_buf);
+    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+        --width;
     }
-    printf("%.10f\n", o);
-    printf("%100.10d", 5);
+    if (fill == ' ')
+        while ((int) res_len <= --width)
+            *(buf++) = fill;
+    if (flags & PUT_MINUS) *(buf++) = '-';
+    else if (flags & PUT_PLUS) *(buf++) = '+';
+    while ((int) res_len <= --width) {
+        *(buf++) = fill;
+    }
+    s21_strcat(buf, res_buf);
+    buf += s21_strlen(res_buf);
+    return buf;
 }
-#endif
+
+char *s21_sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags) {
+    unsigned int base;
+    char hex_size = 'a';
+    if (flags & BASE_2) {
+        base = 2;
+    } else if (flags & BASE_10) {
+        base = 10;
+    } else {
+        base = 16;
+        if (flags & BIG_HEX) {
+            hex_size = 'A';
+        } else {
+            hex_size = 'a';
+        }
+    }
+    char tmp[32];
+    char *p = tmp;
+    do {
+        int rem = num % base;
+        *p++ = (rem <= 9) ? (rem + '0') : (rem + hex_size - 0xA);
+    } while ((num /= base));
+    width -= p - tmp;
+    char fill = (flags & FILL_ZERO) ? '0' : ' ';
+    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+        --width;
+    }
+    if (fill == ' ')
+        while (0 <= --width)
+            *(buf++) = fill;
+    if (flags & PUT_MINUS) *(buf++) = '-';
+    else if (flags & PUT_PLUS) *(buf++) = '+';
+    while (0 <= --width) {
+        *(buf++) = fill;
+    }
+    do {
+        *(buf++) = *(--p);
+    } while (tmp < p);
+    return buf;
+}
+
+int s21_vsprintf(char *buf, const char *fmt, va_list va) {
+    char c;
+    const char *save = buf;
+    while ((c = *fmt++)) {
+        int width = 0;
+        int precision = 0;
+        int precision_flag = 0;
+        enum flag_itoa flags = 0;
+        if (c != '%') {
+            *(buf++) = c;
+            continue;
+        }
+        for (char *i = (char *) fmt; *fmt; ++i) {
+            c = *fmt++;
+            switch (c) {
+                case '%': {}
+                    *(buf++) = c;
+                    break;
+                case 'c': {}
+                    *(buf++) = va_arg(va, int);
+                    break;
+                case 'i':
+                case 'd': {}
+                    int num = va_arg(va, int);
+                    if (num < 0) {
+                        num = -num;
+                        flags |= PUT_MINUS;
+                    }
+                    buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                    break;
+                case 'X': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
+                    break;
+                case 'x': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
+                    break;
+                case 'b':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
+                    break;
+                case 'f': {}/*что-нибудь придумать. */
+                    double f_num = va_arg(va, double);
+                    buf = s21_ftoa(buf, f_num, width, precision, flags);
+                    break;
+                case 's': {}
+                    const char *p = va_arg(va, const char *);
+                    if (p)
+                        while (*p)
+                            *(buf++) = *(p++);
+                    break;
+                case 'u':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
+                    break;
+                case 'm': {}
+                    const uint8_t *m = va_arg(va, const uint8_t *);
+                    width = min(width, 64);
+                    if (m) {
+                        for (;;) {
+                            buf = s21_sitoa(buf, *(m++), 2, FILL_ZERO);
+                            if (--width <= 0)
+                                break;
+                            *(buf++) = ':';
+                        }
+                    }
+                    break;
+                case '.': {}
+                    if (!precision_flag)
+                        precision_flag = 1;
+                    else
+                        *(buf++) = '?';
+                    break;
+                case '0':
+                    if (!width) {
+                        flags |= FILL_ZERO;
+                    }
+                    // fall through
+                case '1'...'9': {}
+                    if (!precision_flag)
+                        width = width * 10 + c - '0';
+                    else
+                        precision = precision * 10 + c - '0';
+                    continue;
+                case '*': {}
+                    width = va_arg(va, unsigned int);
+                    continue;
+                case ' ': {}
+                    continue;
+                case '+': {}
+                    flags |= PUT_PLUS;
+                    continue;
+                case '\0':
+                default:*(buf++) = '?';
+            }
+        }
+        //  width = 0;
+    }
+    *buf = '\0';
+    return buf - save;
+}
+
+int s21_sprintf(char *buf, const char *fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+    int ret = s21_vsprintf(buf, fmt, va);
+    va_end(va);
+    return ret;
+}

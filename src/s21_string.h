@@ -169,4 +169,20 @@ void *s21_to_lower(const char *str);
 void *s21_insert(const char *src, const char *str, size_t start_index);
 
 void *s21_trim(const char *src, const char *trim_chars);
+#define min(a, b) __extension__\
+    ({ __typeof__(a) _a = (a); \
+       __typeof__(b) _b = (b); \
+       _a < _b ? _a : _b; })
+enum flag_itoa {
+  FILL_ZERO = 1,
+  PUT_PLUS = 2,
+  PUT_MINUS = 4,
+  BASE_2 = 8,
+  BASE_10 = 16,
+  BIG_HEX = 32,
+};
+char *s21_sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags);
+char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags);
+int s21_vsprintf(char *buf, const char *fmt, va_list va);
+int s21_sprintf(char *buf, const char *fmt, ...);
 #endif  //  SRC_S21_STRING_H_

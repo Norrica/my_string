@@ -40,6 +40,6 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) $(CFLAGS) -DDEV -g s21_string.c useful.c -o local_test
+	$(CC) $(CFLAGS) -DDEV -g s21_string.c useful.c -o local_test
 
 
