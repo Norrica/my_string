@@ -63,7 +63,7 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
     double float_part = num - int_part;
     char int_res[50];
     s21_itoa(int_part, int_res);
-    int float_num = float_part * pow(10, precision);
+    long long float_num = float_part * pow(10, precision);
     char float_res[50];
     s21_itoa(float_num, float_res);
     char res_buf[100];
@@ -235,11 +235,12 @@ int my_sprintf(char *buf, const char *fmt, ...) {
 
 int main() {
     char b[256];
-    //char c[256];
+    char c[256];
     double val = 1.58;
-    my_sprintf(b, "%.10f", val);
-       //sprintf(c, "%+5.1f", val);
+    char * fmt = "%+013.11f";
+    my_sprintf(b, fmt, val);
+       sprintf(c, fmt, val);
     puts(b);
-    //puts(c);
+    puts(c);
 }
 #endif
