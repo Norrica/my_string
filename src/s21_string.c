@@ -51,7 +51,7 @@ char *s21_strcpy(char *dest, const char *src) {
     return dest;
 }
 
-//TODO проверить
+
 char *s21_strncpy(char *dest, const char *src, size n) {
     return s21_memcpy(dest, src, n);
 }
@@ -92,6 +92,7 @@ char *s21_strchr(const char *str, int c) {
 char *s21_strrchr(const char *str, int c) {
     const char *ptr, *found;
     c = (unsigned char) c;
+
     if (c == '\0')
         return s21_strchr(str, '\0');
     found = S21_NULL;
@@ -102,7 +103,7 @@ char *s21_strrchr(const char *str, int c) {
     return (char *) found;
 }
 
-//TODO проверить
+
 char *s21_strpbrk(const char *str1, const char *str2) {
     int flag = 0;
     char *res = S21_NULL;
@@ -118,7 +119,7 @@ char *s21_strpbrk(const char *str1, const char *str2) {
     return res;
 }
 
-//TODO проверить
+
 size s21_strspn(const char *str1, const char *str2) {
     size_t res = 0;
     while (*str1 && s21_strchr(str2, *str1++)) {
@@ -127,7 +128,7 @@ size s21_strspn(const char *str1, const char *str2) {
     return res;
 }
 
-//TODO проверить
+
 size s21_strcspn(const char *str1, const char *str2) {
     size_t count = 0;
     while (*str1 && !s21_strchr(str2, *str1++)) {
@@ -201,7 +202,7 @@ size s21_strlen(const char *str) {
     return len;
 }
 
-//char *s21_strtok(char *str, const char *delim) {
+// char *s21_strtok(char *str, const char *delim) {
 //    char *s21_strtok(char *str, const char *delim) {
 //        int i = 0;
 //        while (str[i] != '\0') {
@@ -254,7 +255,7 @@ void reverse(char *str, int len) {
     }
 }
 
-char *s21_itoa(long long n, char *str) {
+char *s21_itoa(int n, char *str) {
     int len = 0, i = 0, f = 0;
     if (n < 0) {
         n *= -1;
@@ -280,6 +281,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     int len_src = s21_strlen(src);
     int len_str = s21_strlen(str);
     int len_total = len_src + len_str;
+
     if (len_src >= (int) start_index) {
         result = (char *) malloc(len_total * sizeof(char));
         if (result != S21_NULL) {
@@ -299,120 +301,19 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
 }
 
 char *s21_strerror(int errnum) {
-#if defined(__APPLE__) && (__MACH__)
-    static char *str[] =
-        {"Undefined error: 0",
-         "Operation not permitted",
-         "No such file or directory",
-         "No such process", "Interrupted system call",
-         "Input/output error", "Device not configured",
-         "Argument list too long", "Exec format error",
-         "Bad file descriptor", "No child processes", "Resource deadlock avoided",
-         "Cannot allocate memory", "Permission denied", "Bad address",
-         "Block device required",
-         "Resource busy", "File exists", "Cross-device link",
-         "Operation not supported by device",
-         "Not a directory", "Is a directory", "Invalid argument",
-         "Too many open files in system",
-         "Too many open files", "Inappropriate ioctl for device",
-         "Text file busy", "File too large",
-         "No space left on device", "Illegal seek", "Read-only file system",
-         "Too many links", "Broken pipe", "Numerical argument out of domain",
-         "Result too large", "Resource temporarily unavailable",
-         "Operation now in progress", "Operation already in progress",
-         "Socket operation on non-socket", "Destination address required",
-         "Message too long", "Protocol wrong type for socket",
-         "Protocol not available", "Protocol not supported",
-         "Socket type not supported", "Operation not supported",
-         "Protocol family not supported",
-         "Address family not supported by protocol family",
-         "Address already in use", "Can't assign requested address",
-         "Network is down", "Network is unreachable",
-         "Network dropped connection on reset",
-         "Software caused connection abort",
-         "Connection reset by peer", "No buffer space available",
-         "Socket is already connected", "Socket is not connected",
-         "Can't send after socket shutdown", "Too many references: can't splice",
-         "Operation timed out", "Connection refused", "Too many levels of symbolic links",
-         "File name too long", "Host is down", "No route to host", "Directory not empty",
-         "Too many processes", "Too many users", "Disc quota exceeded",
-         "Stale NFS file handle",
-         "Too many levels of remote in path", "RPC struct is bad", "RPC version wrong",
-         "RPC prog. not avail", "Program version wrong", "Bad procedure for program",
-         "No locks available", "Function not implemented",
-         "Inappropriate file type or format",
-         "Authentication error",
-         "Need authenticator", "Device power is off", "Device error",
-         "Value too large to be stored in data type",
-         "Bad executable (or shared library)",
-         "Bad CPU type in executable", "Shared library version mismatch",
-         "Malformed Mach-o file", "Operation canceled", "Identifier removed",
-         "No message of desired type", "Illegal byte sequence",
-         "Attribute not found", "Bad message", "EMULTIHOP (Reserved)",
-         "No message available on STREAM", "ENOLINK (Reserved)",
-         "No STREAM resources", "Not a STREAM", "Protocol error",
-         "STREAM ioctl timeout", "Operation not supported on socket", "Policy not found",
-         "State not recoverable", "Previous owner died", "Interface output queue is full"};
-#else
-    static char *str[] ={ "Success", "Operation not permitted", "No such file or directory",
-      "No such process", "Interrupted system call", "Input/output error",
-      "No such device or address", "Argument list too long", "Exec format error",
-      "Bad file descriptor", "No child processes", "Resource temporarily unavailable",
-      "Cannot allocate memory", "Permission denied", "Bad address", "Block device required",
-      "Device or resource busy", "File exists", "Invalid cross-device link", "No such device",
-      "Not a directory", "Is a directory", "Invalid argument", "Too many open files in system",
-      "Too many open files", "Inappropriate ioctl for device", "Text file busy", "File too large",
-      "No space left on device", "Illegal seek", "Read-only file system", "Too many links",
-      "Broken pipe", "Numerical argument out of domain", "Numerical result out of range",
-      "Resource deadlock avoided", "File name too long", "No locks available",
-      "Function not implemented", "Directory not empty", "Too many levels of symbolic links",
-      "Unknown error 41", "No message of desired type", "Identifier removed",
-      "Channel number out of range", "Level 2 not synchronized", "Level 3 halted",
-      "Level 3 reset", "Link number out of range", "Protocol driver not attached",
-      "No CSI structure available", "Level 2 halted", "Invalid exchange",
-      "Invalid request descriptor", "Exchange full", "No anode", "Invalid request code",
-      "Invalid slot", "Unknown error 58", "Bad font file format", "Device not a stream",
-      "No data available", "Timer expired", "Out of streams resources",
-      "Machine is not on the network", "Package not installed", "Object is remote",
-      "Link has been severed", "Advertise error", "Srmount error", "Communication error on send",
-      "Protocol error", "Multihop attempted", "RFS specific error", "Bad message",
-      "Value too large for defined data type", "Name not unique on network",
-      "File descriptor in bad state",
-      "Remote address changed", "Can not access a needed shared library",
-      "Accessing a corrupted shared library",
-      ".lib section in a.out corrupted", "Attempting to link in too many shared libraries",
-      "Cannot exec a shared library directly", "Invalid or incomplete multibyte or wide character",
-      "Interrupted system call should be restarted", "Streams pipe error", "Too many users",
-      "Socket operation on non-socket", "Destination address required",
-      "Message too long", "Protocol wrong type for socket",
-      "Protocol not available", "Protocol not supported",
-      "Socket type not supported", "Operation not supported",
-      "Protocol family not supported", "Address family not supported by protocol",
-      "Address already in use", "Cannot assign requested address",
-      "Network is down", "Network is unreachable", "Network dropped connection on reset",
-      "Software caused connection abort", "Connection reset by peer", "No buffer space available",
-      "Transport endpoint is already connected", "Transport endpoint is not connected",
-      "Cannot send after transport endpoint shutdown", "Too many references: cannot splice",
-      "Connection timed out", "Connection refused", "Host is down", "No route to host",
-      "Operation already in progress", "Operation now in progress", "Stale file handle",
-      "Structure needs cleaning", "Not a XENIX named type file",
-      "No XENIX semaphores available", "Is a named type file",
-      "Remote I/O error", "Disk quota exceeded", "No medium found",
-      "Wrong medium type", "Operation canceled", "Required key not available",
-      "Key has expired", "Key has been revoked", "Key was rejected by service",
-      "Owner died", "State not recoverable", "Operation not possible due to RF-kill",
-      "Memory page has hardware error" }
-#endif
+    static char *str[] = ERRORS;
     int max;
     char error[4096] = {'\0'};
     char stt[10];
-    static char string[4096] = {'\0'};
-    for (int i = 0; i < 4096; i++) string[i] = '\0';
+    static char strr[4096] = {'\0'};
+    for (int i = 0; i < 4096; i++) strr[i] = '\0';
+
 #if defined(__APPLE__) && defined(__MACH__)
     max = 106;
 #else
     max = 133;
 #endif
+
     if (errnum > max || errnum < 0) {
         s21_itoa(errnum, stt);
         s21_strcpy(error, "Unknown error: ");
@@ -420,9 +321,10 @@ char *s21_strerror(int errnum) {
     } else {
         s21_strcat(error, str[errnum]);
     }
-    s21_strcat(string, error);
-    return string;
+    s21_strcat(strr, error);
+    return strr;
 }
+
 
 void *s21_to_lower(const char *str) {
     int len = s21_strlen(str);
@@ -454,6 +356,7 @@ void *s21_to_upper(const char *str) {
             result[i] = str[i];
     return result;
 }
+
 
 int isthere(char c, const char *trim_chars) {
     int res = 0;
@@ -508,7 +411,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 
 
 
-//int my_atoi(const char *c) {
+// int my_atoi(const char *c) {
 //    char *ch = (char *) c;
 //    int res = 0, sign = 1;
 //    while (*ch == ' ') {
@@ -526,7 +429,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //    return res * sign;
 //}
 //
-//double my_atof(const char *c) {
+// double my_atof(const char *c) {
 //    char *ch = (char *) c;
 //    int start_position = 0, sign = 1, dot_position = 0;
 //    /*удалить пробелы*/
@@ -579,7 +482,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //
 
 //
-//char *my_ftoa(float num, int precision) {
+// char *my_ftoa(float num, int precision) {
 //    int int_part = (int) num;
 //    float float_part = num - int_part;
 //    char *int_res = my_itoa(int_part);
@@ -595,10 +498,10 @@ void *s21_trim(const char *src, const char *trim_chars) {
 ////  c, d, i, f, s, u, %
 ////  %.5f
 ////  Это gbpltw
-//typedef int bool;
-//#define true 1;
-//#define false 0;
-//typedef struct {
+// typedef int bool;
+// #define true 1;
+// #define false 0;
+// typedef struct {
 //  int fmt_str_len; /*optional*/
 //  char type_specifier; /*c, d, i, f, s, u, %*/
 //  int sign; /* + - ' '*/ /* ' ' - всегда +1 пробел слева*/
@@ -606,29 +509,29 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //  int l_pad_len;
 //  int r_pad_len;
 //  int precision;
-//} FMT;
+// } FMT;
 //
-//void init_FMT(FMT *fmt) {
+// void init_FMT(FMT *fmt) {
 //    //  *fmt = {'\0',}
 //}
-//char *const TYPE_SPECIFIERS = "cdifsu";
-//char *const LEN_SPECIFIERS = "lh";
-//char *const DIGITS = "0123456789";
-//char *const PUNCTS = "+-.";
-//char *const SIGNS = "+- ";
-//char *const ALL_SPECIFIERS = "+-.0123456789cdifsuhl";
+// char *const TYPE_SPECIFIERS = "cdifsu";
+// char *const LEN_SPECIFIERS = "lh";
+// char *const DIGITS = "0123456789";
+// char *const PUNCTS = "+-.";
+// char *const SIGNS = "+- ";
+// char *const ALL_SPECIFIERS = "+-.0123456789cdifsuhl";
 //
-//void print(char *str) {
+// void print(char *str) {
 //    for (int i = 0; str[i] != '\0'; ++i) {
 //        printf("%c", str[i]);
 //    }
 //    puts("");
 //}
 //
-//typedef enum datatype { CHAR, INT1, INT2, FLOAT, STRING, UINT, ERROR = -1 }
+// typedef enum datatype { CHAR, INT1, INT2, FLOAT, STRING, UINT, ERROR = -1 }
 //    datatype;
 //
-//char find_specifier(char *string) {
+// char find_specifier(char *string) {
 //    char *spec = s21_strpbrk(string, TYPE_SPECIFIERS);
 //    //  if (spec)
 //    //      return spec[0];
@@ -637,7 +540,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //    return spec[0];
 //}
 //
-//int find_sign(char *string, size len) {
+// int find_sign(char *string, size len) {
 //    char sign/* = s21_strpbrk(string, SIGNS)*/;
 //    /*TODO Возможен баг, что мы найдем %3d+, который не должен учитываться.*/
 //    /*В следующей строке вроде без него*/
@@ -649,7 +552,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //        default:return 1;   /*Нет явно знака - '+'*/
 //    }
 //}
-//int find_filler(char *string, size len) {
+// int find_filler(char *string, size len) {
 //    char filler = string[0];
 //    switch (filler) {
 //        case '0':return 0; /*Надо заполнять нулями*/
@@ -657,7 +560,7 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //        default:return -1;
 //    }
 //}
-//int find_length(char *string, size len) {
+// int find_length(char *string, size len) {
 //    char *var_len = s21_strpbrk(string, SIGNS);
 //    if (var_len) {
 //        switch (var_len[0]) {
@@ -668,17 +571,17 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //    return 0;
 //}
 //
-//int find_width(char *string, size len) {
+// int find_width(char *string, size len) {
 //    /* Найти все символы от + и/или 0(если они есть) до . (если она есть) */
 //    /*Вернуть atoi(символов)*/
 //    /*Учесть что передается len и за длину формат-строки(от % до d) не заходить*/
 //}
-//int find_precision(char *string, size len) {
+// int find_precision(char *string, size len) {
 //    /*Аналогично предыдущему, от . до d/f*/
 //}
 //
 ///* % 12.5f*/
-//int s21_sprintf(char *str, char *fmt, ...) {
+// int s21_sprintf(char *str, char *fmt, ...) {
 //    /*TODO padding*/
 //    va_list args;
 //    va_start(args, fmt);
