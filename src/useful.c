@@ -16,6 +16,9 @@ char *convert(unsigned int num, int base) {
 }
 #include <stdarg.h>
 #include <stdint.h>
+#include <stdlib.h>
+#include <math.h>
+#include "s21_string.h"
 
 #define min(a, b) __extension__\
     ({ __typeof__(a) _a = (a); \
@@ -28,9 +31,45 @@ enum flag_itoa {
   BASE_2 = 8,
   BASE_10 = 16,
   FLOAT = 32,
-  BIG_HEX = 64
+  BIG_HEX = 64,
+  SET_PRECISION = 128,
+  SET_WIDTH = 256
 };
-
+//char *s21_itoa(int n, char *str) {
+//    int len = 0, i = 0, f = 0;
+//    if (n < 0) {
+//        n *= -1;
+//        f = 1;
+//    }
+//    do {
+//        str[i++] = n % 10 + '0';
+//        n /= 10;
+//        len++;
+//    } while (n);
+//    if (f) {
+//        str[i++] = '-';
+//        len++;
+//    }
+//    str[i] = '\0';
+//    reverse(str, len);
+//    return str;
+//}
+char *s21_ftoa(char *buf, double num, int precision) {
+    if (precision == 0)
+        precision = 6;
+    int int_part = (int) num;
+    double float_part = num - int_part;
+    char int_res[50];
+    s21_itoa(int_part, int_res);
+    int float_num = float_part * pow(10, precision);
+    char float_res[50];
+    s21_itoa(float_num, float_res);
+    //char *res = malloc(s21_strlen(int_res) + 1 + s21_strlen(float_res));
+    s21_strcat(buf, int_res);
+    s21_strcat(buf, ".");
+    s21_strcat(buf, float_res);
+    return buf;
+}
 static char *sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags) {
     unsigned int base;
     char hex_size;
@@ -74,6 +113,8 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
     const char *save = buf;
     while ((c = *fmt++)) {
         int width = 0;
+        int precision = 0;
+        int precision_flag = 0;
         enum flag_itoa flags = 0;
         if (c != '%') {
             *(buf++) = c;
@@ -105,7 +146,9 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                     break;
                 case 'b':buf = sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
                     break;
-                case 'f': /*что-нибудь придумать. */
+                case 'f': {}/*что-нибудь придумать. */
+                    double f_num = va_arg(va, double);
+                    buf = s21_ftoa(buf, f_num, precision);
                 case 's': {}
                     const char *p = va_arg(va, const char *);
                     if (p)
@@ -126,12 +169,21 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                         }
                     }
                     break;
+                case '.': {}
+                    if (!precision_flag)
+                        precision_flag = 1;
+                    else
+                        *(buf++) = '?';
                 case '0':
-                    if (!width)
+                    if (!width) {
                         flags |= FILL_ZERO;
+                    }
                     // fall through
                 case '1'...'9': {}
-                    width = width * 10 + c - '0';
+                    if (!precision_flag)
+                        width = width * 10 + c - '0';
+                    else
+                        precision = precision * 10 + c - '0';
                     continue;
                 case '*': {}
                     width = va_arg(va, unsigned int);
@@ -161,12 +213,13 @@ int my_sprintf(char *buf, const char *fmt, ...) {
 #ifdef DEV
 #include <stdio.h>
 #include <string.h>
-int main(int argc, char *argv[]) {
+
+int main() {
     char b[256];
     char c[256];
-    int val = 10;
-    my_sprintf(b, "%b", val);
-       sprintf(c, "%b", val);
+    double val = 1078.58º;
+    my_sprintf(b, "%f", val);
+    sprintf(c, "%f", val);
     puts(b);
     puts(c);
 }

@@ -284,7 +284,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     int len_str = s21_strlen(str);
     int len_total = len_src + len_str;
 
-    if (len_src >= start_index) {
+    if (len_src >= (int)start_index) {
         result = (char*)malloc(len_total * sizeof(char));
         if (result != S21_NULL) {
             for (int i = 0; i < len_src; i++) {
@@ -330,7 +330,7 @@ char *s21_strerror(int errnum) {
 
 
 void *s21_to_lower(const char *str) {
-    s21_size_t len = s21_strlen(str);
+    int len = s21_strlen(str);
     char *result = malloc(len * sizeof(char));
     if (result == S21_NULL) {
         return S21_NULL;
@@ -618,7 +618,7 @@ void *s21_trim(const char *src, const char *trim_chars)  {
 //    return 0; /*TODO remove*/
 //}
 
-#ifdef DEV
+#ifdef DEVstring
 #include <string.h>
 #include <stdio.h>
 

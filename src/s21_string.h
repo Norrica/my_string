@@ -6,7 +6,6 @@
 typedef unsigned long s21_size_t;
 typedef s21_size_t size;
 #define S21_NULL (void *)0
-
 #if defined(__APPLE__) && (__MACH__)
 #define ERRORS                                                                              \
     { "Undefined error: 0",                                                                     \
@@ -106,7 +105,6 @@ typedef s21_size_t size;
       "Owner died", "State not recoverable", "Operation not possible due to RF-kill",               \
       "Memory page has hardware error" }
 #endif
-
 void *s21_memchr(const void *str, int c, s21_size_t n);
 
 int s21_memcmp(const void *str1, const void *str2, s21_size_t n);
@@ -153,7 +151,9 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 //
 //double my_atof(const char *c);
 //
-char *s21_itoa(int n, char* str);
+void reverse(char *str, int len);
+
+char *s21_itoa(int n, char *str);
 //
 //char *my_ftoa(float num, int precision);
 
@@ -168,5 +168,4 @@ void *s21_to_lower(const char *str);
 void *s21_insert(const char *src, const char *str, size_t start_index);
 
 void *s21_trim(const char *src, const char *trim_chars);
-
 #endif  //  SRC_S21_STRING_H_

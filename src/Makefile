@@ -1,6 +1,6 @@
 #all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS =   #-Wall -Werror -Wextra
+FLAGS =   -Wall -Werror -Wextra
 
 TARGET=test.c
 
@@ -38,6 +38,6 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) $(FLAGS) s21_string.c -o local_test
+		$(CC) $(FLAGS) -DDEV -g s21_string.c useful.c -o local_test
 
 .PHONY : all build clean
