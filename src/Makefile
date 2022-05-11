@@ -1,6 +1,6 @@
 #all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS =   -Wall -Werror -Wextra
+FLAGS =   -Wall -Werror -Wextra -ggdb3
 
 TARGET=test.c
 
