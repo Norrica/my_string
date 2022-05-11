@@ -51,7 +51,6 @@ char *s21_strcpy(char *dest, const char *src) {
     return dest;
 }
 
-
 char *s21_strncpy(char *dest, const char *src, size n) {
     return s21_memcpy(dest, src, n);
 }
@@ -92,7 +91,6 @@ char *s21_strchr(const char *str, int c) {
 char *s21_strrchr(const char *str, int c) {
     const char *ptr, *found;
     c = (unsigned char) c;
-
     if (c == '\0')
         return s21_strchr(str, '\0');
     found = S21_NULL;
@@ -102,7 +100,6 @@ char *s21_strrchr(const char *str, int c) {
     }
     return (char *) found;
 }
-
 
 char *s21_strpbrk(const char *str1, const char *str2) {
     int flag = 0;
@@ -119,7 +116,6 @@ char *s21_strpbrk(const char *str1, const char *str2) {
     return res;
 }
 
-
 size s21_strspn(const char *str1, const char *str2) {
     size_t res = 0;
     while (*str1 && s21_strchr(str2, *str1++)) {
@@ -127,7 +123,6 @@ size s21_strspn(const char *str1, const char *str2) {
     }
     return res;
 }
-
 
 size s21_strcspn(const char *str1, const char *str2) {
     size_t count = 0;
@@ -281,7 +276,6 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     int len_src = s21_strlen(src);
     int len_str = s21_strlen(str);
     int len_total = len_src + len_str;
-
     if (len_src >= (int) start_index) {
         result = (char *) malloc(len_total * sizeof(char));
         if (result != S21_NULL) {
@@ -307,13 +301,11 @@ char *s21_strerror(int errnum) {
     char stt[10];
     static char strr[4096] = {'\0'};
     for (int i = 0; i < 4096; i++) strr[i] = '\0';
-
 #if defined(__APPLE__) && defined(__MACH__)
     max = 106;
 #else
     max = 133;
 #endif
-
     if (errnum > max || errnum < 0) {
         s21_itoa(errnum, stt);
         s21_strcpy(error, "Unknown error: ");
@@ -324,7 +316,6 @@ char *s21_strerror(int errnum) {
     s21_strcat(strr, error);
     return strr;
 }
-
 
 void *s21_to_lower(const char *str) {
     int len = s21_strlen(str);
@@ -356,7 +347,6 @@ void *s21_to_upper(const char *str) {
             result[i] = str[i];
     return result;
 }
-
 
 int isthere(char c, const char *trim_chars) {
     int res = 0;
@@ -399,7 +389,12 @@ void *s21_trim(const char *src, const char *trim_chars) {
         i = 0;
         result = (char *) calloc(1, sizeof(char *));
         for (int j = start_n + 1; j < last_n; j++) {
-            result = (char *) realloc(result, (temp + 2) * sizeof(char *));
+            char *tmp = (char *) realloc(result, (temp + 2) * sizeof(char *));
+            if (!tmp) {
+                return S21_NULL;
+            } else {
+                result = tmp;
+            }
             result[temp] = src[j];
             temp++;
         }
