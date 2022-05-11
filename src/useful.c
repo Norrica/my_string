@@ -35,28 +35,9 @@ enum flag_itoa {
   SET_PRECISION = 128,
   SET_WIDTH = 256
 };
-//char *s21_itoa(int n, char *str) {
-//    int len = 0, i = 0, f = 0;
-//    if (n < 0) {
-//        n *= -1;
-//        f = 1;
-//    }
-//    do {
-//        str[i++] = n % 10 + '0';
-//        n /= 10;
-//        len++;
-//    } while (n);
-//    if (f) {
-//        str[i++] = '-';
-//        len++;
-//    }
-//    str[i] = '\0';
-//    reverse(str, len);
-//    return str;
-//}
+
 char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
     char fill = (flags & FILL_ZERO) ? '0' : ' ';
-
     if (precision == 0)
         precision = 6;
     int int_part = (int) num;
@@ -75,14 +56,14 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
         --width;
     }
     if (fill == ' ')
-        while ((int)res_len <= --width)
+        while ((int) res_len <= --width)
             *(buf++) = fill;
     if (flags & PUT_MINUS) *(buf++) = '-';
     else if (flags & PUT_PLUS) *(buf++) = '+';
-    while ((int)res_len <= --width) {
+    while ((int) res_len <= --width) {
         *(buf++) = fill;
     }
-    s21_strcat(buf,res_buf);
+    s21_strcat(buf, res_buf);
     buf += s21_strlen(res_buf);
     return buf;
 }
@@ -237,9 +218,9 @@ int main() {
     char b[256];
     char c[256];
     double val = 1.58;
-    char * fmt = "%+013.11f";
+    char *fmt = "%+0130.20f";
     my_sprintf(b, fmt, val);
-       sprintf(c, fmt, val);
+    sprintf(c, fmt, val);
     puts(b);
     puts(c);
 }
