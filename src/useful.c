@@ -149,6 +149,7 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                 case 'f': {}/*что-нибудь придумать. */
                     double f_num = va_arg(va, double);
                     buf = s21_ftoa(buf, f_num, precision);
+                    break;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
                     if (p)
@@ -217,7 +218,7 @@ int my_sprintf(char *buf, const char *fmt, ...) {
 int main() {
     char b[256];
     char c[256];
-    double val = 1078.58º;
+    double val = 1078.58;
     my_sprintf(b, "%f", val);
     sprintf(c, "%f", val);
     puts(b);
