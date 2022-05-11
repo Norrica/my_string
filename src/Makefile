@@ -1,15 +1,17 @@
 #all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS =   -Wall -Werror -Wextra -ggdb3
+CFLAGS =   -Wall -Werror -Wextra -ggdb3
 
 TARGET=test.c
 
-all: build
-.DBG: FLAGS += -g -O0
-build: s21_string.a test
+.PHONY : all build clean
 
-debug:FLAGS += -DDEV
-debug:FLAGS += -g -O0
+all: build
+.DBG: CFLAGS += -g
+build: test
+
+debug:CFLAGS += -DDEV
+debug:CFLAGS += -g
 debug: local_debug
 	./local_test
 
@@ -24,13 +26,13 @@ clean:
 rebuild: clean build
 
 s21_string.a: clean
-	$(CC) $(FLAGS) -c -o s21_string.o s21_string.c
+	$(CC) $(CFLAGS) -c s21_string.c -o s21_string.o
 	ar rcs s21_string.a s21_string.o
 
 test: s21_string.a
-	$(CC) $(FLAGS) -lcheck s21_string.a test.c  -o test
+	$(CC) $(CFLAGS) s21_string.c test.c  -o test -lcheck
 
-gcov_report:FLAGS += -fprofile-arcs -ftest-coverage
+gcov_report:CFLAGS += -fprofile-arcs -ftest-coverage
 gcov_report: test
 	./test
 	gcov test.c
@@ -38,6 +40,6 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) $(FLAGS) -DDEV -g s21_string.c useful.c -o local_test
+		$(CC) $(CFLAGS) -DDEV -g s21_string.c useful.c -o local_test
 
-.PHONY : all build clean
+

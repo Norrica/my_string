@@ -250,7 +250,7 @@ void reverse(char *str, int len) {
     }
 }
 
-char *s21_itoa(int n, char *str) {
+char *s21_itoa(long long n, char *str) {
     int len = 0, i = 0, f = 0;
     if (n < 0) {
         n *= -1;

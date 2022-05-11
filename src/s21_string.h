@@ -153,7 +153,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 //
 void reverse(char *str, int len);
 
-char *s21_itoa(int n, char *str);
+char *s21_itoa(long long n, char *str);
 //
 // char *my_ftoa(float num, int precision);
 
