@@ -54,7 +54,9 @@ enum flag_itoa {
 //    reverse(str, len);
 //    return str;
 //}
-char *s21_ftoa(char *buf, double num, int precision) {
+char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
+    char fill = (flags & FILL_ZERO) ? '0' : ' ';
+
     if (precision == 0)
         precision = 6;
     int int_part = (int) num;
@@ -64,12 +66,27 @@ char *s21_ftoa(char *buf, double num, int precision) {
     int float_num = float_part * pow(10, precision);
     char float_res[50];
     s21_itoa(float_num, float_res);
-    //char *res = malloc(s21_strlen(int_res) + 1 + s21_strlen(float_res));
-    s21_strcat(buf, int_res);
-    s21_strcat(buf, ".");
-    s21_strcat(buf, float_res);
+    char res_buf[100];
+    s21_strcat(res_buf, int_res);
+    s21_strcat(res_buf, ".");
+    s21_strcat(res_buf, float_res);
+    s21_size_t res_len = s21_strlen(res_buf);
+    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+        --width;
+    }
+    if (fill == ' ')
+        while ((int)res_len <= --width)
+            *(buf++) = fill;
+    if (flags & PUT_MINUS) *(buf++) = '-';
+    else if (flags & PUT_PLUS) *(buf++) = '+';
+    while ((int)res_len <= --width) {
+        *(buf++) = fill;
+    }
+    s21_strcat(buf,res_buf);
+    buf += s21_strlen(res_buf);
     return buf;
 }
+
 static char *sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags) {
     unsigned int base;
     char hex_size;
@@ -148,7 +165,7 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                     break;
                 case 'f': {}/*что-нибудь придумать. */
                     double f_num = va_arg(va, double);
-                    buf = s21_ftoa(buf, f_num, precision);
+                    buf = s21_ftoa(buf, f_num, width, precision, flags);
                     break;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
@@ -175,6 +192,7 @@ int my_vsprintf(char *buf, const char *fmt, va_list va) {
                         precision_flag = 1;
                     else
                         *(buf++) = '?';
+                    break;
                 case '0':
                     if (!width) {
                         flags |= FILL_ZERO;
@@ -217,11 +235,11 @@ int my_sprintf(char *buf, const char *fmt, ...) {
 
 int main() {
     char b[256];
-    char c[256];
-    double val = 1078.58;
-    my_sprintf(b, "%f", val);
-    sprintf(c, "%f", val);
+    //char c[256];
+    double val = 1.58;
+    my_sprintf(b, "%.10f", val);
+       //sprintf(c, "%+5.1f", val);
     puts(b);
-    puts(c);
+    //puts(c);
 }
 #endif
