@@ -1477,7 +1477,6 @@ Suite *string_suite(void) {
     tcase_add_test(insert_case, test_insert);
     suite_add_tcase(s, insert_case);
 
-
     TCase *trim_case;
     trim_case = tcase_create("trim");
     tcase_add_test(trim_case, test_trim);
