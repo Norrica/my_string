@@ -300,7 +300,6 @@ char *s21_strerror(int errnum) {
     static char result[100];
     s21_memset(result, '\0', 100);
     char str_n[100];
-
 #if defined(__APPLE__) || defined(__MACH__)
     int max = 107;
     static char *str_error[107] = {
@@ -646,7 +645,6 @@ void *s21_trim(const char *src, const char *trim_chars) {
     return result;
 }
 
-
 char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
     char fill = (flags & FILL_ZERO) ? '0' : ' ';
     if (precision == 0)
@@ -757,9 +755,12 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     break;
                 case 'b':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
                     break;
-                case 'f': {}/*что-нибудь придумать. */
-                    double f_num = va_arg(va, double);
-                    buf = s21_ftoa(buf, f_num, width, precision, flags);
+                case 'f': {}
+                    if (precision_flag) {
+                        buf = s21_ftoa(buf, va_arg(va, double), width, precision, flags);
+                    } else {
+                        buf = s21_sitoa(buf, va_arg(va, int), width, flags | BASE_10);
+                    }
                     break;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
@@ -767,7 +768,8 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         while (*p)
                             *(buf++) = *(p++);
                     break;
-                case 'u':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
+                case 'u': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
                     break;
                 case 'm': {}
                     const uint8_t *m = va_arg(va, const uint8_t *);
