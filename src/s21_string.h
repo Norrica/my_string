@@ -180,6 +180,7 @@ enum flag_itoa {
   BASE_2 = 8,
   BASE_10 = 16,
   BIG_HEX = 32,
+  SET_PRECISION = 64,
 };
 char *s21_sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags);
 char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags);

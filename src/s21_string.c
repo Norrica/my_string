@@ -647,8 +647,9 @@ void *s21_trim(const char *src, const char *trim_chars) {
 
 char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
     char fill = (flags & FILL_ZERO) ? '0' : ' ';
-    if (precision == 0)
+    if (precision == 0) {
         precision = 6;
+    }
     int int_part = (int) num;
     double float_part = num - int_part;
     char int_res[50];
@@ -657,9 +658,16 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
     char float_res[50];
     s21_itoa(float_num, float_res);
     char res_buf[100];
-    s21_strcat(res_buf, int_res);
-    s21_strcat(res_buf, ".");
-    s21_strcat(res_buf, float_res);
+    if (float_part == 0) {
+        for (int i = 0; i < precision - 1; ++i) {
+            s21_strcat(float_res, "0");
+        }
+    }
+    s21_strcpy(res_buf, int_res);
+    if (!(flags & SET_PRECISION) && precision == 6) {
+        s21_strcat(res_buf, ".");
+        s21_strcat(res_buf, float_res);
+    }
     s21_size_t res_len = s21_strlen(res_buf);
     if (flags & PUT_MINUS || flags & PUT_PLUS) {
         --width;
@@ -672,8 +680,10 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
     while ((int) res_len <= --width) {
         *(buf++) = fill;
     }
-    s21_strcat(buf, res_buf);
-    buf += s21_strlen(res_buf);
+    char *b = res_buf;
+    while (*b != '\0') {
+        *buf++ = *b++;
+    }
     return buf;
 }
 
@@ -723,7 +733,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
     while ((c = *fmt++)) {
         int width = 0;
         int precision = 0;
-        int precision_flag = 0;
+        //int precision_flag = 0;
         enum flag_itoa flags = 0;
         if (c != '%') {
             *(buf++) = c;
@@ -753,14 +763,12 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                 case 'x': {}
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
                     break;
-                case 'b':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
+                case 'b': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
                     break;
                 case 'f': {}
-                    if (precision_flag) {
-                        buf = s21_ftoa(buf, va_arg(va, double), width, precision, flags);
-                    } else {
-                        buf = s21_sitoa(buf, va_arg(va, int), width, flags | BASE_10);
-                    }
+                    double d = va_arg(va, double);
+                    buf = s21_ftoa(buf, d, width, precision, flags);
                     break;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
@@ -784,8 +792,8 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     }
                     break;
                 case '.': {}
-                    if (!precision_flag)
-                        precision_flag = 1;
+                    if (!(flags & SET_PRECISION))
+                        flags |= SET_PRECISION;
                     else
                         *(buf++) = '?';
                     break;
@@ -795,7 +803,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     }
                     // fall through
                 case '1'...'9': {}
-                    if (!precision_flag)
+                    if (!(flags & SET_PRECISION))
                         width = width * 10 + c - '0';
                     else
                         precision = precision * 10 + c - '0';
@@ -808,7 +816,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                 case '+': {}
                     flags |= PUT_PLUS;
                     continue;
-                case '\0':
+                case '\0':continue;
                 default:*(buf++) = '?';
             }
         }
@@ -825,3 +833,19 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     va_end(va);
     return ret;
 }
+#ifdef DEV
+int main() {
+    char temp1[200]="gjfdsklsgjadfkl;jakl;";
+    char temp2[200]="gjfdsklsgjadfkl;jakl;";
+    //char c = 'c';
+    //int di = 5;
+    //short hdi = 15;
+    //size_t u = 10;
+    //float f = 155;
+    char * fmt = "%s    %d";
+        sprintf(temp1, fmt, "lol", 15);
+    s21_sprintf(temp2, fmt, "lol", 15);
+    puts(temp1);
+    puts(temp2);
+}
+#endif
