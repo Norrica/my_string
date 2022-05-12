@@ -681,7 +681,7 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
         *(buf++) = fill;
     }
     char *b = res_buf;
-    buf--;
+    //buf--;
     while (*b != '\0') {
         *buf++ = *b++;
     }
@@ -738,9 +738,9 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
             for (char *i = (char *) fmt; *fmt; ++i) {
                 c = *fmt++;
                 switch (c) {
-                    //case '%': {}
-                    //    *(buf++) = c;
-                    //    break;
+                    case '%': {}
+                        *(buf++) = c;
+                        break;
                     case 'c': {}
                         *(buf++) = va_arg(va, int);
                         break;
@@ -811,21 +811,18 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         flags |= PUT_PLUS;
                         continue;
                     case ' ':
-                    //case '\0':
-                        *buf++ = c;
-                        break;
-                    default:
-                        *buf++ = c;
+                        //case '\0':
+                        //    *buf++ = c;
+                        //break;
+                    default:*buf++ = c;
                         continue;
+
                 }
             }
-        } else {
-            //*buf++ = c;
-            continue;
         }
         *buf = '\0';
     }
-    return buf - save;
+        return buf - save;
 }
 int s21_sprintf(char *buf, const char *fmt, ...) {
     va_list va;
@@ -843,9 +840,9 @@ int main() {
     //short hdi = 15;
     //size_t u = 10;
     //float f = 155;
-    char * fmt = "%d %f %s";
-        sprintf(temp1, fmt,15,16.5, "lol");
-    s21_sprintf(temp2, fmt,15,16.5, "lol");
+    char * fmt = "%f";
+        sprintf(temp1, fmt,15.15);
+    s21_sprintf(temp2, fmt,15.15);
     puts(temp1);
     puts(temp2);
 }
