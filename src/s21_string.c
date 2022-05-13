@@ -655,6 +655,10 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
         precision = 0;
     }
 
+    if (flags & PUT_MINUS) {
+        num *= -1;
+    }
+
     int int_part = (int) num;
     double float_part = num - int_part;
 
@@ -673,11 +677,10 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
 
     char res_buf[100];
     s21_strcpy(res_buf, int_res);
-    if ((flags & SET_PRECISION) && precision != 0) {
+    if (precision != 0) {
         s21_strcat(res_buf, ".");
         s21_strcat(res_buf, float_res);
     }
-
 
     if (flags & PUT_MINUS || flags & PUT_PLUS) {
         --width;
@@ -781,6 +784,8 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         break;
                     case 'f': {}
                         double d = va_arg(va, double);
+                        if (d < 0)
+                            flags |= PUT_MINUS;
                         buf = s21_ftoa(buf, d, width, precision, flags);
                         break;
                     case 's': {}
@@ -855,8 +860,8 @@ int main() {
     //int di = 5;
     //short hdi = 15;
     //size_t u = 10;
-    float f = 0.12;
-    char * fmt = "%f";
+    float f = -155.12;
+    char * fmt = "%.1f";
         sprintf(temp1, fmt,f);
     s21_sprintf(temp2, fmt,f);
     puts(temp1);
