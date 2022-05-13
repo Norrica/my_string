@@ -5,7 +5,7 @@
 
 typedef unsigned long s21_size_t;
 typedef s21_size_t size;
-#define S21_NULL (void *)0
+#define s21_NULL (void *)0
 #if defined(__APPLE__) && (__MACH__)
 #define ERRORS                                                                              \
     { "Undefined error: 0",                                                                     \
@@ -139,7 +139,7 @@ char *s21_strpbrk(const char *str1, const char *str2);
 
 char *s21_strrchr(const char *str, int c);
 
-char *s21_strstr(const char *str, const char *substr);
+char *s21_strstr(const char *haystack, const char *needle);
 
 char *s21_strtok(char *str, const char *delim);
 
@@ -151,7 +151,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 //
 // double my_atof(const char *c);
 //
-void reverse(char *str, int len);
+void s21_reverse(char *str, int len);
 
 char *s21_itoa(long long n, char *str);
 //
