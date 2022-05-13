@@ -679,6 +679,8 @@ char *s21_sitoa(char *buf, long long int num, int width, int flags) {
     char hex_size = 'a';
     if (flags & BASE_2) {
         base = 2;
+    } else if (flags & BASE_8) {
+        base = 8;
     } else if (flags & BASE_10) {
         base = 10;
     } else {
@@ -806,6 +808,10 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
                     start_fmt = 0;
                     continue;
+                case 'o': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_8);
+                    start_fmt = 0;
+                    continue;
                 case 'm': {}
                     const uint8_t *m = va_arg(va, const uint8_t *);
                     width = min(width, 64);
@@ -869,12 +875,12 @@ int main() {
     char temp2[200];
     //char c = 'c';
     //long long int di = 5;
-    int hdi = 56437256;
+    //int hdi = 56437256;
     //size_t u = 10;
-    long double f = 155;
-    char *fmt = "%hd %07s %020L.10f";
-        sprintf(temp1, fmt, hdi,"aboba",f);
-    s21_sprintf(temp2, fmt, hdi,"aboba",f);
+    //long double f = 155;
+    char *fmt = "%o";
+        sprintf(temp1, fmt, 16);
+    s21_sprintf(temp2, fmt, 16);
     printf("%s [%s]\n", "std", temp1);
     printf("%s [%s]\n", "s21", temp2);
 

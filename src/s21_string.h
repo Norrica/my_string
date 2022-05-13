@@ -175,13 +175,14 @@ enum conversion_flags {
   PUT_PLUS = 2,
   PUT_MINUS = 4,
   BASE_2 = 8,
-  BASE_10 = 16,
-  BIG_HEX = 32,
-  SET_PRECISION = 64,
-  L = 128,
-  h = 256,
-  l = 512,
-  ll = 1024,
+  BASE_8=16,
+  BASE_10 = 32,
+  BIG_HEX = 64,
+  SET_PRECISION = 128,
+  L = 256,
+  h = 512,
+  l = 1024,
+  ll = 2048,
 };
 
 
