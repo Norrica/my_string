@@ -10,7 +10,7 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
     const unsigned char *p = str;
     while (n--)
         if (*p++ == c) {
-            result = (void *)p - 1;
+            result = (void *) p - 1;
             break;
         }
     return result;
@@ -79,16 +79,20 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    char *result = s21_NULL;
-    do {
-        if (*str == c)
-            result = (char *)str;
-    } while (*str++);
-    return result;
+    /*while (*str!='\0' && *str != c)
+        ++str;
+    return (char *) (c == *str ? str : s21_NULL);*/
+    while (*str != '\0') {
+        if (*str == c) {
+            return (char *) str;
+        }
+        str++;
+    }
+    return (s21_NULL);
 }
 
 int s21_strcmp(const char *str1, const char *str2) {
-    while ((*str1++ == *str2++) && *str1);
+    while ((*str1++ == *str2++) && *str1) {};
     return *str1 - *str2;
 }
 
@@ -115,7 +119,7 @@ char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
 }
 //TODO: не понимаю
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
-    size_t result = 0;
+    s21_size_t result = 0;
     while (*str1 && !s21_strchr(str2, *str1++)) {
         result++;
     }
@@ -394,7 +398,7 @@ char *s21_strpbrk(const char *str1, const char *str2) {
     while (*str1) {
         while (*str2) {
             if (*str1 == *str2++)
-                result = (char *)str1;
+                result = (char *) str1;
         }
         str1++;
     }
@@ -406,7 +410,7 @@ char *s21_strrchr(const char *str, int c) {
     char *result = s21_NULL;
     for (s21_size_t i = 0; i < size; i++) {
         if (str[i] == c) {
-            result = (char *)&str[i];
+            result = (char *) &str[i];
         }
     }
     return result;
@@ -499,7 +503,7 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     s21_size_t size_str = s21_strlen(str);
     s21_size_t size_total = size_src + size_str;
     if (size_src >= start_index) {
-        result = (char *)malloc(size_total * sizeof(char));
+        result = (char *) malloc(size_total * sizeof(char));
         if (result != s21_NULL) {
             for (s21_size_t i = 0; i < size_src; i++) {
                 result[i] = src[i];
@@ -603,8 +607,14 @@ void *s21_trim(const char *src, const char *trim_chars) {
     return result;
 }
 
-char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
-    char fill = (flags & FILL_ZERO) ? '0' : ' ';
+char *s21_ftoa(char *buf, long double num, int width, int precision, int flags) {
+    char fill/* = (flags & FILL_ZERO) ? '0' : ' '*/;
+    if (flags & FILL_ZERO) {
+        fill = '0';
+    } else {
+        fill = ' ';
+    }
+
     if (precision == 0 && !(flags & SET_PRECISION)) {
         precision = 6;
     } else if (precision == 0 && (flags & SET_PRECISION)) {
@@ -625,7 +635,7 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
     char float_res[50];
     s21_itoa(float_num, float_res);
 
-    char new_float_res[50];
+    char new_float_res[50] = "";
     if ((size) precision > s21_strlen(float_res))
         s21_memset(new_float_res, '0', precision - s21_strlen(float_res));
     s21_strcat(new_float_res, float_res);
@@ -647,11 +657,11 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
             *(buf++) = fill;
     if (flags & PUT_MINUS) *(buf++) = '-';
     else if (flags & PUT_PLUS) *(buf++) = '+';
-    precision = 0;
 
     while ((int) res_len <= --width) {
         *(buf++) = fill;
     }
+    precision = 0;
     if ((int) s21_strlen(res_buf) < width + precision)
         for (int i = 0; i < width + precision; ++i) {
             s21_strcat(res_buf, "0");
@@ -664,7 +674,7 @@ char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa f
     return buf;
 }
 
-char *s21_sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags) {
+char *s21_sitoa(char *buf, long long int num, int width, int flags) {
     unsigned int base;
     char hex_size = 'a';
     if (flags & BASE_2) {
@@ -677,6 +687,12 @@ char *s21_sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags) {
             hex_size = 'A';
         }
     }
+
+    if (num < 0) {
+        num = -num;
+        flags |= PUT_MINUS;
+    }
+
     char tmp[32];
     char *p = tmp;
     do {
@@ -708,103 +724,125 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
     while ((c = *fmt++)) {
         int width = 0;
         int precision = 0;
-        //int precision_flag = 0;
-        enum flag_itoa flags = 0;
-        if (c == '%') {
-            for (char *i = (char *) fmt; *fmt; ++i) {
-                c = *fmt++;
-                switch (c) {
-                    case '%': {}
-                        *(buf++) = c;
-                        break;
-                    case 'l':
-                        flags |= IS_LONG;
-                        break;
-                    case 'h':
-                        flags |= IS_SHORT;
-                        break;
-                    case 'c': {}
-                        *(buf++) = va_arg(va, int);
-                        break;
-                    case 'i':
-                    case 'd': {}
-                        int num = va_arg(va, int);
-                        if (num < 0) {
-                            num = -num;
-                            flags |= PUT_MINUS;
-                        }
+        int flags = 0;
+        if (c != '%') {
+            *(buf++) = c;
+            continue;
+        }
+        int start_fmt = 1;
+        for (char *i = (char *) fmt; start_fmt; ++i) {
+            c = *fmt++;
+            switch (c) {
+                case '%': {}
+                    *(buf++) = c;
+                    start_fmt = 0;
+                    continue;
+                case 'L':flags |= L;
+                    continue;
+                case 'h':flags |= h;
+                    continue;
+                case 'l':flags |= l;
+                    if (*(fmt + 1) == 'l') {
+                        flags |= ll;
+                        flags &= ~l;
+                    }
+                    continue;
+                case 'c': {}
+                    *(buf++) = va_arg(va, int);
+                    start_fmt = 0;
+                    continue;
+                case 'i':
+                case 'd': {}
+                    int num = va_arg(va, int);
+
+                    if (flags & h) {
+                        num = (short int) num;
+
                         buf = s21_sitoa(buf, num, width, flags | BASE_10);
-                        break;
-                    case 'X': {}
-                        buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
-                        break;
-                    case 'x': {}
-                        buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
-                        break;
-                    case 'b': {}
-                        buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
-                        break;
-                    case 'f': {}
-                        double d = va_arg(va, double);
-                        if (d < 0)
-                            flags |= PUT_MINUS;
-                        buf = s21_ftoa(buf, d, width, precision, flags);
-                        break;
-                    case 's': {}
-                        const char *p = va_arg(va, const char *);
-                        if (p)
-                            while (*p)
-                                *buf++ = *(p++);
-                        break;
-                    case 'u': {}
-                        buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
-                        break;
-                    case 'm': {}
-                        const uint8_t *m = va_arg(va, const uint8_t *);
-                        width = min(width, 64);
-                        if (m) {
-                            for (;;) {
-                                buf = s21_sitoa(buf, *(m++), 2, FILL_ZERO);
-                                if (--width <= 0)
-                                    break;
-                                *(buf++) = ':';
-                            }
+                    } else {
+                        buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                    }
+                    start_fmt = 0;
+                    continue;
+                case 'X': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
+                    start_fmt = 0;
+                    continue;
+                case 'x': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
+                    start_fmt = 0;
+                    continue;
+
+                case 'b': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
+                    start_fmt = 0;
+                    continue;
+                case 'f': {}
+                    long double d;
+                    if (flags & L)
+                        d = (long double) va_arg(va, long double);
+                    else
+                        d = (double) va_arg(va, double);
+                    if (d < 0)
+                        flags |= PUT_MINUS;
+                    buf = s21_ftoa(buf, d, width, precision, flags);
+                    start_fmt = 0;
+                    continue;
+                case 's': {}
+                    const char *p = va_arg(va, const char *);
+                    if (p)
+                        while (*p)
+                            *buf++ = *(p++);
+                    start_fmt = 0;
+                    continue;
+                case 'u': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
+                    start_fmt = 0;
+                    continue;
+                case 'm': {}
+                    const uint8_t *m = va_arg(va, const uint8_t *);
+                    width = min(width, 64);
+                    if (m) {
+                        for (;;) {
+                            buf = s21_sitoa(buf, *(m++), 2, FILL_ZERO);
+                            if (--width <= 0)
+                                break;
+                            *(buf++) = ':';
                         }
-                        break;
-                    case '.': {}
-                        if (!(flags & SET_PRECISION))
-                            flags |= SET_PRECISION;
-                        else
-                            *(buf++) = '?';
-                        break;
-                    case '0':
-                        if (!width) {
-                            flags |= FILL_ZERO;
-                        }
-                        // fall through
-                    case '1'...'9': {}
-                        if (!(flags & SET_PRECISION))
-                            width = width * 10 + c - '0';
-                        else
-                            precision = precision * 10 + c - '0';
-                        continue;
-                    case '*': {}
-                        width = va_arg(va, unsigned int);
-                        continue;
-                    case '+': {}
-                        flags |= PUT_PLUS;
-                        continue;
-                    case ' ':
-                        //case '\0':
-                        //    *buf++ = c;
-                        //break;
-                    default:*buf++ = c;
-                        continue;
-                }
+                    }
+                    start_fmt = 0;
+                    continue;
+                case '.': {}
+                    if (!(flags & SET_PRECISION))
+                        flags |= SET_PRECISION;
+                    else
+                        *(buf++) = '?';
+                    continue;
+                case '0':
+                    if (!width) {
+                        flags |= FILL_ZERO;
+                    }
+                    // fall through
+                case '1'...'9': {}
+                    if (!(flags & SET_PRECISION))
+                        width = width * 10 + c - '0';
+                    else
+                        precision = precision * 10 + c - '0';
+                    continue;
+                case '*': {}
+                    width = va_arg(va, unsigned int);
+                    continue;
+                case '+': {}
+                    flags |= PUT_PLUS;
+                    continue;
+                case ' ':
+                default:*buf++ = c;
+                    start_fmt = 0;
+                    continue;
             }
         }
-        *buf = '\0';
     }
+    *buf = '\0';
     return buf - save;
 }
 int s21_sprintf(char *buf, const char *fmt, ...) {
@@ -814,19 +852,35 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     va_end(va);
     return ret;
 }
+
+//#define DEV
 #ifdef DEV
+#include <stdio.h>
+
 int main() {
     char temp1[200];
     char temp2[200];
     //char c = 'c';
-    //int di = 5;
-    //short hdi = 15;
+    //long long int di = 5;
+    int hdi = 33000;
     //size_t u = 10;
-    int f = -155;
-    char * fmt = "%10";
-        sprintf(temp1, fmt,f);
-    s21_sprintf(temp2, fmt,f);
-    puts(temp1);
-    puts(temp2);
+    //long double f = 155.237664875;
+    char *fmt = "%hd";
+        sprintf(temp1, fmt, hdi);
+    s21_sprintf(temp2, fmt, hdi);
+    printf("%s [%s]\n", "std", temp1);
+    printf("%s [%s]\n", "s21", temp2);
+
+    //printf("%lu\n", sizeof(long double));
+    //printf("%lu\n", sizeof(double));
+    //printf("%lu\n", sizeof(float));
+    //printf("%lu\n", sizeof(short int));
+    //printf("%lu\n", sizeof(int));
+    //printf("%lu\n", sizeof(long int));
+    //printf("%lu\n", sizeof(long long int));
+
+    //puts(s21_strchr("abcdabb", 'a'));
+    //int a = 33000;
+    printf("%d",(short)hdi);
 }
 #endif

@@ -1,6 +1,5 @@
 #ifndef SRC_S21_STRING_H_
 #define SRC_S21_STRING_H_
-#include <stdio.h>
 #include <stdlib.h>
 
 typedef unsigned long s21_size_t;
@@ -145,8 +144,6 @@ char *s21_strtok(char *str, const char *delim);
 
 s21_size_t s21_strspn(const char *str1, const char *str2);
 
-void *s21_insert(const char *src, const char *str, s21_size_t start_index);
-
 // int my_atoi(const char *c);
 //
 // double my_atof(const char *c);
@@ -166,14 +163,14 @@ void *s21_to_upper(const char *str);
 
 void *s21_to_lower(const char *str);
 
-void *s21_insert(const char *src, const char *str, size_t start_index);
+void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 
 void *s21_trim(const char *src, const char *trim_chars);
 #define min(a, b) __extension__\
     ({ __typeof__(a) _a = (a); \
        __typeof__(b) _b = (b); \
        _a < _b ? _a : _b; })
-enum flag_itoa {
+enum conversion_flags {
   FILL_ZERO = 1,
   PUT_PLUS = 2,
   PUT_MINUS = 4,
@@ -181,11 +178,15 @@ enum flag_itoa {
   BASE_10 = 16,
   BIG_HEX = 32,
   SET_PRECISION = 64,
-  IS_LONG = 128,
-  IS_SHORT = 256,
+  L = 128,
+  h = 256,
+  l = 512,
+  ll = 1024,
 };
-char *s21_sitoa(char *buf, unsigned int num, int width, enum flag_itoa flags);
-char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags);
+
+
+char *s21_sitoa(char *buf, long long int num, int width, int flags);
+char *s21_ftoa(char *buf, long double num, int width, int precision, int flags);
 int s21_vsprintf(char *buf, const char *fmt, va_list va);
 int s21_sprintf(char *buf, const char *fmt, ...);
 #endif  //  SRC_S21_STRING_H_
