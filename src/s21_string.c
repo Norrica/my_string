@@ -388,9 +388,9 @@ char *s21_strerror(int errnum) {
 }
 
 s21_size_t s21_strlen(const char *str) {
-    s21_size_t i = 0;
-    for (; str[i]; i++);
-    return i;
+    s21_size_t len = 0;
+    for (; str[len]; len++);
+    return len + 1;
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {
@@ -790,6 +790,13 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
+                    int a = s21_strlen(p);
+                    while (((width--) - a) >= 0) {
+                        if (flags & FILL_ZERO)
+                            *buf++ = '0';
+                        else
+                            *buf++ = ' ';
+                    }
                     if (p)
                         while (*p)
                             *buf++ = *(p++);
@@ -862,12 +869,12 @@ int main() {
     char temp2[200];
     //char c = 'c';
     //long long int di = 5;
-    int hdi = 33000;
+    int hdi = 56437256;
     //size_t u = 10;
-    //long double f = 155.237664875;
-    char *fmt = "%hd";
-        sprintf(temp1, fmt, hdi);
-    s21_sprintf(temp2, fmt, hdi);
+    long double f = 155;
+    char *fmt = "%hd %07s %020L.10f";
+        sprintf(temp1, fmt, hdi,"aboba",f);
+    s21_sprintf(temp2, fmt, hdi,"aboba",f);
     printf("%s [%s]\n", "std", temp1);
     printf("%s [%s]\n", "s21", temp2);
 
@@ -881,6 +888,5 @@ int main() {
 
     //puts(s21_strchr("abcdabb", 'a'));
     //int a = 33000;
-    printf("%d",(short)hdi);
 }
 #endif
