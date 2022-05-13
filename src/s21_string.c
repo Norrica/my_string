@@ -57,7 +57,7 @@ char *s21_strncpy(char *dest, const char *src, size n) {
     return s21_memcpy(dest, src, n);
 }
 
-void *s21_memmove(void *dest, const void *src, size_t n) {
+void *s21_memmove(void *dest, const void *src, size n) {
     char *d = dest;
     const char *s = src;
     if (d < s) {
@@ -72,10 +72,12 @@ void *s21_memmove(void *dest, const void *src, size_t n) {
     return dest;
 }
 
-void *s21_memset(void *str, int c, size_t n) {
-    char *s = str;
-    while (n--) {
-        *s++ = (char) c;
+void *s21_memset(void *str, int c, s21_size_t n) {
+    if (n > 0) {
+        char *s = str;
+        while (n--) {
+            *s++ = (char) c;
+        }
     }
     return str;
 }
@@ -647,39 +649,54 @@ void *s21_trim(const char *src, const char *trim_chars) {
 
 char *s21_ftoa(char *buf, double num, int width, int precision, enum flag_itoa flags) {
     char fill = (flags & FILL_ZERO) ? '0' : ' ';
-    if (precision == 0) {
+    if (precision == 0 && !(flags & SET_PRECISION)) {
         precision = 6;
+    } else if (precision == 0 && (flags & SET_PRECISION)) {
+        precision = 0;
     }
+
     int int_part = (int) num;
     double float_part = num - int_part;
+
     char int_res[50];
     s21_itoa(int_part, int_res);
+
     long long float_num = float_part * pow(10, precision);
     char float_res[50];
     s21_itoa(float_num, float_res);
+
+    char new_float_res[50];
+    if ((size) precision > s21_strlen(float_res))
+        s21_memset(new_float_res, '0', precision - s21_strlen(float_res));
+    s21_strcat(new_float_res, float_res);
+    s21_strcpy(float_res, new_float_res);
+
     char res_buf[100];
-    if (float_part == 0) {
-        for (int i = 0; i < precision - 1; ++i) {
-            s21_strcat(float_res, "0");
-        }
-    }
     s21_strcpy(res_buf, int_res);
-    if (!(flags & SET_PRECISION) && precision == 6) {
+    if ((flags & SET_PRECISION) && precision != 0) {
         s21_strcat(res_buf, ".");
         s21_strcat(res_buf, float_res);
     }
-    s21_size_t res_len = s21_strlen(res_buf);
+
+
     if (flags & PUT_MINUS || flags & PUT_PLUS) {
         --width;
     }
+    s21_size_t res_len = s21_strlen(res_buf);
     if (fill == ' ')
         while ((int) res_len <= --width)
             *(buf++) = fill;
     if (flags & PUT_MINUS) *(buf++) = '-';
     else if (flags & PUT_PLUS) *(buf++) = '+';
+    precision = 0;
+
     while ((int) res_len <= --width) {
         *(buf++) = fill;
     }
+    if ((int) s21_strlen(res_buf) < width + precision)
+        for (int i = 0; i < width + precision; ++i) {
+            s21_strcat(res_buf, "0");
+        }
     char *b = res_buf;
     //buf--;
     while (*b != '\0') {
@@ -816,13 +833,12 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         //break;
                     default:*buf++ = c;
                         continue;
-
                 }
             }
         }
         *buf = '\0';
     }
-        return buf - save;
+    return buf - save;
 }
 int s21_sprintf(char *buf, const char *fmt, ...) {
     va_list va;
@@ -833,16 +849,16 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
 }
 #ifdef DEV
 int main() {
-    char temp1[200]="gjfdsklsgjadfkl;jakl;";
-    char temp2[200]="gjfdsklsgjadfkl;jakl;";
+    char temp1[200];
+    char temp2[200];
     //char c = 'c';
     //int di = 5;
     //short hdi = 15;
     //size_t u = 10;
-    //float f = 155;
+    float f = 0.12;
     char * fmt = "%f";
-        sprintf(temp1, fmt,15.15);
-    s21_sprintf(temp2, fmt,15.15);
+        sprintf(temp1, fmt,f);
+    s21_sprintf(temp2, fmt,f);
     puts(temp1);
     puts(temp2);
 }
