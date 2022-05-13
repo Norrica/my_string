@@ -763,8 +763,10 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         break;
                     case 'l':
                         flags |= IS_LONG;
+                        break;
                     case 'h':
                         flags |= IS_SHORT;
+                        break;
                     case 'c': {}
                         *(buf++) = va_arg(va, int);
                         break;
@@ -864,8 +866,8 @@ int main() {
     //int di = 5;
     //short hdi = 15;
     //size_t u = 10;
-    float f = -155.12;
-    char * fmt = "%.1f";
+    int f = -155;
+    char * fmt = "%10";
         sprintf(temp1, fmt,f);
     s21_sprintf(temp2, fmt,f);
     puts(temp1);
