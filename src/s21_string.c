@@ -761,6 +761,10 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     case '%': {}
                         *(buf++) = c;
                         break;
+                    case 'l':
+                        flags |= IS_LONG;
+                    case 'h':
+                        flags |= IS_SHORT;
                     case 'c': {}
                         *(buf++) = va_arg(va, int);
                         break;
