@@ -901,7 +901,7 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     return ret;
 }
 
-//#define DEV
+#define DEV
 #ifdef DEV
 #include <stdio.h>
 #include <string.h>
@@ -923,18 +923,18 @@ int main() {
      s21_to_lower("qweqsda");
      s21_insert("qweqweq", "qweqweq", 2);
      s21_trim("   qqwe", "qweq ");
-     reverse("ghhsdfs", 1);
+//     reverse("ghhsdfs", 1);
      s21_itoa(4, dest);
      s21_strpbrk("qweqweq", "sdsdsd");
      s21_strrchr("qweqweq", 10);
      s21_strstr("qweqeqe", "fvvbgg");
      s21_strtok("#qweqe", "q");
-//     s21_strspn("qweqeq", "wqwqwqwqw");
-//     s21_strerror(1);
-//     s21_strlen("hgdfjkghdkj");
-//     s21_strcpy(dest, "qweqweq");
-//     s21_strncpy("qqw", "1231wq", 3 );
-//     s21_strcspn("qweqweqe", "ofjfdifdi");
+     s21_strspn("qweqeq", "wqwqwqwqw");
+     s21_strerror(1);
+     s21_strlen("hgdfjkghdkj");
+     s21_strcpy(dest, "qweqweq");
+     s21_strncpy(dest, "1231wq", 3 );
+     s21_strcspn("qweqweqe", "ofjfdifdi");
     //  printf("%s %d",__FILE__, __LINE__);
     char str[50];
     char *fmt = "%+0123.5dd";
