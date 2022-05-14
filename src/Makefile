@@ -30,7 +30,7 @@ s21_string.a: clean
 	ar rcs s21_string.a s21_string.o
 
 test: s21_string.a
-	$(CC) $(CFLAGS) s21_string.c test.c  -o test -lcheck
+	$(CC)  s21_string.c test.c  -o test -lcheck
 
 gcov_report:CFLAGS += -fprofile-arcs -ftest-coverage
 gcov_report: test

@@ -79,16 +79,16 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    while (*str!='\0' && *str != c)
-        ++str;
-    return (char *) (c == *str ? str : s21_NULL);
-//    while (*str != '\0') {
-//        if (*str == c) {
-//            return (char *) str;
-//        }
-//        str++;
-//    }
-//    return (s21_NULL);
+    //while (*str != '\0' && *str != c)
+    //    ++str;
+    //return (char *) (c == *str ? str : s21_NULL);
+    while (*str != '\0') {
+        if (*str == c) {
+            return (char *) str;
+        }
+        str++;
+    }
+    return (s21_NULL);
 }
 
 int s21_strcmp(const char *str1, const char *str2) {
@@ -140,9 +140,10 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 //TODO: не решено
 char *s21_strerror(int errnum) {
     static char result[100];
+
 #if defined(__APPLE__) || defined(__MACH__)
-    int n = 107;
-    static char *str_error[] = {
+    int n = 106;
+    const char *str_error[] = {
         "Undefined error: 0",
         "Operation not permitted",
         "No such file or directory",
@@ -251,10 +252,11 @@ char *s21_strerror(int errnum) {
         "Previous owner died",
         "Interface output queue is full",
     };
+
 #elif defined(__linux__)
-    int n = 132;
-    static char *str_error[] = {
-        "Success",
+    int n = 131;
+    const char *str_error[] = {
+        "No error information",
         "Operation is not permitted",
         "No such file or directory exists",
         "No such process exists",
@@ -361,7 +363,7 @@ char *s21_strerror(int errnum) {
         "Transport endpoint is already connected",
         "Transport endpoint is not connected",
         "System cannot send after transport endpoint shutdown",
-        "Too many references: cannot splice.",
+        "Socket not connected",
         "Connection is timed out",
         "Connection is refused",
         "Host is down",
@@ -388,12 +390,14 @@ char *s21_strerror(int errnum) {
         "Memory page has hardware error",
     };
 #endif
-    if (errnum > n && errnum < 0) {
-
-
-        s21_strcpy(result, "Unknown error: 107");
-
-
+    if (errnum > n || errnum < 0) {
+#if defined(__APPLE__) || defined(__MACH__)
+        char res[30];
+        s21_sprintf(res, "Unknown error: %d", errnum);
+        s21_strcpy(result, res);
+#elif defined(__linux__)
+        s21_strcpy(result, "No error information");
+#endif
     } else {
         s21_strcpy(result, str_error[errnum]);
     }
@@ -413,7 +417,7 @@ char *s21_strpbrk(const char *str1, const char *str2) {
     for (s21_size_t i = 0; i < size_str1 && result == s21_NULL; i++) {
         for (s21_size_t j = 0; j < size_str2 && result == s21_NULL; j++) {
             if (str1[i] == str2[j]) {
-                result = (char *)&str1[i];
+                result = (char *) &str1[i];
             }
         }
     }
@@ -459,25 +463,36 @@ char *s21_strstr(const char *haystack, const char *needle) {
 }
 
 char *s21_strtok(char *str, const char *delim) {
-    static char *buffer;
-    char *token = s21_NULL;
-    if (str) {
-        buffer = str;
-        while (*buffer && s21_strchr(delim, *buffer)) {
-            *buffer++ = '\0';
+    static char *current;
+    char *result = s21_NULL;
+    if (delim != NULL) {
+        if (str != s21_NULL) {
+            /*remove delims from start*/
+            str = &str[s21_strspn(str, delim)];
+            s21_size_t first = s21_strspn(str, delim);
+            s21_size_t second = s21_strcspn(str, delim);
+            if (second == s21_strlen(str) || first == s21_strlen(str)) {
+                if (current != s21_NULL)
+                    return str;
+                else
+                    return s21_NULL;
+            }
+            current = &str[second] + 1;
+            result = malloc((first + second) * sizeof(char));
+            for (s21_size_t i = first; i < second; ++i) {
+                result[i - first] = str[i];
+            }
+            return result;
+        } else {
+            if (current == s21_NULL || current[0] == '\0') {
+                return s21_NULL;
+            } else {
+                result = s21_strtok(current, delim);
+                current = &current[s21_strspn(current, result)];
+            }
         }
     }
-    if (buffer && *buffer) {
-        str = buffer;
-        while (*buffer && !s21_strchr(delim, *buffer)) {
-            ++buffer;
-        }
-        while (*buffer && s21_strchr(delim, *buffer)) {
-            *buffer++ = '\0';
-        }
-        token = str;
-    }
-    return token;
+    return result;
 }
 
 void s21_reverse(char *str, int len) {
@@ -514,28 +529,33 @@ char *s21_itoa(long long n, char *str) {
 
 void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     char *result = s21_NULL;
-    s21_size_t size_src = s21_strlen(src);
-    s21_size_t size_str = s21_strlen(str);
-    s21_size_t size_total = size_src + size_str;
-    if (size_src >= start_index) {
-        result = (char *) malloc(size_total * sizeof(char));
-        if (result != s21_NULL) {
-            for (s21_size_t i = 0; i < size_src; i++) {
-                result[i] = src[i];
+    if (src != s21_NULL && str != s21_NULL) {
+        s21_size_t size_src = s21_strlen(src);
+        s21_size_t size_str = s21_strlen(str);
+        s21_size_t size_total = size_src + size_str;
+        if (size_src >= start_index) {
+            result = (char *) malloc(size_total * sizeof(char));
+            if (result != s21_NULL) {
+                for (s21_size_t i = 0; i < size_src; i++) {
+                    result[i] = src[i];
+                }
+                for (s21_size_t i = start_index; i < size_total; i++) {
+                    result[i] = str[i - start_index];
+                }
+                for (s21_size_t i = start_index + size_str; i < size_total; i++) {
+                    result[i] = src[i - s21_strlen(str)];
+                }
+                result[size_total] = '\0';
             }
-            for (s21_size_t i = start_index; i < size_total; i++) {
-                result[i] = str[i - start_index];
-            }
-            for (s21_size_t i = start_index + size_str; i < size_total; i++) {
-                result[i] = src[i - s21_strlen(str)];
-            }
-            result[size_total + 1] = '\0';
         }
     }
     return result;
 }
 
 void *s21_to_lower(const char *str) {
+    if (str == s21_NULL) {
+        return s21_NULL;
+    }
     int len = s21_strlen(str);
     char *result = malloc(len * sizeof(char));
     if (result == s21_NULL) {
@@ -552,6 +572,9 @@ void *s21_to_lower(const char *str) {
 }
 
 void *s21_to_upper(const char *str) {
+    if (str == s21_NULL) {
+        return s21_NULL;
+    }
     s21_size_t len = s21_strlen(str);
     char *result = malloc(len * sizeof(char));
     if (result == s21_NULL) {
@@ -575,8 +598,6 @@ int isthere(char c, const char *trim_chars) {
                 res = 1;
             }
         }
-    } else {
-        res = isspace(c);
     }
     return res;
 }
@@ -774,7 +795,6 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
 
                     if (flags & h) {
                         num = (short int) num;
-
                         buf = s21_sitoa(buf, num, width, flags | BASE_10);
                     } else {
                         buf = s21_sitoa(buf, num, width, flags | BASE_10);
@@ -884,30 +904,27 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
 //#define DEV
 #ifdef DEV
 #include <stdio.h>
+#include <string.h>
 
 int main() {
-    char temp1[200];
-    char temp2[200];
-    //char c = 'c';
-    //long long int di = 5;
-    //int hdi = 56437256;
-    //size_t u = 10;
-    //long double f = 155;
-    char *fmt = "%o";
-        sprintf(temp1, fmt, 16);
-    s21_sprintf(temp2, fmt, 16);
-    printf("%s [%s]\n", "std", temp1);
-    printf("%s [%s]\n", "s21", temp2);
+    //char *a = "a.b.c.d.e.f.g";
+    //char *b = NULL;
+    //b = s21_strtok(a,NULL);
+    //b = s21_strtok(NULL,".");
+    //puts(b);
+    //b = s21_strtok(NULL,".");
+    //puts(b);
+    //b = s21_strtok(NULL,".");
+    //puts(b);
+    //b = s21_strtok(NULL,".");
+    //puts(b);
+    //b = s21_strtok(NULL,".");
+    //puts(b);
+    //b = s21_strtok(NULL,".");
+    //puts(b);
+    char * a = "";
+    strcat(a,"dasdas");
+    puts(a);
 
-    //printf("%lu\n", sizeof(long double));
-    //printf("%lu\n", sizeof(double));
-    //printf("%lu\n", sizeof(float));
-    //printf("%lu\n", sizeof(short int));
-    //printf("%lu\n", sizeof(int));
-    //printf("%lu\n", sizeof(long int));
-    //printf("%lu\n", sizeof(long long int));
-
-    //puts(s21_strchr("abcdabb", 'a'));
-    //int a = 33000;
 }
 #endif
