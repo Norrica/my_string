@@ -23,4 +23,4 @@ COPY materials/linters /project/tests/linters
 
 WORKDIR "/project"
 
-# ENTRYPOINT ["/bin/bash","ci-scripts/test.sh"]
+#ENTRYPOINT ["/bin/bash","ci-scripts/test.sh"]

@@ -1,11 +1,10 @@
 #ifndef SRC_S21_STRING_H_
 #define SRC_S21_STRING_H_
-#include <stdio.h>
 #include <stdlib.h>
 
 typedef unsigned long s21_size_t;
 typedef s21_size_t size;
-#define S21_NULL (void *)0
+#define s21_NULL (void *)0
 #if defined(__APPLE__) && (__MACH__)
 #define ERRORS                                                                              \
     { "Undefined error: 0",                                                                     \
@@ -139,21 +138,19 @@ char *s21_strpbrk(const char *str1, const char *str2);
 
 char *s21_strrchr(const char *str, int c);
 
-char *s21_strstr(const char *str, const char *substr);
+char *s21_strstr(const char *haystack, const char *needle);
 
 char *s21_strtok(char *str, const char *delim);
 
 s21_size_t s21_strspn(const char *str1, const char *str2);
 
-void *s21_insert(const char *src, const char *str, s21_size_t start_index);
-
 // int my_atoi(const char *c);
 //
 // double my_atof(const char *c);
 //
-void reverse(char *str, int len);
+void s21_reverse(char *str, int len);
 
-char *s21_itoa(int n, char *str);
+char *s21_itoa(long long n, char *str);
 //
 // char *my_ftoa(float num, int precision);
 
@@ -166,7 +163,31 @@ void *s21_to_upper(const char *str);
 
 void *s21_to_lower(const char *str);
 
-void *s21_insert(const char *src, const char *str, size_t start_index);
+void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 
 void *s21_trim(const char *src, const char *trim_chars);
+#define min(a, b) __extension__\
+    ({ __typeof__(a) _a = (a); \
+       __typeof__(b) _b = (b); \
+       _a < _b ? _a : _b; })
+enum conversion_flags {
+  FILL_ZERO = 1,
+  PUT_PLUS = 2,
+  PUT_MINUS = 4,
+  BASE_2 = 8,
+  BASE_8=16,
+  BASE_10 = 32,
+  BIG_HEX = 64,
+  SET_PRECISION = 128,
+  L = 256,
+  h = 512,
+  l = 1024,
+  ll = 2048,
+};
+
+
+char *s21_sitoa(char *buf, long long int num, int width, int flags);
+char *s21_ftoa(char *buf, long double num, int width, int precision, int flags);
+int s21_vsprintf(char *buf, const char *fmt, va_list va);
+int s21_sprintf(char *buf, const char *fmt, ...);
 #endif  //  SRC_S21_STRING_H_

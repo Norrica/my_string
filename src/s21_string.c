@@ -1,261 +1,513 @@
 #include <stdarg.h>
 #include <math.h>
 #include <ctype.h>
+#include <stdint.h>
+#include <stdlib.h>
 #include "s21_string.h"
 
-void *s21_memchr(const void *str, int c, size_t n) {
-    const char *s = str;
-    int flg = 0;
+void *s21_memchr(const void *str, int c, s21_size_t n) {
+    void *result = s21_NULL;
+    const unsigned char *p = str;
     while (n--)
-        if (*s++ == c) {
-            flg = 1;
+        if (*p++ == c) {
+            result = (void *) p - 1;
             break;
         }
-    void *result = (void *) s - 1;
-    if (!flg)
-        result = S21_NULL;
     return result;
 }
 
-int s21_memcmp(const void *str1, const void *str2, size_t n) {
+int s21_memcmp(const void *str1, const void *str2, s21_size_t n) {
     int result = 0;
-    unsigned const char *s1 = str1, *s2 = str2;
-    if (n != 0) {
-        while (n-- != 0) {
-            if (*s1++ != *s2++) {
-                result = *--s1 - *--s2;
-                break;
-            }
+    unsigned const char *p1 = str1, *p2 = str2;
+    while (n--) {
+        if (*p1++ != *p2++) {
+            result = *--p1 - *--p2;
+            break;
         }
     }
     return result;
 }
 
-void *s21_memcpy(void *dest, const void *src, size_t n) {
-    char *d = dest;
-    const char *s = src;
+void *s21_memcpy(void *dest, const void *src, s21_size_t n) {
+    unsigned char *p1 = dest;
+    const unsigned char *p2 = src;
     while (n--)
-        *d++ = *s++;
+        *p1++ = *p2++;
     return dest;
 }
 
-char *s21_strcpy(char *dest, const char *src) {
-    //  if (s21_strlen(dest) < s21_strlen(src)) {
-    //    return S21_NULL;
-    //  }
-    char *d = dest;
-    char *s = (char *) src;
-    for (; *d || *s; d++, s++) {
-        *d = *s;
-    }
-    return dest;
-}
-
-
-char *s21_strncpy(char *dest, const char *src, size n) {
-    return s21_memcpy(dest, src, n);
-}
-
-void *s21_memmove(void *dest, const void *src, size_t n) {
-    char *d = dest;
-    const char *s = src;
-    if (d < s) {
+void *s21_memmove(void *dest, const void *src, s21_size_t n) {
+    unsigned char *p1 = dest;
+    const unsigned char *p2 = src;
+    if (p1 < p2) {
         while (n--)
-            *d++ = *s++;
+            *p1++ = *p2++;
     } else {
-        char *lasts = (char *) s + (n - 1);
-        char *lastd = d + (n - 1);
+        p1 = p1 + (n - 1);
+        p2 = p2 + (n - 1);
         while (n--)
-            *lastd-- = *lasts--;
+            *p1-- = *p2--;
     }
     return dest;
 }
 
-void *s21_memset(void *str, int c, size_t n) {
-    char *s = str;
-    while (n--) {
-        *s++ = (char) c;
-    }
+void *s21_memset(void *str, int c, s21_size_t n) {
+    unsigned char *p = str;
+    while (n--)
+        *p++ = c;
     return str;
 }
 
+char *s21_strcat(char *dest, const char *src) {
+    char *p = dest;
+    while (*p)
+        p++;
+    while (*src)
+        *p++ = *src++;
+    *p = '\0';
+    return dest;
+}
+
+char *s21_strncat(char *dest, const char *src, s21_size_t n) {
+    char *p = dest;
+    while (*p)
+        p++;
+    while (*src && n--)
+        *p++ = *src++;
+    *p++ = '\0';
+    return dest;
+}
+
 char *s21_strchr(const char *str, int c) {
-    char *result = S21_NULL;
-    do {
+    //while (*str != '\0' && *str != c)
+    //    ++str;
+    //return (char *) (c == *str ? str : s21_NULL);
+    while (*str != '\0') {
         if (*str == c) {
-            result = (char *) str;
+            return (char *) str;
         }
-    } while (*str++);
+        str++;
+    }
+    return (s21_NULL);
+}
+
+int s21_strcmp(const char *str1, const char *str2) {
+    int result = 0;
+    s21_size_t size_str1 = s21_strlen(str1);
+    s21_size_t size_str2 = s21_strlen(str2);
+    s21_size_t size_max = size_str1 > size_str2 ? size_str1 : size_str2;
+    for (size_t i = 0; i < size_max; i++) {
+        if (str1[i] != str2[i]) {
+            result = str1[i] - str2[i];
+            break;
+        }
+    }
+    return result;
+}
+
+int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
+    int result = 0;
+    for (size_t i = 0; i < n && str1[i]; i++) {
+        if (str1[i] != str2[i]) {
+            result = str1[i] - str2[i];
+            break;
+        }
+    }
+    return result;
+}
+
+char *s21_strcpy(char *dest, const char *src) {
+    char *p = dest;
+    while (*p || *src)
+        *p++ = *src++;
+    return dest;
+}
+
+char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
+    s21_size_t size = s21_strlen(src);
+    if (size < n)
+        s21_memset(dest + size, '\0', n - size);
+    return s21_memcpy(dest, src, n);
+}
+
+s21_size_t s21_strcspn(const char *str1, const char *str2) {
+    s21_size_t result = 0;
+    while (*str1 && !s21_strchr(str2, *str1++)) {
+        result++;
+    }
+    return result;
+}
+//TODO: не решено
+char *s21_strerror(int errnum) {
+    static char result[100];
+
+#if defined(__APPLE__) || defined(__MACH__)
+    int n = 106;
+    const char *str_error[] = {
+        "Undefined error: 0",
+        "Operation not permitted",
+        "No such file or directory",
+        "No such process",
+        "Interrupted system call",
+        "Input/output error",
+        "Device not configured",
+        "Argument list too long",
+        "Exec format error",
+        "Bad file descriptor",
+        "No child processes",
+        "Resource deadlock avoided",
+        "Cannot allocate memory",
+        "Permission denied",
+        "Bad address",
+        "Block device required",
+        "Resource busy",
+        "File exists",
+        "Cross-device link",
+        "Operation not supported by device",
+        "Not a directory",
+        "Is a directory",
+        "Invalid argument",
+        "Too many open files in system",
+        "Too many open files",
+        "Inappropriate ioctl for device",
+        "Text file busy",
+        "File too large",
+        "No space left on device",
+        "Illegal seek",
+        "Read-only file system",
+        "Too many links",
+        "Broken pipe",
+        "Numerical argument out of domain",
+        "Result too large",
+        "Resource temporarily unavailable",
+        "Operation now in progress",
+        "Operation already in progress",
+        "Socket operation on non-socket",
+        "Destination address required",
+        "Message too long",
+        "Protocol wrong type for socket",
+        "Protocol not available",
+        "Protocol not supported",
+        "Socket type not supported",
+        "Operation not supported",
+        "Protocol family not supported",
+        "Address family not supported by protocol family",
+        "Address already in use",
+        "Can't assign requested address",
+        "Network is down",
+        "Network is unreachable",
+        "Network dropped connection on reset",
+        "Software caused connection abort",
+        "Connection reset by peer",
+        "No buffer space available",
+        "Socket is already connected",
+        "Socket is not connected",
+        "Can't send after socket shutdown",
+        "Too many references: can't splice",
+        "Operation timed out",
+        "Connection refused",
+        "Too many levels of symbolic links",
+        "File name too long",
+        "Host is down",
+        "No route to host",
+        "Directory not empty",
+        "Too many processes",
+        "Too many users",
+        "Disc quota exceeded",
+        "Stale NFS file handle",
+        "Too many levels of remote in path",
+        "RPC struct is bad",
+        "RPC version wrong",
+        "RPC prog. not avail",
+        "Program version wrong",
+        "Bad procedure for program",
+        "No locks available",
+        "Function not implemented",
+        "Inappropriate file type or format",
+        "Authentication error",
+        "Need authenticator",
+        "Device power is off",
+        "Device error",
+        "Value too large to be stored in data type",
+        "Bad executable (or shared library)",
+        "Bad CPU type in executable",
+        "Shared library version mismatch",
+        "Malformed Mach-o file",
+        "Operation canceled",
+        "Identifier removed",
+        "No message of desired type",
+        "Illegal byte sequence",
+        "Attribute not found",
+        "Bad message",
+        "EMULTIHOP (Reserved)",
+        "No message available on STREAM",
+        "ENOLINK (Reserved)",
+        "No STREAM resources",
+        "Not a STREAM",
+        "Protocol error",
+        "STREAM ioctl timeout",
+        "Operation not supported on socket",
+        "Policy not found",
+        "State not recoverable",
+        "Previous owner died",
+        "Interface output queue is full",
+    };
+
+#elif defined(__linux__)
+    int n = 131;
+    const char *str_error[] = {
+        "No error information",
+        "Operation is not permitted",
+        "No such file or directory exists",
+        "No such process exists",
+        "Interrupted system cal",
+        "Input/output error",
+        "No such device or address exists.",
+        "Argument list is too long",
+        "Exec format error",
+        "Bad file descriptor",
+        "No child process exists",
+        "Resource is temporarily unavailable",
+        "System cannot allocate memory",
+        "Permission is denied",
+        "Bad address",
+        "Block device is required",
+        "Device or resource is busy",
+        "File already exists",
+        "Invalid cross-device link",
+        "No such device",
+        "Not a directory",
+        "A directory",
+        "An invalid argument",
+        "Too many open files in system",
+        "Too many open files",
+        "An inappropriate ioctl for device",
+        "Text file is busy",
+        "File is too large",
+        "No space left on device",
+        "Illegal seek",
+        "Read-only file system",
+        "Too many links",
+        "Case of broken pipe",
+        "Numerical argument is out of domain",
+        "Numerical result is out of range",
+        "Resource deadlock is avoided",
+        "File name is too long",
+        "No locks are available",
+        "Function is not implemented",
+        "Directory is not empty",
+        "Too many levels of symbolic links",
+        "No message of desired type",
+        "Identifier is removed",
+        "Channel number is out of range",
+        "Level 2 is not synchronized",
+        "Level 3 is halted",
+        "Level 3 is reset",
+        "Link number is out of range",
+        "Protocol driver is not attached",
+        "No CSI structure available",
+        "Level 2 is halted",
+        "Invalid exchange",
+        "Invalid request descriptor",
+        "Exchange is full",
+        "No anode",
+        "Invalid request code",
+        "Invalid slot",
+        "Bad font file format",
+        "Device is not a stream",
+        "No data available",
+        "Timer is expired",
+        "Out of streams resources",
+        "Machine is not on the network",
+        "Package is not installed",
+        "Object is remote",
+        "The link has been severed",
+        "Advertise error",
+        "Srmount error",
+        "Communication error on send",
+        "Protocol error",
+        "Multihop attempted",
+        "Rfs specific error",
+        "Bad message",
+        "Value is too large for defined data type",
+        "Name is not unique on network",
+        "File descriptor is in bad state",
+        "Remote address is changed",
+        "Cannot access a needed shared library",
+        "Accessing a corrupted shared library",
+        ".Lib section in a.out is corrupted",
+        "Attempting to link in too many shared libraries",
+        "Cannot exec a shared library directly",
+        "An invalid or incomplete multibyte or wide character",
+        "Interrupted system call should be restarted",
+        "Streams pipe error",
+        "Too many users",
+        "Socket operation on non-socket",
+        "Destination address is required",
+        "Message is too long",
+        "Protocol is wrong type for socket",
+        "Protocol is not available",
+        "Protocol is not supported",
+        "Socket type is not supported",
+        "Operation is not supported",
+        "Protocol family is not supported",
+        "Address family is not supported by protocol",
+        "Address is already in use",
+        "System cannot assign requested address",
+        "Network is down",
+        "Network is unreachable",
+        "Network has dropped connection on reset",
+        "Software caused connection abort",
+        "Connection is reset by peer",
+        "No buffer space available",
+        "Transport endpoint is already connected",
+        "Transport endpoint is not connected",
+        "System cannot send after transport endpoint shutdown",
+        "Socket not connected",
+        "Connection is timed out",
+        "Connection is refused",
+        "Host is down",
+        "No route to host",
+        "Operation is already in progress",
+        "Operation is now in progress",
+        "Stale file handle",
+        "Structure needs cleaning",
+        "Not a XENIX named type file",
+        "No XENIX semaphores are available",
+        "Named type file",
+        "Remote I/O error",
+        "Disk quota is exceeded",
+        "No medium found",
+        "Wrong medium type",
+        "Operation is cancelled",
+        "Required key is not available",
+        "Key has expired",
+        "Key has been revoked",
+        "Key was rejected by service",
+        "Owner is died",
+        "No recoverable state",
+        "Operation is not possible due to RF-kill",
+        "Memory page has hardware error",
+    };
+#endif
+    if (errnum > n || errnum < 0) {
+#if defined(__APPLE__) || defined(__MACH__)
+        char res[30];
+        s21_sprintf(res, "Unknown error: %d", errnum);
+        s21_strcpy(result, res);
+#elif defined(__linux__)
+        s21_strcpy(result, "No error information");
+#endif
+    } else {
+        s21_strcpy(result, str_error[errnum]);
+    }
+    return result;
+}
+
+s21_size_t s21_strlen(const char *str) {
+    s21_size_t len = 0;
+    for (; str[len]; len++);
+    return len;
+}
+
+char *s21_strpbrk(const char *str1, const char *str2) {
+    char *result = s21_NULL;
+    s21_size_t size_str1 = s21_strlen(str1);
+    s21_size_t size_str2 = s21_strlen(str2);
+    for (s21_size_t i = 0; i < size_str1 && result == s21_NULL; i++) {
+        for (s21_size_t j = 0; j < size_str2 && result == s21_NULL; j++) {
+            if (str1[i] == str2[j]) {
+                result = (char *) &str1[i];
+            }
+        }
+    }
     return result;
 }
 
 char *s21_strrchr(const char *str, int c) {
-    const char *ptr, *found;
-    c = (unsigned char) c;
-
-    if (c == '\0')
-        return s21_strchr(str, '\0');
-    found = S21_NULL;
-    while ((ptr = s21_strchr(str, c)) != S21_NULL) {
-        found = ptr;
-        str = ptr + 1;
-    }
-    return (char *) found;
-}
-
-
-char *s21_strpbrk(const char *str1, const char *str2) {
-    int flag = 0;
-    char *res = S21_NULL;
-    while (*str1 != '\0' && !flag) {
-        for (int i = 0; i < (int) s21_strlen(str2); i++) {
-            if (*str1 == *(str2 + i)) {
-                flag = 1;
-                res = (char *) str1;
-            }
-        }
-        str1++;
-    }
-    return res;
-}
-
-
-size s21_strspn(const char *str1, const char *str2) {
-    size_t res = 0;
-    while (*str1 && s21_strchr(str2, *str1++)) {
-        res++;
-    }
-    return res;
-}
-
-
-size s21_strcspn(const char *str1, const char *str2) {
-    size_t count = 0;
-    while (*str1 && !s21_strchr(str2, *str1++)) {
-        count++;
-    }
-    return count;
-}
-
-char *s21_strstr(const char *str, const char *substr) {
-    const char *a = str, *b = substr;
-    while (1) {
-        if (!*b) return (char *) str;
-        if (!*a) return S21_NULL;
-        if (*a++ != *b++) {
-            a = ++str;
-            b = substr;
+    s21_size_t size = s21_strlen(str) + 1;
+    char *result = s21_NULL;
+    for (s21_size_t i = 0; i < size; i++) {
+        if (str[i] == c) {
+            result = (char *) &str[i];
         }
     }
-}
-
-char *s21_strcat(char *dest, const char *src) {
-    if ((dest == S21_NULL) && (src == S21_NULL))
-        return S21_NULL;
-    char *start = dest;
-    while (*start != '\0') {
-        start++;
-    }
-    while (*src != '\0') {
-        *start++ = *src++;
-    }
-    *start = '\0';
-    return dest;
-}
-
-char *s21_strncat(char *dest, const char *src, size n) {
-    char *ptr = dest;
-    while (*ptr != '\0')
-        ptr++;
-    while (*src != '\0' && n--) {
-        *ptr++ = *src++;
-    }
-    *ptr++ = '\0';
-    return dest;
-}
-
-int s21_strcmp(const char *str1, const char *str2) {
-    while (*str1 && (*str1 == *str2)) {
-        str1++;
-        str2++;
-    }
-    return *(const unsigned char *) str1 - *(const unsigned char *) str2;
-}
-
-int s21_strncmp(const char *str1, const char *str2, size n) {
-    int result;
-    while (n && *str1 && (*str1 == *str2)) {
-        str1++;
-        str2++;
-        n--;
-    }
-    if (n == 0)
-        result = 0;
-    else
-        result = *(unsigned char *) str1 - *(unsigned char *) str2;
     return result;
 }
 
-size s21_strlen(const char *str) {
-    size len = 0;
-    for (; str[len]; len++) {}
-    return len;
+s21_size_t s21_strspn(const char *str1, const char *str2) {
+    s21_size_t result = 0;
+    while (*str1 && s21_strchr(str2, *str1++)) {
+        result++;
+    }
+    return result;
 }
 
-// char *s21_strtok(char *str, const char *delim) {
-//    char *s21_strtok(char *str, const char *delim) {
-//        int i = 0;
-//        while (str[i] != '\0') {
-//            for (int j = 0; j < (int) s21_strlen(delim); j++) {
-//                if (str[i] == delim[j]) {
-//                    str[i] = '\0';
-//                }
-//            }
-//            i++;
-//        }
-//        if (*str == '\0') {
-//            return S21_NULL;
-//        } else {
-//            return str;
-//        }
-//    }
-//}
+char *s21_strstr(const char *haystack, const char *needle) {
+    char *result = s21_NULL;
+    const char *p1 = haystack, *p2 = needle;
+    int i = 1;
+    while (i) {
+        if (!*p2) {
+            result = (char *) haystack;
+            i = 0;
+        }
+        if (!*p1)
+            i = 0;
+        if (*p1++ != *p2++) {
+            p1 = ++haystack;
+            p2 = needle;
+        }
+    }
+    return result;
+}
 
 char *s21_strtok(char *str, const char *delim) {
-    static char *buffer;
-    char *token = S21_NULL;
-    if (str) {
-        buffer = str;
-        while (*buffer && s21_strchr(delim, *buffer)) {
-            *buffer++ = '\0';
+    static char *current;
+    char *result = s21_NULL;
+    if (delim != NULL) {
+        if (str != s21_NULL) {
+            /*remove delims from start*/
+            str = &str[s21_strspn(str, delim)];
+            s21_size_t first = s21_strspn(str, delim);
+            s21_size_t second = s21_strcspn(str, delim);
+            if (second == s21_strlen(str) || first == s21_strlen(str)) {
+                if (current != s21_NULL)
+                    return str;
+                else
+                    return s21_NULL;
+            }
+            current = &str[second] + 1;
+            result = malloc((first + second) * sizeof(char));
+            for (s21_size_t i = first; i < second; ++i) {
+                result[i - first] = str[i];
+            }
+            return result;
+        } else {
+            if (current == s21_NULL || current[0] == '\0') {
+                return s21_NULL;
+            } else {
+                result = s21_strtok(current, delim);
+                current = &current[s21_strspn(current, result)];
+            }
         }
     }
-    if (buffer && *buffer) {
-        str = buffer;
-        while (*buffer && !s21_strchr(delim, *buffer)) {
-            ++buffer;
-        }
-        while (*buffer && s21_strchr(delim, *buffer)) {
-            *buffer++ = '\0';
-        }
-        token = str;
-    }
-    return token;
+    return result;
 }
 
-void reverse(char *str, int len) {
-    int s = 0;
-    int e = len - 1;
-    while (s < e) {
-        int tmp = *(str + s);
-        *(str + s) = *(str + e);
-        *(str + e) = tmp;
-        s++;
-        e--;
+void s21_reverse(char *str, int len) {
+    int p1 = 0;
+    int p2 = len - 1;
+    while (p1 < p2) {
+        char temp = *(str + p1);
+        *(str + p1) = *(str + p2);
+        *(str + p2) = temp;
+        p1++;
+        p2--;
     }
 }
 
-char *s21_itoa(int n, char *str) {
+char *s21_itoa(long long n, char *str) {
     int len = 0, i = 0, f = 0;
     if (n < 0) {
         n *= -1;
@@ -271,66 +523,43 @@ char *s21_itoa(int n, char *str) {
         len++;
     }
     str[i] = '\0';
-    reverse(str, len);
+    s21_reverse(str, len);
     return str;
 }
 
 void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
-    char *result = S21_NULL;
-
-    int len_src = s21_strlen(src);
-    int len_str = s21_strlen(str);
-    int len_total = len_src + len_str;
-
-    if (len_src >= (int) start_index) {
-        result = (char *) malloc(len_total * sizeof(char));
-        if (result != S21_NULL) {
-            for (int i = 0; i < len_src; i++) {
-                result[i] = src[i];
+    char *result = s21_NULL;
+    if (src != s21_NULL && str != s21_NULL) {
+        s21_size_t size_src = s21_strlen(src);
+        s21_size_t size_str = s21_strlen(str);
+        s21_size_t size_total = size_src + size_str;
+        if (size_src >= start_index) {
+            result = (char *) malloc(size_total * sizeof(char));
+            if (result != s21_NULL) {
+                for (s21_size_t i = 0; i < size_src; i++) {
+                    result[i] = src[i];
+                }
+                for (s21_size_t i = start_index; i < size_total; i++) {
+                    result[i] = str[i - start_index];
+                }
+                for (s21_size_t i = start_index + size_str; i < size_total; i++) {
+                    result[i] = src[i - s21_strlen(str)];
+                }
+                result[size_total] = '\0';
             }
-            for (int i = start_index; i < len_total; i++) {
-                result[i] = str[i - start_index];
-            }
-            for (int i = start_index + len_str; i < len_total; i++) {
-                result[i] = src[i - s21_strlen(str)];
-            }
-            result[len_total] = '\0';
         }
     }
     return result;
 }
 
-char *s21_strerror(int errnum) {
-    static char *str[] = ERRORS;
-    int max;
-    char error[4096] = {'\0'};
-    char stt[10];
-    static char strr[4096] = {'\0'};
-    for (int i = 0; i < 4096; i++) strr[i] = '\0';
-
-#if defined(__APPLE__) && defined(__MACH__)
-    max = 106;
-#else
-    max = 133;
-#endif
-
-    if (errnum > max || errnum < 0) {
-        s21_itoa(errnum, stt);
-        s21_strcpy(error, "Unknown error: ");
-        s21_strncat(error, stt, s21_strlen(error));
-    } else {
-        s21_strcat(error, str[errnum]);
-    }
-    s21_strcat(strr, error);
-    return strr;
-}
-
-
 void *s21_to_lower(const char *str) {
+    if (str == s21_NULL) {
+        return s21_NULL;
+    }
     int len = s21_strlen(str);
     char *result = malloc(len * sizeof(char));
-    if (result == S21_NULL) {
-        return S21_NULL;
+    if (result == s21_NULL) {
+        return s21_NULL;
     }
     s21_strcpy(result, str);
     for (int i = 0; i < len; i++) {
@@ -343,10 +572,13 @@ void *s21_to_lower(const char *str) {
 }
 
 void *s21_to_upper(const char *str) {
+    if (str == s21_NULL) {
+        return s21_NULL;
+    }
     s21_size_t len = s21_strlen(str);
     char *result = malloc(len * sizeof(char));
-    if (result == S21_NULL) {
-        return S21_NULL;
+    if (result == s21_NULL) {
+        return s21_NULL;
     }
     s21_strcpy(result, str);
     for (int i = 0; str[i] != '\0'; i++)
@@ -357,28 +589,26 @@ void *s21_to_upper(const char *str) {
     return result;
 }
 
-
 int isthere(char c, const char *trim_chars) {
     int res = 0;
-    if ((trim_chars != S21_NULL) && (s21_strlen(trim_chars) > 0)) {
+    if ((trim_chars != s21_NULL) && (s21_strlen(trim_chars) > 0)) {
         int len = s21_strlen(trim_chars);
         for (int i = 0; i <= len; i++) {
             if (trim_chars[i] == c) {
                 res = 1;
             }
         }
-    } else {
-        res = isspace(c);
     }
     return res;
 }
 
 void *s21_trim(const char *src, const char *trim_chars) {
-    char *result = S21_NULL;
-    int i = 0, start_n = -1, temp = 0;
-    if (src != S21_NULL) {
+    char *result = s21_NULL;
+    if (src != s21_NULL) {
         int len = s21_strlen(src);
         int last_n = len;
+        int i = 0;
+        int start_n = -1;
         while (i <= len) {
             if (isthere(src[i], trim_chars) == 1) {
                 start_n = i;
@@ -396,10 +626,15 @@ void *s21_trim(const char *src, const char *trim_chars) {
                 i = -1;
             }
         }
-        i = 0;
-        result = (char *) calloc(1, sizeof(char *));
+        result = (char *) calloc(1, sizeof(char));
+        int temp = 0;
         for (int j = start_n + 1; j < last_n; j++) {
-            result = (char *) realloc(result, (temp + 2) * sizeof(char *));
+            char *tmp = (char *) realloc(result, (temp + 2) * sizeof(char *));
+            if (!tmp) {
+                return s21_NULL;
+            } else {
+                result = tmp;
+            }
             result[temp] = src[j];
             temp++;
         }
@@ -408,216 +643,268 @@ void *s21_trim(const char *src, const char *trim_chars) {
     return result;
 }
 
+char *s21_ftoa(char *buf, long double num, int width, int precision, int flags) {
+    char fill/* = (flags & FILL_ZERO) ? '0' : ' '*/;
+    if (flags & FILL_ZERO) {
+        fill = '0';
+    } else {
+        fill = ' ';
+    }
 
+    if (precision == 0 && !(flags & SET_PRECISION)) {
+        precision = 6;
+    } else if (precision == 0 && (flags & SET_PRECISION)) {
+        precision = 0;
+    }
 
+    if (flags & PUT_MINUS) {
+        num *= -1;
+    }
 
-// int my_atoi(const char *c) {
-//    char *ch = (char *) c;
-//    int res = 0, sign = 1;
-//    while (*ch == ' ') {
-//        ch++;
-//    }
-//    if (*ch == '-' || *ch == '+') {
-//        sign = 1 - 2 * (*ch++ == '-');
-//    }
-//    while (*ch != '\0') {
-//        if (*ch >= '0' && *ch <= '9')
-//            res = res * 10 + *ch++ - '0';
-//        else
-//            break;
-//    }
-//    return res * sign;
-//}
-//
-// double my_atof(const char *c) {
-//    char *ch = (char *) c;
-//    int start_position = 0, sign = 1, dot_position = 0;
-//    /*удалить пробелы*/
-//    for (int i = 0; ch[i] != '\0'; i++) {
-//        if (ch[i] == ' ')
-//            start_position++;
-//    }
-//
-//    /*проверить положительное или отрицательное*/
-//    if (ch[start_position] == '-' || ch[start_position] == '+') {
-//        sign = 1 - 2 * (ch[start_position] == '-');
-//        start_position++;
-//    }
-//
-//    /*найти точку - разделитель*/
-//    for (int i = start_position; ch[i] != '\0'; i++) {
-//        if (ch[i] == '.') {
-//            dot_position = i;
-//            break;
-//        }
-//    }
-//
-//    /*если нет нуля*/
-//    if (!dot_position) {
-//        return my_atoi(c);
-//    } else {
-//        /*если есть нуль, то подсчитать int*/
-//        double integer_part = 0;
-//        for (int i = start_position;
-//             i < dot_position &&
-//                 ch[i] != '\0' &&
-//                 ch[i] >= '0' &&
-//                 ch[i] <= '9';
-//             i++, start_position++) {
-//            integer_part = integer_part * 10 + (ch[i] - '0');
-//        }
-//        if (start_position < dot_position) {
-//            return integer_part;
-//        }
-//        /*подсчитать float*/
-//        double float_part = 0;
-//        for (int i = dot_position + 1;
-//             ch[i] != '\0' && ch[i] >= '0' && ch[i] <= '9';
-//             i++) {
-//            float_part = float_part + (ch[i] - '0') * pow(10, dot_position - i);
-//        }
-//        return (integer_part + float_part) * sign;
-//    }
-//}
-//
+    int int_part = (int) num;
+    double float_part = num - int_part;
 
-//
-// char *my_ftoa(float num, int precision) {
-//    int int_part = (int) num;
-//    float float_part = num - int_part;
-//    char *int_res = my_itoa(int_part);
-//    int float_num = (float_part * pow(10, precision));
-//    char *float_res = my_itoa(float_num);
-//    char *res = malloc(s21_strlen(int_res) + 1 + s21_strlen(float_res));
-//    s21_strcat(res, int_res);
-//    s21_strcat(res, ".");
-//    s21_strcat(res, float_res);
-//    return res;
-//}
-//
-////  c, d, i, f, s, u, %
-////  %.5f
-////  Это gbpltw
-// typedef int bool;
-// #define true 1;
-// #define false 0;
-// typedef struct {
-//  int fmt_str_len; /*optional*/
-//  char type_specifier; /*c, d, i, f, s, u, %*/
-//  int sign; /* + - ' '*/ /* ' ' - всегда +1 пробел слева*/
-//  char pad_with; /* ' ' or '0' */
-//  int l_pad_len;
-//  int r_pad_len;
-//  int precision;
-// } FMT;
-//
-// void init_FMT(FMT *fmt) {
-//    //  *fmt = {'\0',}
-//}
-// char *const TYPE_SPECIFIERS = "cdifsu";
-// char *const LEN_SPECIFIERS = "lh";
-// char *const DIGITS = "0123456789";
-// char *const PUNCTS = "+-.";
-// char *const SIGNS = "+- ";
-// char *const ALL_SPECIFIERS = "+-.0123456789cdifsuhl";
-//
-// void print(char *str) {
-//    for (int i = 0; str[i] != '\0'; ++i) {
-//        printf("%c", str[i]);
-//    }
-//    puts("");
-//}
-//
-// typedef enum datatype { CHAR, INT1, INT2, FLOAT, STRING, UINT, ERROR = -1 }
-//    datatype;
-//
-// char find_specifier(char *string) {
-//    char *spec = s21_strpbrk(string, TYPE_SPECIFIERS);
-//    //  if (spec)
-//    //      return spec[0];
-//    //  else
-//    //      return '\0';
-//    return spec[0];
-//}
-//
-// int find_sign(char *string, size len) {
-//    char sign/* = s21_strpbrk(string, SIGNS)*/;
-//    /*TODO Возможен баг, что мы найдем %3d+, который не должен учитываться.*/
-//    /*В следующей строке вроде без него*/
-//
-//    sign = string[0];
-//    switch (sign) {
-//        case '-':return -1;
-//        case '+':
-//        default:return 1;   /*Нет явно знака - '+'*/
-//    }
-//}
-// int find_filler(char *string, size len) {
-//    char filler = string[0];
-//    switch (filler) {
-//        case '0':return 0; /*Надо заполнять нулями*/
-//        case ' ':return 1;/*Заполнять пробелами*/
-//        default:return -1;
-//    }
-//}
-// int find_length(char *string, size len) {
-//    char *var_len = s21_strpbrk(string, SIGNS);
-//    if (var_len) {
-//        switch (var_len[0]) {
-//            case 'l':return 1;
-//            case 'h':return -1;
-//        }
-//    }
-//    return 0;
-//}
-//
-// int find_width(char *string, size len) {
-//    /* Найти все символы от + и/или 0(если они есть) до . (если она есть) */
-//    /*Вернуть atoi(символов)*/
-//    /*Учесть что передается len и за длину формат-строки(от % до d) не заходить*/
-//}
-// int find_precision(char *string, size len) {
-//    /*Аналогично предыдущему, от . до d/f*/
-//}
-//
-///* % 12.5f*/
-// int s21_sprintf(char *str, char *fmt, ...) {
-//    /*TODO padding*/
-//    va_list args;
-//    va_start(args, fmt);
-//    int va_len = 0;
-//    for (size i = 0; i < s21_strlen(fmt); ++i) {
-//        if (fmt[i] == '%') {
-//            if (fmt[i + 1] != '%')
-//                va_len++;
-//            else
-//                ++i;
-//        }
-//    }
-//    /*s21_size_t is_float;*/
-//    /*s21_size_t curr = 0;*/
-//    FMT curr_fmt;
-//    for (size i = 0; i < s21_strlen(fmt); ++i) {
-//        if (fmt[i] == '%' && fmt[i + 1] != '%') {
-//            char datatype = find_specifier(&fmt[i] + 1);
-//            if (datatype == '\0') {
-//                return ERROR;
-//            }
-//            size format_len = s21_strchr(fmt, datatype) - &fmt[i]; /*if len NULL - return error*/
-//            int sign = find_sign(&fmt[i] + 1, format_len);
-//            if (sign == -10) return ERROR;
-//            int length = find_length(&fmt[i] + 1, format_len);
-//            int width = find_width(&fmt[i] + 1, format_len);
-//        } else {
-//            str[i] = fmt[i];
-//        }
-//    }
-//    return 0; /*TODO remove*/
-//}
-#define  DEVstring
-#ifdef DEVstring
-#include <string.h>
+    char int_res[50];
+    s21_itoa(int_part, int_res);
+
+    long long float_num = float_part * pow(10, precision);
+    char float_res[50];
+    s21_itoa(float_num, float_res);
+
+    char new_float_res[50] = "";
+    if ((size) precision > s21_strlen(float_res))
+        s21_memset(new_float_res, '0', precision - s21_strlen(float_res));
+    s21_strcat(new_float_res, float_res);
+    s21_strcpy(float_res, new_float_res);
+
+    char res_buf[100];
+    s21_strcpy(res_buf, int_res);
+    if (precision != 0) {
+        s21_strcat(res_buf, ".");
+        s21_strcat(res_buf, float_res);
+    }
+
+    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+        --width;
+    }
+    s21_size_t res_len = s21_strlen(res_buf);
+    if (fill == ' ')
+        while ((int) res_len <= --width)
+            *(buf++) = fill;
+    if (flags & PUT_MINUS) *(buf++) = '-';
+    else if (flags & PUT_PLUS) *(buf++) = '+';
+
+    while ((int) res_len <= --width) {
+        *(buf++) = fill;
+    }
+    precision = 0;
+    if ((int) s21_strlen(res_buf) < width + precision)
+        for (int i = 0; i < width + precision; ++i) {
+            s21_strcat(res_buf, "0");
+        }
+    char *b = res_buf;
+    //buf--;
+    while (*b != '\0') {
+        *buf++ = *b++;
+    }
+    return buf;
+}
+
+char *s21_sitoa(char *buf, long long int num, int width, int flags) {
+    unsigned int base;
+    char hex_size = 'a';
+    if (flags & BASE_2) {
+        base = 2;
+    } else if (flags & BASE_8) {
+        base = 8;
+    } else if (flags & BASE_10) {
+        base = 10;
+    } else {
+        base = 16;
+        if (flags & BIG_HEX) {
+            hex_size = 'A';
+        }
+    }
+
+    if (num < 0) {
+        num = -num;
+        flags |= PUT_MINUS;
+    }
+
+    char tmp[32];
+    char *p = tmp;
+    do {
+        int rem = num % base;
+        *p++ = (rem <= 9) ? (rem + '0') : (rem + hex_size - 0xA);
+    } while ((num /= base));
+    width -= p - tmp;
+    char fill = (flags & FILL_ZERO) ? '0' : ' ';
+    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+        --width;
+    }
+    if (fill == ' ')
+        while (0 <= --width)
+            *(buf++) = fill;
+    if (flags & PUT_MINUS) *(buf++) = '-';
+    else if (flags & PUT_PLUS) *(buf++) = '+';
+    while (0 <= --width) {
+        *(buf++) = fill;
+    }
+    do {
+        *(buf++) = *(--p);
+    } while (tmp < p);
+    return buf;
+}
+
+int s21_vsprintf(char *buf, const char *fmt, va_list va) {
+    char c;
+    const char *save = buf;
+    while ((c = *fmt++)) {
+        int width = 0;
+        int precision = 0;
+        int flags = 0;
+        if (c != '%') {
+            *(buf++) = c;
+            continue;
+        }
+        int start_fmt = 1;
+        for (char *i = (char *) fmt; start_fmt; ++i) {
+            c = *fmt++;
+            switch (c) {
+                case '%': {}
+                    *(buf++) = c;
+                    start_fmt = 0;
+                    continue;
+                case 'L':flags |= L;
+                    continue;
+                case 'h':flags |= h;
+                    continue;
+                case 'l':flags |= l;
+                    if (*(fmt + 1) == 'l') {
+                        flags |= ll;
+                        flags &= ~l;
+                    }
+                    continue;
+                case 'c': {}
+                    *(buf++) = va_arg(va, int);
+                    start_fmt = 0;
+                    continue;
+                case 'i':
+                case 'd': {}
+                    int num = va_arg(va, int);
+
+                    if (flags & h) {
+                        num = (short int) num;
+                        buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                    } else {
+                        buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                    }
+                    start_fmt = 0;
+                    continue;
+                case 'X': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
+                    start_fmt = 0;
+                    continue;
+                case 'x': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
+                    start_fmt = 0;
+                    continue;
+
+                case 'b': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
+                    start_fmt = 0;
+                    continue;
+                case 'f': {}
+                    long double d;
+                    if (flags & L)
+                        d = (long double) va_arg(va, long double);
+                    else
+                        d = (double) va_arg(va, double);
+                    if (d < 0)
+                        flags |= PUT_MINUS;
+                    buf = s21_ftoa(buf, d, width, precision, flags);
+                    start_fmt = 0;
+                    continue;
+                case 's': {}
+                    const char *p = va_arg(va, const char *);
+                    int a = s21_strlen(p);
+                    while (((width--) - a) >= 0) {
+                        if (flags & FILL_ZERO)
+                            *buf++ = '0';
+                        else
+                            *buf++ = ' ';
+                    }
+                    if (p)
+                        while (*p)
+                            *buf++ = *(p++);
+                    start_fmt = 0;
+                    continue;
+                case 'u': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
+                    start_fmt = 0;
+                    continue;
+                case 'o': {}
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_8);
+                    start_fmt = 0;
+                    continue;
+                case 'm': {}
+                    const uint8_t *m = va_arg(va, const uint8_t *);
+                    width = min(width, 64);
+                    if (m) {
+                        for (;;) {
+                            buf = s21_sitoa(buf, *(m++), 2, FILL_ZERO);
+                            if (--width <= 0)
+                                break;
+                            *(buf++) = ':';
+                        }
+                    }
+                    start_fmt = 0;
+                    continue;
+                case '.': {}
+                    if (!(flags & SET_PRECISION))
+                        flags |= SET_PRECISION;
+                    else
+                        *(buf++) = '?';
+                    continue;
+                case '0':
+                    if (!width) {
+                        flags |= FILL_ZERO;
+                    }
+                    // fall through
+                case '1'...'9': {}
+                    if (!(flags & SET_PRECISION))
+                        width = width * 10 + c - '0';
+                    else
+                        precision = precision * 10 + c - '0';
+                    continue;
+                case '*': {}
+                    width = va_arg(va, unsigned int);
+                    continue;
+                case '+': {}
+                    flags |= PUT_PLUS;
+                    continue;
+                case ' ':
+                default:*buf++ = c;
+                    start_fmt = 0;
+                    continue;
+            }
+        }
+    }
+    *buf = '\0';
+    return buf - save;
+}
+int s21_sprintf(char *buf, const char *fmt, ...) {
+    va_list va;
+    va_start(va, fmt);
+    int ret = s21_vsprintf(buf, fmt, va);
+    va_end(va);
+    return ret;
+}
+
+//#define DEV
+#ifdef DEV
 #include <stdio.h>
+#include <string.h>
 
 int main() {
      char dest[50];
