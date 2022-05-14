@@ -1,6 +1,3 @@
-//
-// Created by Gladis Ariane on 5/5/22.
-//
 
 char *convert(unsigned int num, int base) {
     static char Representation[] = "0123456789ABCDEF";

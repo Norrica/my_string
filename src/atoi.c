@@ -1,3 +1,4 @@
+
 int my_atoi (const char *c) {
     char *ch = (char *) c;
     int res = 0, sign = 1;

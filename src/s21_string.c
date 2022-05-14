@@ -614,12 +614,40 @@ void *s21_trim(const char *src, const char *trim_chars) {
 //    }
 //    return 0; /*TODO remove*/
 //}
-
+#define  DEVstring
 #ifdef DEVstring
 #include <string.h>
 #include <stdio.h>
 
 int main() {
+     char dest[50];
+     char qweq[10] = "#qweqe";
+     s21_memchr("qweqweqw", 6, 5);
+     s21_memcpy(dest, "qweqweqweq", 6);
+     s21_memmove(dest, "qweqweqweq", 6);
+     s21_memset(dest, 1, 10);
+     s21_strcat(dest, "12");
+     s21_strncat(dest, "000", 50);
+     s21_strchr("123124", 3);
+     s21_memcmp("qweqweqq", "rtertet", 10);
+     s21_strcmp("qweqweq", "ererer");
+     s21_strncmp("qweqwe", "tgtbr", 10);
+     s21_to_upper("qweqweqwe");
+     s21_to_lower("qweqsda");
+     s21_insert("qweqweq", "qweqweq", 2);
+     s21_trim("   qqwe", "qweq ");
+     reverse("ghhsdfs", 1);
+     s21_itoa(4, dest);
+     s21_strpbrk("qweqweq", "sdsdsd");
+     s21_strrchr("qweqweq", 10);
+     s21_strstr("qweqeqe", "fvvbgg");
+     s21_strtok("#qweqe", "q");
+//     s21_strspn("qweqeq", "wqwqwqwqw");
+//     s21_strerror(1);
+//     s21_strlen("hgdfjkghdkj");
+//     s21_strcpy(dest, "qweqweq");
+//     s21_strncpy("qqw", "1231wq", 3 );
+//     s21_strcspn("qweqweqe", "ofjfdifdi");
     //  printf("%s %d",__FILE__, __LINE__);
     char str[50];
     char *fmt = "%+0123.5dd";

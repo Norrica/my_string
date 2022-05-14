@@ -1,15 +1,16 @@
 #all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS =   -Wall -Werror -Wextra
+FLAGS =-Wall -Werror -Wextra
 
 TARGET=test.c
 
 all: build
-.DBG: FLAGS += -g -O0
+	.DBG: FLAGS += -g -O0
+
 build: s21_string.a test
 
-debug:FLAGS += -DDEV
-debug:FLAGS += -g -O0
+#debug:FLAGS += -DDEV
+#debug:FLAGS += -g -O0
 debug: local_debug
 	./local_test
 
@@ -28,9 +29,9 @@ s21_string.a: clean
 	ar rcs s21_string.a s21_string.o
 
 test: s21_string.a
-	$(CC) $(FLAGS) -lcheck s21_string.a test.c  -o test
+	$(CC) $(FLAGS) -lcheck s21_string.a test.c -o test
 
-gcov_report:FLAGS += -fprofile-arcs -ftest-coverage
+#gcov_report:FLAGS += -fprofile-arcs -ftest-coverage
 gcov_report: test
 	./test
 	gcov test.c
@@ -38,6 +39,15 @@ gcov_report: test
 	genhtml test.info --output-directory report
 
 local_debug:
-		$(CC) $(FLAGS) -DDEV -g s21_string.c useful.c -o local_test
+	$(CC) $(FLAGS) -DDEV -g s21_string.c useful.c -o local_test
 
-.PHONY : all build clean
+#.PHONY: all build clean
+for_docker:
+	cp ../materials/linters/CPPLINT.cfg ./
+	python3 ../materials/linters/cpplint.py ./*.c
+	rm CPPLINT.cfg
+	cppcheck --enable = all --suppress = missingIncludeSystem  --inconclusive --check-config *.c *.h unit_tests/*.c unit_tests/*.h
+
+
+leaks:
+	leaks -atExit -- ./a.out
