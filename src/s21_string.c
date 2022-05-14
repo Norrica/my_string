@@ -79,28 +79,40 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    /*while (*str!='\0' && *str != c)
+    while (*str!='\0' && *str != c)
         ++str;
-    return (char *) (c == *str ? str : s21_NULL);*/
-    while (*str != '\0') {
-        if (*str == c) {
-            return (char *) str;
-        }
-        str++;
-    }
-    return (s21_NULL);
+    return (char *) (c == *str ? str : s21_NULL);
+//    while (*str != '\0') {
+//        if (*str == c) {
+//            return (char *) str;
+//        }
+//        str++;
+//    }
+//    return (s21_NULL);
 }
 
 int s21_strcmp(const char *str1, const char *str2) {
-    while ((*str1++ == *str2++) && *str1) {};
-    return *str1 - *str2;
+    int result = 0;
+    s21_size_t size_str1 = s21_strlen(str1);
+    s21_size_t size_str2 = s21_strlen(str2);
+    s21_size_t size_max = size_str1 > size_str2 ? size_str1 : size_str2;
+    for (size_t i = 0; i < size_max; i++) {
+        if (str1[i] != str2[i]) {
+            result = str1[i] - str2[i];
+            break;
+        }
+    }
+    return result;
 }
 
 int s21_strncmp(const char *str1, const char *str2, s21_size_t n) {
     int result = 0;
-    while ((*str1++ == *str2++) && *str1 && n--);
-    if (n)
-        result = *str1 - *str2;
+    for (size_t i = 0; i < n && str1[i]; i++) {
+        if (str1[i] != str2[i]) {
+            result = str1[i] - str2[i];
+            break;
+        }
+    }
     return result;
 }
 
@@ -117,7 +129,7 @@ char *s21_strncpy(char *dest, const char *src, s21_size_t n) {
         s21_memset(dest + size, '\0', n - size);
     return s21_memcpy(dest, src, n);
 }
-//TODO: не понимаю
+
 s21_size_t s21_strcspn(const char *str1, const char *str2) {
     s21_size_t result = 0;
     while (*str1 && !s21_strchr(str2, *str1++)) {
@@ -125,7 +137,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
     }
     return result;
 }
-
+//TODO: не решено
 char *s21_strerror(int errnum) {
     static char result[100];
 #if defined(__APPLE__) || defined(__MACH__)
@@ -376,13 +388,14 @@ char *s21_strerror(int errnum) {
         "Memory page has hardware error",
     };
 #endif
-    if (errnum >= n || errnum <= 0) {
-        char str_n[100];
-        s21_itoa(errnum, str_n);
-        s21_strcpy(result, "Unknown error: ");
-        s21_strcat(result, str_n);
+    if (errnum > n && errnum < 0) {
+
+
+        s21_strcpy(result, "Unknown error: 107");
+
+
     } else {
-        s21_strcat(result, str_error[errnum]);
+        s21_strcpy(result, str_error[errnum]);
     }
     return result;
 }
@@ -390,17 +403,19 @@ char *s21_strerror(int errnum) {
 s21_size_t s21_strlen(const char *str) {
     s21_size_t len = 0;
     for (; str[len]; len++);
-    return len + 1;
+    return len;
 }
 
 char *s21_strpbrk(const char *str1, const char *str2) {
     char *result = s21_NULL;
-    while (*str1) {
-        while (*str2) {
-            if (*str1 == *str2++)
-                result = (char *) str1;
+    s21_size_t size_str1 = s21_strlen(str1);
+    s21_size_t size_str2 = s21_strlen(str2);
+    for (s21_size_t i = 0; i < size_str1 && result == s21_NULL; i++) {
+        for (s21_size_t j = 0; j < size_str2 && result == s21_NULL; j++) {
+            if (str1[i] == str2[j]) {
+                result = (char *)&str1[i];
+            }
         }
-        str1++;
     }
     return result;
 }
@@ -444,8 +459,8 @@ char *s21_strstr(const char *haystack, const char *needle) {
 }
 
 char *s21_strtok(char *str, const char *delim) {
-    char *result = s21_NULL;
     static char *buffer;
+    char *token = s21_NULL;
     if (str) {
         buffer = str;
         while (*buffer && s21_strchr(delim, *buffer)) {
@@ -455,14 +470,14 @@ char *s21_strtok(char *str, const char *delim) {
     if (buffer && *buffer) {
         str = buffer;
         while (*buffer && !s21_strchr(delim, *buffer)) {
-            buffer++;
+            ++buffer;
         }
         while (*buffer && s21_strchr(delim, *buffer)) {
             *buffer++ = '\0';
         }
-        result = str;
+        token = str;
     }
-    return result;
+    return token;
 }
 
 void s21_reverse(char *str, int len) {
