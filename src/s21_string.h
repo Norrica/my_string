@@ -191,13 +191,13 @@ typedef struct {
   int length;
   int star;
   int negative
-} parsing_format;
+} parsing_foramt;
 
 
-void form_number(char *str, int *len, parsing_format *pf);
-char sign_func_subst(long double *number, parsing_format pf);
-int c_or_percent_func(parsing_format pf, va_list arg, int *len_buf, char *str);
-long double subst_input(parsing_format pf, va_list arg);
+void form_number(char *str, int *len, parsing_foramt *pf);
+char sign_func_subst(long double *number, parsing_foramt pf);
+int c_or_percent_func(parsing_foramt pf, va_list arg, int *len_buf, char *str);
+long double subst_input(parsing_foramt pf, va_list arg);
 
 char *s21_wchstrcat(char *dest, const wchar_t *src);
 int def_number(char c);
