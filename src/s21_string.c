@@ -464,26 +464,28 @@ char *s21_strstr(const char *haystack, const char *needle) {
 
 char *s21_strtok(char *str, const char *delim) {
     static char *current;
-    char *result = str;
-    if (delim != NULL && *delim) {
-        if (str != s21_NULL && *str) {
+    char *result = s21_NULL;
+    if (delim != NULL) {
+        if (str != s21_NULL) {
             /*remove delims from start*/
             str = &str[s21_strspn(str, delim)];
             s21_size_t first = s21_strspn(str, delim);
             s21_size_t second = s21_strcspn(str, delim);
             if (second == s21_strlen(str) || first == s21_strlen(str)) {
                 if (current != s21_NULL)
-                    result = str;
+                    return str;
                 else
-                    result = s21_NULL;
-            } else {
-                current = &str[second] + 1;
-                str[second] = '\0';
-                result = str;
+                    return s21_NULL;
             }
+            current = &str[second] + 1;
+            result = malloc((first + second) * sizeof(char));
+            for (s21_size_t i = first; i < second; ++i) {
+                result[i - first] = str[i];
+            }
+            return result;
         } else {
             if (current == s21_NULL || current[0] == '\0') {
-                result = s21_NULL;
+                return s21_NULL;
             } else {
                 result = s21_strtok(current, delim);
                 current = &current[s21_strspn(current, result)];
@@ -882,8 +884,8 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     flags |= PUT_PLUS;
                     continue;
                 case ' ':
-                default:
-                    *buf++ = c;
+                default:*buf++ = c;
+                    start_fmt = 0;
                     continue;
             }
         }
@@ -899,89 +901,49 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     return ret;
 }
 
-//#define DEV
+#define DEV
 #ifdef DEV
 #include <stdio.h>
 #include <string.h>
 
-void leaks(){
-    //char dest[50];
-    /*s21_memchr("qweqweqw", 6, 5);*/
-    //s21_memcpy(dest, "qweqweqweq", 6);
-    //s21_memmove(dest, "qweqweqweq", 6);
-    //s21_memset(dest, 1, 10);
-    //s21_strcat(dest, "12");
-    //s21_strncat(dest, "000", 50);
-    //s21_strchr("123124", 3);
-    //s21_memcmp("qweqweqq", "rtertet", 10);
-    //s21_strcmp("qweqweq", "ererer");
-    //s21_strncmp("qweqwe", "tgtbr", 10);
-    //char *r = s21_to_upper("qweqweqwe");
-    //free(r);
-    //char *l = (char*)s21_to_lower("qweqsda");
-    //free(l);
-    //char* i = s21_insert("qweqweq", "qweqweq", 2);
-    //free(i);
-    //s21_trim("   qqwe", "qweq ");
-    //s21_itoa(4, dest);
-    //s21_strpbrk("qweqweq", "sdsdsd");
-    //s21_strrchr("qweqweq", 10);
-    //s21_strstr("qweqeqe", "fvvbgg");
-    //s21_strtok("a.b.c.d.e.d.f.g.h.", ".");
-    //s21_strtok(NULL, ".");
-    //s21_strtok(NULL, ".");
-    //s21_strtok(NULL, ".");
-    //s21_strtok(NULL, ".");
-    //s21_strtok(NULL, ".");
-    //s21_strtok(NULL, ".");
-    //s21_strtok(NULL, ".");
-    //s21_strspn("qweqeq", "wqwqwqwqw");
-    //s21_strerror(1);
-    //s21_strlen("hgdfjkghdkj");
-    //s21_strcpy(dest, "qweqweq");
-    //s21_strncpy(dest, "1231wq", 3);
-    //s21_strcspn("qweqweqe", "ofjfdifdi");
-}
-
 int main() {
-    //char a[50];
-    //strcpy(a,"a.b.c.d.e.d.f.g.h.");
-    //char* b = s21_strtok(a, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //b = s21_strtok(NULL, ".");
-    //puts(b);
-    //strcpy(a,"a.b.c.d.e.d.f.g.h.");
-    //char* c = strtok(a, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    //c = strtok(NULL, ".");
-    //puts(c);
-    char st[50];
-    s21_sprintf(st,"% d",15);
-    puts(st);
-
+     char dest[50];
+     char qweq[10] = "#qweqe";
+     s21_memchr("qweqweqw", 6, 5);
+     s21_memcpy(dest, "qweqweqweq", 6);
+     s21_memmove(dest, "qweqweqweq", 6);
+     s21_memset(dest, 1, 10);
+     s21_strcat(dest, "12");
+     s21_strncat(dest, "000", 50);
+     s21_strchr("123124", 3);
+     s21_memcmp("qweqweqq", "rtertet", 10);
+     s21_strcmp("qweqweq", "ererer");
+     s21_strncmp("qweqwe", "tgtbr", 10);
+     s21_to_upper("qweqweqwe");
+     s21_to_lower("qweqsda");
+     s21_insert("qweqweq", "qweqweq", 2);
+     s21_trim("   qqwe", "qweq ");
+//     reverse("ghhsdfs", 1);
+     s21_itoa(4, dest);
+     s21_strpbrk("qweqweq", "sdsdsd");
+     s21_strrchr("qweqweq", 10);
+     s21_strstr("qweqeqe", "fvvbgg");
+     s21_strtok("#qweqe", "q");
+     s21_strspn("qweqeq", "wqwqwqwqw");
+     s21_strerror(1);
+     s21_strlen("hgdfjkghdkj");
+     s21_strcpy(dest, "qweqweq");
+     s21_strncpy(dest, "1231wq", 3 );
+     s21_strcspn("qweqweqe", "ofjfdifdi");
+    //  printf("%s %d",__FILE__, __LINE__);
+    char str[50];
+    char *fmt = "%+0123.5dd";
+    //  puts("");
+    float o = 50;
+    for (int i = 0; i < 10; ++i) {
+        o/=10;
+    }
+    printf("%.10f\n", o);
+    printf("%100.10d", 5);
 }
 #endif
