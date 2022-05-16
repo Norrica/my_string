@@ -183,6 +183,7 @@ enum conversion_flags {
   h = 512,
   l = 1024,
   ll = 2048,
+  PUT_SPACE = 4096,
 };
 
 
