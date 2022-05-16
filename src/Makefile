@@ -2,7 +2,7 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
 
-TARGET=test.c
+TARGET=test.c local_test.c
 
 .PHONY : all build clean
 
@@ -30,7 +30,7 @@ s21_string.a: clean
 	ar rcs s21_string.a s21_string.o
 
 test: s21_string.a
-	$(CC)  -g s21_string.c test.c  -o test -lcheck
+	$(CC)  s21_string.c test.c  -o test -lcheck
 
 gcov_report:CFLAGS += -fprofile-arcs -ftest-coverage
 gcov_report: test
@@ -39,8 +39,8 @@ gcov_report: test
 	geninfo . -b . -o ./test.info
 	genhtml test.info --output-directory report
 
-local_debug:
-	$(CC) $(CFLAGS) -DDEV -g s21_string.c -o local_test
+local:
+	$(CC)  -g s21_string.c local_test.c -o local_test
 
 #.PHONY: all build clean
 for_docker:

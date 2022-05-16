@@ -653,7 +653,7 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, int flags) 
         precision = 0;
     }
 
-    if (flags & PUT_MINUS) {
+    if (flags & IS_NEGATIVE) {
         num *= -1;
     }
 
@@ -680,14 +680,14 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, int flags) 
         s21_strcat(res_buf, float_res);
     }
 
-    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+    if (flags & IS_NEGATIVE || flags & PUT_PLUS) {
         --width;
     }
     s21_size_t res_len = s21_strlen(res_buf);
     if (fill == ' ')
         while ((int) res_len <= --width)
             *(buf++) = fill;
-    if (flags & PUT_MINUS) *(buf++) = '-';
+    if (flags & IS_NEGATIVE) *(buf++) = '-';
     else if (flags & PUT_PLUS) *(buf++) = '+';
 
     while ((int) res_len <= --width) {
@@ -724,7 +724,7 @@ char *s21_sitoa(char *buf, long long int num, int width, int flags) {
 
     if (num < 0) {
         num = -num;
-        flags |= PUT_MINUS;
+        flags |= IS_NEGATIVE;
     }
 
     char tmp[32];
@@ -734,40 +734,63 @@ char *s21_sitoa(char *buf, long long int num, int width, int flags) {
         *p++ = (rem <= 9) ? (rem + '0') : (rem + hex_size - 0xA);
     } while ((num /= base));
     width -= p - tmp;
+
     char fill = (flags & FILL_ZERO) ? '0' : ' ';
-    if (flags & PUT_MINUS || flags & PUT_PLUS) {
+
+    if (flags & IS_NEGATIVE || flags & PUT_PLUS) {
         --width;
     }
-    if (fill == ' ')
-        while (0 <= --width)
-            *(buf++) = fill;
-    if (flags & PUT_MINUS) *(buf++) = '-';
-    else if (flags & PUT_PLUS) *(buf++) = '+';
-    while (0 <= --width) {
-        *(buf++) = fill;
+    if (flags & JUSTIFY_LEFT) {
+        fill = ' ';
+        if (flags & IS_NEGATIVE) {
+            *buf++ = '-';
+        }
+        if (flags & PUT_PLUS) {
+            *buf++ = '+';
+        }
     }
-    do {
-        *(buf++) = *(--p);
-    } while (tmp < p);
+    if (fill =='0') {
+        while (width-- - s21_strlen(p) > 0)
+            *buf++ = '0';
+
+        //while (width-- && *p) {
+        //    *buf++ = *p++;
+        //}
+        do {
+            *(buf++) = *(--p);
+        } while (tmp < p);
+    }else{
+
+        //while (width-- && *p) {
+        //    *buf++ = *p++;
+        //}
+        do {
+            *(buf++) = *(--p);
+        } while (tmp < p);
+        while (width-- - s21_strlen(p) > 0)
+            *buf++ = ' ';
+    }
     return buf;
 }
 
-char *Foo(enum conversion_flags flags, const char *p, char *buf, int *width) {
+char *stringer(enum conversion_flags flags, const char *p, char *buf, int width) {
     int a = s21_strlen(p);
-
-    char *string = malloc(a + *width) ;
-    string = "";
-    while ((((*width)--) - a) >= 0) {
-        if ((flags) & FILL_ZERO)
-            *string++ = '0';
+    //char *string = (char *) malloc(a + width);
+    while ((((width)--) - a) >= 0) {
+        if (flags & FILL_ZERO)
+            *buf++ = '0';
         else
-            *string++ = ' ';
+            *buf++ = ' ';
     }
+    char *save = buf;
     if (p)
         while (*p)
-            *string++ = *(p++);
-    s21_strcat(buf,string);
-    free(string);
+            *buf++ = *(p++);
+
+    if (flags & IS_NEGATIVE) {
+        s21_reverse(save, (int) s21_strlen(save));
+    }
+    //free(string);
     return buf;
 }
 int s21_vsprintf(char *buf, const char *fmt, va_list va) {
@@ -837,13 +860,13 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     else
                         d = (double) va_arg(va, double);
                     if (d < 0)
-                        flags |= PUT_MINUS;
+                        flags |= IS_NEGATIVE;
                     buf = s21_ftoa(buf, d, width, precision, flags);
                     start_fmt = 0;
                     continue;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
-                    buf = Foo(flags, p, buf, &width);
+                    buf = stringer(flags, p, buf, width);
                     start_fmt = 0;
                     continue;
                 case 'u': {}
@@ -890,14 +913,16 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                 case '+': {}
                     flags |= PUT_PLUS;
                     continue;
+                case '-': {}
+                    flags |= JUSTIFY_LEFT;
+                    continue;
                 case ' ':
                     if (!(flags & PUT_SPACE)) {
                         flags |= PUT_SPACE;
                         *buf++ = ' ';
                     }
                     break;
-                default:*buf++ = c;
-                    start_fmt = 0;
+                default:;
                     continue;
             }
         }
@@ -913,49 +938,3 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     return ret;
 }
 
-//#define DEV
-#ifdef DEV
-#include <stdio.h>
-#include <string.h>
-//char dest[50];
-//    char qweq[10] = "#qweqe";
-//    s21_memchr("qweqweqw", 6, 5);
-//    s21_memcpy(dest, "qweqweqweq", 6);
-//    s21_memmove(dest, "qweqweqweq", 6);
-//    s21_memset(dest, 1, 10);
-//    s21_strcat(dest, "12");
-//    s21_strncat(dest, "000", 50);
-//    s21_strchr("123124", 3);
-//    s21_memcmp("qweqweqq", "rtertet", 10);
-//    s21_strcmp("qweqweq", "ererer");
-//    s21_strncmp("qweqwe", "tgtbr", 10);
-//    s21_to_upper("qweqweqwe");
-//    s21_to_lower("qweqsda");
-//    s21_insert("qweqweq", "qweqweq", 2);
-//    s21_trim("   qqwe", "qweq ");
-////     reverse("ghhsdfs", 1);
-//    s21_itoa(4, dest);
-//    s21_strpbrk("qweqweq", "sdsdsd");
-//    s21_strrchr("qweqweq", 10);
-//    s21_strstr("qweqeqe", "fvvbgg");
-//    s21_strtok("#qweqe", "q");
-//    s21_strspn("qweqeq", "wqwqwqwqw");
-//    s21_strerror(1);
-//    s21_strlen("hgdfjkghdkj");
-//    s21_strcpy(dest, "qweqweq");
-//    s21_strncpy(dest, "1231wq", 3);
-//    s21_strcspn("qweqweqe", "ofjfdifdi");
-int main() {
-
-    //  printf("%s %d",__FILE__, __LINE__);
-    char str[50];
-    char *fmt = "%+0123.5dd";
-    //  puts("");
-    float o = 50;
-    for (int i = 0; i < 10; ++i) {
-        o /= 10;
-    }
-    printf("%.10f\n", o);
-    printf("%100.10d", 5);
-}
-#endif

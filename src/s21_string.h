@@ -177,7 +177,7 @@ void *s21_trim(const char *src, const char *trim_chars);
 enum conversion_flags {
   FILL_ZERO = 1,
   PUT_PLUS = 2,
-  PUT_MINUS = 4,
+  IS_NEGATIVE = 4,
   BASE_2 = 8,
   BASE_8=16,
   BASE_10 = 32,
@@ -188,6 +188,7 @@ enum conversion_flags {
   l = 1024,
   ll = 2048,
   PUT_SPACE = 4096,
+  JUSTIFY_LEFT = 8192,
 };
 
 
