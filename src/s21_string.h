@@ -167,28 +167,69 @@ void *s21_to_lower(const char *str);
 void *s21_insert(const char *src, const char *str, s21_size_t start_index);
 
 void *s21_trim(const char *src, const char *trim_chars);
-#define min(a, b) __extension__\
-    ({ __typeof__(a) _a = (a); \
-       __typeof__(b) _b = (b); \
-       _a < _b ? _a : _b; })
-enum conversion_flags {
-  FILL_ZERO = 1,
-  PUT_PLUS = 2,
-  PUT_MINUS = 4,
-  BASE_2 = 8,
-  BASE_8=16,
-  BASE_10 = 32,
-  BIG_HEX = 64,
-  SET_PRECISION = 128,
-  L = 256,
-  h = 512,
-  l = 1024,
-  ll = 2048,
-};
+
+typedef struct {
+  int plus;
+  int gird;
+  int minus;
+  int zero;
+  int space;
+  int leng;
+  int width;
+  int point;
+  int precision;
+  int type;
+  int star;
+} parsing;
+
+typedef struct {
+  int specifier;
+  int flag;
+  int width;
+  int precision;
+  int dot;
+  int length;
+  int star;
+  int negative
+} parsing_foramt;
 
 
-char *s21_sitoa(char *buf, long long int num, int width, int flags);
-char *s21_ftoa(char *buf, long double num, int width, int precision, int flags);
-int s21_vsprintf(char *buf, const char *fmt, va_list va);
-int s21_sprintf(char *buf, const char *fmt, ...);
+void form_number(char *str, int *len, parsing_foramt *pf);
+char sign_func_subst(long double *number, parsing_foramt pf);
+int c_or_percent_func(parsing_foramt pf, va_list arg, int *len_buf, char *str);
+long double subst_input(parsing_foramt pf, va_list arg);
+
+char *s21_wchstrcat(char *dest, const wchar_t *src);
+int def_number(char c);
+
+
+
+
+
+int whole_part(long double n, int *array);
+int round_number(int *buff, int len, int *buff1, int *whole);
+int str_form(parsing pars, int *buff1, int whole, char c, char *str, int *len_str);
+int consider_g(char *str, int *len_str, int *len, int from_g_gird);
+int form_power(int power, char e, char *str, int *len_buf);
+int form_number_d(parsing pars, long int number, char *str);
+int consider_precision_d(parsing pars, int i, char sign, char *str, int *precision);
+int format_d(parsing pars, int len, char *str, char sign, int *len_buf);
+int format_x(parsing pars, int len, char *str, int *len_buf);
+char sign_func_whole(long int *number, int *plus, int *space);
+int consider_precision_x(parsing pars, int i, int *precision, char *str);
+int s21_sprintf(char *str, char *format, ...);
+
+int d_or_i_func(parsing pars, va_list args, int *len_buf, char *str);
+int f_func(parsing pars, int *len_buf, char *str, long double number, int from_g_gird);
+int u_func(parsing pars, va_list args, int *len_buf, char *str);
+int n_func(va_list args, int length);
+char convertTox(int value);
+char convertToX(int value);
+int convert(parsing pars, long unsigned num, long unsigned divider, char *data, char spec);
+int x_or_X_func(parsing pars, va_list args, int *len_buf, char *str);
+int e_or_E_func(parsing pars, int *len_buf, char *str, long double number, int from_g_gird);
+int s_func(parsing pars, va_list args, int *len_buf, char *str);
+int p_func(parsing pars, va_list args, int *len_buf, char *str);
+int g_or_G_func(parsing pars, int *len_buf, char *str, long double number);
+int calling_function(parsing pars, va_list args, int *len_buf, char *str_add, int length);
 #endif  //  SRC_S21_STRING_H_
