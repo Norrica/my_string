@@ -695,7 +695,7 @@ char sign_func_whole(long int *number, int *plus, int *space) {
     return c;
 }
 
-char sign_func_subst(long double *n, parsing_foramt pf) {
+char sign_func_subst(long double *n, parsing_format pf) {
     char c;
     if (*n < 0) {
         *n = *n * (-1);
@@ -964,7 +964,7 @@ int consider_precision_x(parsing pars, int i, int *precision, char *str) {
     return len;
 }
 
-int f_func(parsing_foramt pf, int *len_buf, char *str, long double number, int from_g_gird) {
+int f_func(parsing_format pf, int *len_buf, char *str, long double number, int from_g_gird) {
     char sign = sign_func_subst(&number, &pf);
     if (pf.precision < 0)
         pf.precision = 6;
@@ -1429,8 +1429,6 @@ int def_number(char c) {
     return result;
 }
 
-
-
 int spec(char c) {
     int result = 0;
     int code[16] = {99, 100, 101, 102, 105, 69, 71, 103, 111, 115, 117, 88, 120, 110, 112, 37};
@@ -1442,8 +1440,7 @@ int spec(char c) {
     return result;
 }
 
-
-long double subst_input(parsing_foramt pf, va_list arg) {
+long double subst_input(parsing_format pf, va_list arg) {
     long double number;
     if (pf.length == 0) {
         number = (long double) va_arg(arg, double);
@@ -1453,7 +1450,7 @@ long double subst_input(parsing_foramt pf, va_list arg) {
     return number;
 }
 
-int c_or_percent_func(parsing_foramt pf, va_list args, int *len_buf, char *str) {
+int c_or_percent_func(parsing_format pf, va_list args, int *len_buf, char *str) {
     char c;
     if (pf.specifier == '%') {
         c = '%';
@@ -1487,7 +1484,7 @@ int c_or_percent_func(parsing_foramt pf, va_list args, int *len_buf, char *str) 
     return 1;
 }
 
-void form_number(char *str, int *len, parsing_foramt *pf) {
+void form_number(char *str, int *len, parsing_format *pf) {
     int factor = 0;
     char *tmp = str;
     if (*tmp >= '0' && *tmp <= '9') {
@@ -1514,7 +1511,7 @@ int s21_sprintf(char *str, char *format, ...) {
     va_list arg;
     parsing pars;
 
-    parsing_foramt pf;
+    parsing_format pf;
     int len_add = 0;
     char *str_add;
     str_add = (char *) malloc(200 * sizeof(char));
@@ -1555,19 +1552,15 @@ int s21_sprintf(char *str, char *format, ...) {
 
             while (flag) {
                 switch (*format) {
-                    case '-':
-                        pf.flag = '-';
+                    case '-':pf.flag = '-';
                     case '+':pf.flag = '+';
                     case ' ':
                         if (pf.flag != '+')
                             pf.flag = ' ';
-                    case '#':
-                        pf.flag = '#';
-                    case '0':
-                        pf.flag = '0';
+                    case '#':pf.flag = '#';
+                    case '0':pf.flag = '0';
                         break;
-                    case '*':
-                        pf.star = '*';
+                    case '*':pf.star = '*';
                         int i = va_arg(arg, int);
                         if (i < 0) {
                             pf.flag = '-';
@@ -1580,69 +1573,54 @@ int s21_sprintf(char *str, char *format, ...) {
                             pf.dot = 0;
                         }
                         break;
-                    case '.':
-                        pf.dot = '.';
+                    case '.':pf.dot = '.';
                         break;
-                    case 'h':
-                        pf.length = 'h';
+                    case 'h':pf.length = 'h';
                         break;
-                    case 'l':
-                        pf.length = 'l';
+                    case 'l':pf.length = 'l';
                         break;
-                    case 'L':
-                        pf.length = 'L';
+                    case 'L':pf.length = 'L';
                         break;
                     case 'c':
-                    case '%':
-                        pf.specifier = (int) *format;
+                    case '%':pf.specifier = (int) *format;
                         c_or_percent_func(pf, arg, &len_add, str_add);
                         flag = 0;
                         break;
-                    case 'f':
-                        pf.specifier = 'f';
+                    case 'f':pf.specifier = 'f';
                         number = subst_input(pf, arg);
                         f_func(pars, &len_add, str_add, number, from_g_gird);
                         break;
                     case 'd':
-                    case 'i':
-                        pf.specifier = (int) *format;
+                    case 'i':pf.specifier = (int) *format;
                         d_or_i_func(pars, arg, &len_add, str_add);
                         break;
-                    case 'u':
-                        pf.specifier = 'u';
+                    case 'u':pf.specifier = 'u';
                         u_func(pars, arg, &len_add, str_add);
                         break;
-                    case 'n':
-                        pf.specifier = 'n';
+                    case 'n':pf.specifier = 'n';
                         n_func(arg, length);
                         break;
-                    case 'o':
-                        pf.specifier = 'o';
+                    case 'o':pf.specifier = 'o';
                         o_func(pars, arg, &len_add, str_add);
                         break;
                     case 'x':
-                    case 'X':
-                        pf.specifier = (int) *format;
+                    case 'X':pf.specifier = (int) *format;
                         x_or_X_func(pars, arg, &len_add, str_add);
                         break;
                     case 'e':
-                    case 'E':
-                        pf.specifier = (int) *format;
+                    case 'E':pf.specifier = (int) *format;
                         number = subst_input(pars, arg);
                         e_or_E_func(pars, &len_add, str_add, number, from_g_gird);
                         break;
                     case 'g':
-                    case 'G':
-                        pf.specifier = (int) *format;
+                    case 'G':pf.specifier = (int) *format;
                         number = subst_input(pars, arg);
                         g_or_G_func(pars, &len_add, str_add, number);
                         break;
-                    case 'p':
-                        pf.specifier = 'p';
+                    case 'p':pf.specifier = 'p';
                         p_func(pars, arg, &len_add, str_add);
                         break;
-                    case 's':
-                        pf.specifier = 's';
+                    case 's':pf.specifier = 's';
                         s_func(pars, arg, &len_add, str_add);
                         flag = 0;
                         break;
