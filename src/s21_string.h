@@ -1,6 +1,10 @@
 #ifndef SRC_S21_STRING_H_
 #define SRC_S21_STRING_H_
 #include <stdlib.h>
+#include <stdarg.h>
+#include <math.h>
+#include <ctype.h>
+#include <stdint.h>
 
 typedef unsigned long s21_size_t;
 typedef s21_size_t size;

@@ -1,8 +1,4 @@
-#include <stdarg.h>
-#include <math.h>
-#include <ctype.h>
-#include <stdint.h>
-#include <stdlib.h>
+
 #include "s21_string.h"
 
 void *s21_memchr(const void *str, int c, s21_size_t n) {
@@ -756,6 +752,24 @@ char *s21_sitoa(char *buf, long long int num, int width, int flags) {
     return buf;
 }
 
+char *Foo(enum conversion_flags flags, const char *p, char *buf, int *width) {
+    int a = s21_strlen(p);
+
+    char *string = malloc(a + *width) ;
+    string = "";
+    while ((((*width)--) - a) >= 0) {
+        if ((flags) & FILL_ZERO)
+            *string++ = '0';
+        else
+            *string++ = ' ';
+    }
+    if (p)
+        while (*p)
+            *string++ = *(p++);
+    s21_strcat(buf,string);
+    free(string);
+    return buf;
+}
 int s21_vsprintf(char *buf, const char *fmt, va_list va) {
     char c;
     const char *save = buf;
@@ -791,12 +805,15 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 'i':
                 case 'd': {}
-                    int num = va_arg(va, int);
-
-                    if (flags & h) {
+                    long long int num;
+                    if (flags & l) { num = va_arg(va, long int); }
+                    else if (flags & ll) { num = va_arg(va, long long int); }
+                    else if (flags & h) {
+                        num = va_arg(va, int);
                         num = (short int) num;
                         buf = s21_sitoa(buf, num, width, flags | BASE_10);
                     } else {
+                        num = va_arg(va, int);
                         buf = s21_sitoa(buf, num, width, flags | BASE_10);
                     }
                     start_fmt = 0;
@@ -809,7 +826,6 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
                     start_fmt = 0;
                     continue;
-
                 case 'b': {}
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
                     start_fmt = 0;
@@ -827,16 +843,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
-                    int a = s21_strlen(p);
-                    while (((width--) - a) >= 0) {
-                        if (flags & FILL_ZERO)
-                            *buf++ = '0';
-                        else
-                            *buf++ = ' ';
-                    }
-                    if (p)
-                        while (*p)
-                            *buf++ = *(p++);
+                    buf = Foo(flags, p, buf, &width);
                     start_fmt = 0;
                     continue;
                 case 'u': {}
@@ -884,9 +891,10 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     flags |= PUT_PLUS;
                     continue;
                 case ' ':
-                    if (!(flags & PUT_SPACE))
+                    if (!(flags & PUT_SPACE)) {
                         flags |= PUT_SPACE;
-                    *buf++ = ' ';
+                        *buf++ = ' ';
+                    }
                     break;
                 default:*buf++ = c;
                     start_fmt = 0;
@@ -905,40 +913,40 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     return ret;
 }
 
-#define DEV
+//#define DEV
 #ifdef DEV
 #include <stdio.h>
 #include <string.h>
-
+//char dest[50];
+//    char qweq[10] = "#qweqe";
+//    s21_memchr("qweqweqw", 6, 5);
+//    s21_memcpy(dest, "qweqweqweq", 6);
+//    s21_memmove(dest, "qweqweqweq", 6);
+//    s21_memset(dest, 1, 10);
+//    s21_strcat(dest, "12");
+//    s21_strncat(dest, "000", 50);
+//    s21_strchr("123124", 3);
+//    s21_memcmp("qweqweqq", "rtertet", 10);
+//    s21_strcmp("qweqweq", "ererer");
+//    s21_strncmp("qweqwe", "tgtbr", 10);
+//    s21_to_upper("qweqweqwe");
+//    s21_to_lower("qweqsda");
+//    s21_insert("qweqweq", "qweqweq", 2);
+//    s21_trim("   qqwe", "qweq ");
+////     reverse("ghhsdfs", 1);
+//    s21_itoa(4, dest);
+//    s21_strpbrk("qweqweq", "sdsdsd");
+//    s21_strrchr("qweqweq", 10);
+//    s21_strstr("qweqeqe", "fvvbgg");
+//    s21_strtok("#qweqe", "q");
+//    s21_strspn("qweqeq", "wqwqwqwqw");
+//    s21_strerror(1);
+//    s21_strlen("hgdfjkghdkj");
+//    s21_strcpy(dest, "qweqweq");
+//    s21_strncpy(dest, "1231wq", 3);
+//    s21_strcspn("qweqweqe", "ofjfdifdi");
 int main() {
-    char dest[50];
-    char qweq[10] = "#qweqe";
-    s21_memchr("qweqweqw", 6, 5);
-    s21_memcpy(dest, "qweqweqweq", 6);
-    s21_memmove(dest, "qweqweqweq", 6);
-    s21_memset(dest, 1, 10);
-    s21_strcat(dest, "12");
-    s21_strncat(dest, "000", 50);
-    s21_strchr("123124", 3);
-    s21_memcmp("qweqweqq", "rtertet", 10);
-    s21_strcmp("qweqweq", "ererer");
-    s21_strncmp("qweqwe", "tgtbr", 10);
-    s21_to_upper("qweqweqwe");
-    s21_to_lower("qweqsda");
-    s21_insert("qweqweq", "qweqweq", 2);
-    s21_trim("   qqwe", "qweq ");
-//     reverse("ghhsdfs", 1);
-    s21_itoa(4, dest);
-    s21_strpbrk("qweqweq", "sdsdsd");
-    s21_strrchr("qweqweq", 10);
-    s21_strstr("qweqeqe", "fvvbgg");
-    s21_strtok("#qweqe", "q");
-    s21_strspn("qweqeq", "wqwqwqwqw");
-    s21_strerror(1);
-    s21_strlen("hgdfjkghdkj");
-    s21_strcpy(dest, "qweqweq");
-    s21_strncpy(dest, "1231wq", 3);
-    s21_strcspn("qweqweqe", "ofjfdifdi");
+
     //  printf("%s %d",__FILE__, __LINE__);
     char str[50];
     char *fmt = "%+0123.5dd";

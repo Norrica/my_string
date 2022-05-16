@@ -1326,7 +1326,7 @@ START_TEST(test_sprintf) {
     ck_assert_str_eq(str1, str2);
     sprintf(str1, "%i", 15), s21_sprintf(str2, "%i", 15);
     ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%f", 1.1), s21_sprintf(str2, "%f", 1.1);
+    sprintf(str1, "%f", 1.1); s21_sprintf(str2, "%f", 1.1);
     ck_assert_str_eq(str1, str2);
     sprintf(str1, "%s", "$#3AaP-+=/n/0"), s21_sprintf(str2, "%s", "$#3AaP-+=/n/0");
     ck_assert_str_eq(str1, str2);
