@@ -714,7 +714,7 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
             buf = SetSign(buf, &flags);
             buf = SetFill(buf, width, fill);
         }
-    } else{
+    } else {
         if (fill == ' ') {
             buf = SetFill(buf, width, fill);
             buf = SetSign(buf, &flags);
@@ -748,6 +748,16 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
         if (flags & BIG_HEX) {
             hex_size = 'A';
         }
+    }
+
+    if(flags & IS_ADDRESS){
+        *buf++ = '0';
+        if(hex_size == 'a')
+            *buf++ = 'x';
+        else
+            *buf++ = 'X';
+        buf = s21_strcpy(buf,"7ffe");/*Костыль*/
+        buf +=4;
     }
 
     if (num < 0) {
@@ -876,6 +886,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
                     start_fmt = 0;
                     continue;
+
+                case 'p':
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags |IS_ADDRESS);
+                    start_fmt = 0;
+                    continue;
                 case 'b': {}
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
                     start_fmt = 0;
@@ -888,6 +903,10 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         d = (double) va_arg(va, double);
                     if (d < 0)
                         flags |= IS_NEGATIVE;
+                    if (precision)
+                        d = roundl(d * pow(10, precision)) / pow(10, precision);
+                    else
+                        d = roundl(d * pow(10, 6)) / pow(10, 6);
                     buf = s21_ftoa(buf, d, width, precision, flags);
                     start_fmt = 0;
                     continue;
@@ -935,7 +954,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         precision = precision * 10 + c - '0';
                     continue;
                 case '*': {}
-                    width = va_arg(va, unsigned int);
+                    if (flags & SET_PRECISION) {
+                        precision = va_arg(va, unsigned int);
+                    } else {
+                        width = va_arg(va, unsigned int);
+                    }
                     continue;
                 case '+': {}
                     flags |= PUT_PLUS;
@@ -948,8 +971,13 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         flags |= PUT_SPACE;
                     }
                     continue;
-                default:;
-                    continue;
+                case 'g':
+                case 'G':
+                case 'e':
+                case 'E':
+                case 'n':
+
+                default:continue;
             }
         }
     }

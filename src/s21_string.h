@@ -189,6 +189,7 @@ enum conversion_flags {
   ll = 2048,
   PUT_SPACE = 4096,
   JUSTIFY_LEFT = 8192,
+  IS_ADDRESS = 16384,
 };
 
 
