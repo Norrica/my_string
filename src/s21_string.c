@@ -732,9 +732,10 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
     return buf;
 }
 
-char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags flags) {
+char *s21_sitoa(char *buf, long long int num, int width, int precision, enum conversion_flags flags) {
     unsigned int base;
     char hex_size = 'a';
+    /*region BASE*/
     if (flags & BASE_2) {
         base = 2;
     } else if (flags & BASE_8) {
@@ -747,7 +748,8 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
             hex_size = 'A';
         }
     }
-
+    /*endregion*/
+    //region HEX
     if (flags & IS_ADDRESS) {
         *buf++ = '0';
         if (hex_size == 'a')
@@ -757,6 +759,7 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
         buf = s21_strcpy(buf, "7ffe");/*Костыль*/
         buf += 4;
     }
+    //endregion
 
     if (num < 0) {
         num = -num;
@@ -770,21 +773,26 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
         int rem = num % base;
         *p++ = (rem <= 9) ? (rem + '0') : (rem + hex_size - 0xA);
     } while ((num /= base));
-    width -= p - tmp;
-    if ((flags & PUT_SPACE)) {
-        width = 1;
+    precision -= p - tmp;
+    while (precision-- > 0) {
+        *p++ = '0';
     }
+    width -= p - tmp;
 
     char fill;
-    if ((flags & FILL_ZERO)) {
+    if (flags & FILL_ZERO) {
         fill = '0';
     } else {
         fill = ' ';
     }
-    if (flags & IS_NEGATIVE || flags & PUT_PLUS) {
-        --width;
+    if(flags & PUT_SPACE && !((flags &PUT_PLUS) || (flags &IS_NEGATIVE))){
+        *buf++ = ' ';
+        width--;
     }
-    if ((flags & JUSTIFY_LEFT) && !(flags & PUT_SPACE)) {
+    if ((flags &PUT_PLUS) || (flags &IS_NEGATIVE)){
+        width--;
+    }
+    if ((flags & JUSTIFY_LEFT) ) {
         fill = ' ';
         buf = SetSign(buf, &flags);
         do {
@@ -876,11 +884,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 'i':
                 case 'd': {}
-                    if (flags & SET_PRECISION) {
-                        width = precision+1;
-                        flags |= FILL_ZERO;
-                        flags &= ~JUSTIFY_LEFT;
-                    }
+                    //if (flags & SET_PRECISION) {
+                    //    width = precision + 1;
+                    //    flags |= FILL_ZERO;
+                    //    flags &= ~JUSTIFY_LEFT;
+                    //}
                     long long int num;
                     if (flags & l) {
                         num = va_arg(va, long int);
@@ -894,22 +902,22 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                             num = va_arg(va, int);
                         }
                     }
-                    buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                    buf = s21_sitoa(buf, num, width, precision, flags | BASE_10);
                     start_fmt = 0;
                     continue;
                 case 'X': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | BIG_HEX);
                     start_fmt = 0;
                     continue;
                 case 'x': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags);
                     start_fmt = 0;
                     continue;
-                case 'p':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | IS_ADDRESS);
+                case 'p':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | IS_ADDRESS);
                     start_fmt = 0;
                     continue;
                 case 'b': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | BASE_2);
                     start_fmt = 0;
                     continue;
                 case 'f': {}
@@ -936,11 +944,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     start_fmt = 0;
                     continue;
                 case 'u': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | BASE_10);
                     start_fmt = 0;
                     continue;
                 case 'o': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_8);
+                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | BASE_8);
                     start_fmt = 0;
                     continue;
                 case 'm': {}
@@ -948,7 +956,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     width = min(width, 64);
                     if (m) {
                         for (;;) {
-                            buf = s21_sitoa(buf, *(m++), 2, FILL_ZERO);
+                            buf = s21_sitoa(buf, *(m++), 2, precision, FILL_ZERO);
                             if (--width <= 0)
                                 break;
                             *(buf++) = ':';

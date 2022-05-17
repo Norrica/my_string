@@ -193,7 +193,7 @@ enum conversion_flags {
 };
 
 
-char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags flags);
+char *s21_sitoa(char *buf, long long int num, int width, int precision, enum conversion_flags flags);
 char *s21_ftoa(char *buf, long double num, int width, int precision, enum conversion_flags flags);
 int s21_vsprintf(char *buf, const char *fmt, va_list va);
 int s21_sprintf(char *buf, const char *fmt, ...);

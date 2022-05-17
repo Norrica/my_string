@@ -4,8 +4,8 @@ int main(int argc, char const *argv[])
 {
     char std[20];
     char s21[20];
-    int d = -48;
-    char *fmt = "|%5.10d|";
+    int d = 123;
+    char *fmt = "|% -+1.4d|";
     sprintf(std,fmt,d);
     s21_sprintf(s21,fmt,d);
     printf("std - %s\n",std);
