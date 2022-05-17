@@ -876,6 +876,7 @@ START_TEST(STRERRORTest3) {
 END_TEST
 
 // MARK: - to_upper 7
+/*region TOUPPER*/
 START_TEST(TOUPPERTest1) {
     char str[4] = "abc";
     char *str1 = (char *)s21_to_upper(str);
@@ -931,8 +932,10 @@ START_TEST(TOUPPERTest7) {
     free(str1);
 }
 END_TEST
+/*endregion*/
 
 // MARK: - insert 7
+/*region INSERT*/
 START_TEST(INSERTTest1) {
     char str1[4] = "abc";
     char str2[5] = "1234";
@@ -995,9 +998,11 @@ START_TEST(INSERTTest7) {
     free(str3);
 }
 END_TEST
+/*endregion*/
 
 
 // MARK: - to_lower 7
+/*region TOLOWER*/
 START_TEST(TOLOWERTest1) {
     char str[4] = "abc";
     char *str2 = (char *)s21_to_lower(str);
@@ -1031,7 +1036,7 @@ START_TEST(TOLOWERTest4) {
 END_TEST
 
 START_TEST(TOLOWERTest5) {
-    char str[5] = "1234a";
+    char str[6] = "1234a";
     char *str2 = (char *)s21_to_lower(str);
     ck_assert_str_eq(str2, "1234a");
     free(str2);
@@ -1053,9 +1058,10 @@ START_TEST(TOLOWERTest7) {
     free(str2);
 }
 END_TEST
+/*endregion*/
 
 // MARK: - trim 13
-
+/*region TRIM*/
 START_TEST(TRIMTest1) {
     char *str = "WoW\0, I love it!";
     char *str2 = "W";
@@ -1169,7 +1175,8 @@ START_TEST(TRIMTest13) {
     free(str3);
 }
 END_TEST
-
+/*endregion*/
+/*region SPRINTF*/
 START_TEST(SPRINTF1) {
     char data[100];
     char data1[100];
@@ -1442,6 +1449,16 @@ START_TEST(SPRINTF31) {
 END_TEST
 
 
+START_TEST(SPRINTF32) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5.5s|\n";
+    s21_sprintf(data, fmt, "lol");
+    sprintf(data1, fmt, "lol");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+/*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
     TCase *StrLenTest = tcase_create("STRLEN");

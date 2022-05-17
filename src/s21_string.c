@@ -598,6 +598,9 @@ int isthere(char c, const char *trim_chars) {
 
 void *s21_trim(const char *src, const char *trim_chars) {
     char *result = s21_NULL;
+    if (trim_chars == s21_NULL || *trim_chars == '\0'){
+        trim_chars = " \f\n\r\t\v";
+    }
     if (src != s21_NULL) {
         int len = s21_strlen(src);
         int last_n = len;
