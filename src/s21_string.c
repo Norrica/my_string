@@ -644,16 +644,17 @@ char *SetFill(char *buf, int width, char fill) {
     return buf;
 }
 char *SetSign(char *buf, enum conversion_flags *flags) {
-    if ((*flags) & PUT_PLUS) {
-        *buf++ = '+';
-    } else if ((*flags) & IS_NEGATIVE) {
+    if (*flags & IS_NEGATIVE) {
         *buf++ = '-';
+    } else if ((*flags) & PUT_PLUS) {
+        *buf++ = '+';
     }
     return buf;
 }
 
 char *s21_ftoa(char *buf, long double num, int width, int precision, enum conversion_flags flags) {
     char fill/* = (flags & FILL_ZERO) ? '0' : ' '*/;
+    __attribute__((unused)) char *save = buf;
     if (flags & FILL_ZERO) {
         fill = '0';
     } else {
@@ -701,13 +702,17 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
     s21_size_t res_len = s21_strlen(res_buf);
     width -= res_len;
     char *b = res_buf;
-    if ((flags & JUSTIFY_LEFT) && !(flags & PUT_SPACE)) {
+    if (flags & PUT_SPACE && !((flags & PUT_PLUS) || (flags & IS_NEGATIVE))) {
+        *buf++ = ' ';
+        width--;
+    }
+    if ((flags & JUSTIFY_LEFT)) {
+        buf = SetSign(buf, &flags);
         while (*b != '\0') {
             *buf++ = *b++;
         }
         if (fill == ' ') {
             buf = SetFill(buf, width, fill);
-            buf = SetSign(buf, &flags);
         } else {
             buf = SetSign(buf, &flags);
             buf = SetFill(buf, width, fill);
@@ -764,7 +769,6 @@ char *s21_sitoa(char *buf, long long int num, int width, int precision, enum con
     if (num < 0) {
         num = -num;
         flags |= IS_NEGATIVE;
-        flags &= ~PUT_PLUS;
     }
 
     char tmp[32];
@@ -785,14 +789,14 @@ char *s21_sitoa(char *buf, long long int num, int width, int precision, enum con
     } else {
         fill = ' ';
     }
-    if(flags & PUT_SPACE && !((flags &PUT_PLUS) || (flags &IS_NEGATIVE))){
+    if (flags & PUT_SPACE && !((flags & PUT_PLUS) || (flags & IS_NEGATIVE))) {
         *buf++ = ' ';
         width--;
     }
-    if ((flags &PUT_PLUS) || (flags &IS_NEGATIVE)){
+    if ((flags & PUT_PLUS) || (flags & IS_NEGATIVE)) {
         width--;
     }
-    if ((flags & JUSTIFY_LEFT) ) {
+    if ((flags & JUSTIFY_LEFT)) {
         fill = ' ';
         buf = SetSign(buf, &flags);
         do {

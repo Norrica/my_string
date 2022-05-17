@@ -4,8 +4,9 @@ int main(int argc, char const *argv[])
 {
     char std[20];
     char s21[20];
-    int d = 123;
-    char *fmt = "|% -+1.4d|";
+    float d = -123.5565454367;
+    //int d = 123;
+    char *fmt = "|%-15.3f|";
     sprintf(std,fmt,d);
     s21_sprintf(s21,fmt,d);
     printf("std - %s\n",std);
