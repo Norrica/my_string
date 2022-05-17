@@ -889,12 +889,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         } else if (flags & h) {
                             num = va_arg(va, int);
                             num = (short int) num;
-                            buf = s21_sitoa(buf, num, width, flags | BASE_10);
                         } else {
                             num = va_arg(va, int);
-                            buf = s21_sitoa(buf, num, width, flags | BASE_10);
                         }
                     }
+                    buf = s21_sitoa(buf, num, width, flags | BASE_10);
                     start_fmt = 0;
                     continue;
                 case 'X': {}
