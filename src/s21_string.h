@@ -179,7 +179,7 @@ enum conversion_flags {
   PUT_PLUS = 2,
   IS_NEGATIVE = 4,
   BASE_2 = 8,
-  BASE_8=16,
+  BASE_8 = 16,
   BASE_10 = 32,
   BIG_HEX = 64,
   SET_PRECISION = 128,

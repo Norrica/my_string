@@ -1,4 +1,3 @@
-
 #include "s21_string.h"
 
 void *s21_memchr(const void *str, int c, s21_size_t n) {
@@ -75,9 +74,9 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    //while (*str != '\0' && *str != c)
-    //    ++str;
-    //return (char *) (c == *str ? str : s21_NULL);
+    //  while (*str != '\0' && *str != c)
+    //      ++str;
+    //  return (char *) (c == *str ? str : s21_NULL);
     while (*str != '\0') {
         if (*str == c) {
             return (char *) str;
@@ -133,7 +132,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
     }
     return result;
 }
-//TODO: не решено
+// TODO(f): не решено
 char *s21_strerror(int errnum) {
     static char result[100];
 #if defined(__APPLE__) || defined(__MACH__)
@@ -401,7 +400,7 @@ char *s21_strerror(int errnum) {
 
 s21_size_t s21_strlen(const char *str) {
     s21_size_t len = 0;
-    for (; str[len]; len++);
+    for (; str[len]; len++) {}   /* changed ; to {} */
     return len;
 }
 
@@ -725,11 +724,11 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
             *buf++ = *b++;
         }
     }
-    if ((int) s21_strlen(res_buf) < width + precision)
+    if ((int) s21_strlen(res_buf) < width + precision) {
         for (int i = 0; i < width + precision; ++i) {
             s21_strcat(res_buf, "0");
         }
-
+    }
     return buf;
 }
 
@@ -749,13 +748,13 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
         }
     }
 
-    if(flags & IS_ADDRESS){
+    if (flags & IS_ADDRESS) {
         *buf++ = '0';
-        if(hex_size == 'a')
+        if (hex_size == 'a')
             *buf++ = 'x';
         else
             *buf++ = 'X';
-        buf = s21_strcpy(buf,"7ffe");/*Костыль*/
+        buf = s21_strcpy(buf, "7ffe");/*Костыль*/
         buf +=4;
     }
 
@@ -810,7 +809,7 @@ char *stringer(enum conversion_flags flags, const char *p, char *buf, int width)
     int a = s21_strlen(p);
     // char *string = (char *) malloc(a + width);
     // width -= a;
-    if (width < a){
+    if (width < a) {
         width = 0;
     }
     if (!(flags & JUSTIFY_LEFT)) {
@@ -820,7 +819,7 @@ char *stringer(enum conversion_flags flags, const char *p, char *buf, int width)
             else
                 *buf++ = ' ';
         }
-        char *save = buf;
+        /* char *save = buf; */
         if (p)
             while (*p)
                 *buf++ = *(p++);
@@ -878,15 +877,19 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                         flags |= FILL_ZERO;
                     }
                     long long int num;
-                    if (flags & l) { num = va_arg(va, long int); }
-                    else if (flags & ll) { num = va_arg(va, long long int); }
-                    else if (flags & h) {
-                        num = va_arg(va, int);
-                        num = (short int) num;
-                        buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                    if (flags & l) {
+                        num = va_arg(va, long int);
                     } else {
-                        num = va_arg(va, int);
-                        buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                        if (flags & ll) {
+                            num = va_arg(va, long long int);
+                        } else if (flags & h) {
+                            num = va_arg(va, int);
+                            num = (short int) num;
+                            buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                        } else {
+                            num = va_arg(va, int);
+                            buf = s21_sitoa(buf, num, width, flags | BASE_10);
+                        }
                     }
                     start_fmt = 0;
                     continue;
@@ -1003,4 +1006,3 @@ int s21_sprintf(char *buf, const char *fmt, ...) {
     va_end(va);
     return ret;
 }
-
