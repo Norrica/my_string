@@ -761,6 +761,7 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
     if (num < 0) {
         num = -num;
         flags |= IS_NEGATIVE;
+        flags &=~PUT_PLUS;
     }
 
     char tmp[32];
