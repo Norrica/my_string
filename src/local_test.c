@@ -2,12 +2,12 @@
 #include "s21_string.h"
 int main(int argc, char const *argv[])
 {
-    char std[50];
-    char s21[50];
+    char std[20];
+    char s21[20];
     int d = 10;
-    char *fmt = "|%5.5s|";
-    sprintf(std,fmt,"lol");
-    s21_sprintf(s21,fmt,"lol");
+    char *fmt = "|%-5c|";
+    sprintf(std,fmt,48);
+    s21_sprintf(s21,fmt,48);
     puts(std);
     puts(s21);
 

@@ -136,7 +136,6 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 //TODO: не решено
 char *s21_strerror(int errnum) {
     static char result[100];
-
 #if defined(__APPLE__) || defined(__MACH__)
     int n = 106;
     const char *str_error[] = {
@@ -851,7 +850,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
             c = *fmt++;
             switch (c) {
                 case '%': {}
-                    *(buf++) = c;
+                    *buf++ = c;
                     start_fmt = 0;
                     continue;
                 case 'L':flags |= L;
@@ -865,7 +864,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     }
                     continue;
                 case 'c': {}
-                    *(buf++) = va_arg(va, int);
+                    // *buf++ = ;
+                    char a[2] = "";
+                    a[0]= va_arg(va, int);
+                    a[1]= '\0';
+                    buf = stringer(flags, a, buf, width);
                     start_fmt = 0;
                     continue;
                 case 'i':
