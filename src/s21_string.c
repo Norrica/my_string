@@ -458,32 +458,33 @@ char *s21_strstr(const char *haystack, const char *needle) {
 
 char *s21_strtok(char *str, const char *delim) {
     static char *current;
-    char *result = s21_NULL;
-    if (delim != NULL) {
-        if (str != s21_NULL) {
+    char *result = str;
+    if (delim != s21_NULL && *delim) {
+        if (str != s21_NULL && *str) {
             /*remove delims from start*/
             str = &str[s21_strspn(str, delim)];
             s21_size_t first = s21_strspn(str, delim);
             s21_size_t second = s21_strcspn(str, delim);
-            if (second == s21_strlen(str) || first == s21_strlen(str)) {
+            if (second == s21_strlen(str)) {
                 if (current != s21_NULL)
-                    return str;
+                    result = str;
                 else
-                    return s21_NULL;
-            }
-            current = &str[second] + 1;
-            result = malloc((first + second) * sizeof(char));
-            for (s21_size_t i = first; i < second; ++i) {
-                result[i - first] = str[i];
-            }
-            return result;
-        } else {
-            if (current == s21_NULL || current[0] == '\0') {
-                return s21_NULL;
+                    result = s21_NULL;
+            } else if (first == s21_strlen(str)) {
+                if (current != s21_NULL)
+                    result = str;
+                else
+                    result = s21_NULL;
             } else {
-                result = s21_strtok(current, delim);
-                current = &current[s21_strspn(current, result)];
+                current = &str[second] + 1;
+                str[second] = '\0';
+                result = str;
             }
+        } else if (current == s21_NULL || *current == '\0') {
+            result = s21_NULL;
+        } else {
+            result = s21_strtok(current, delim);
+            current = &current[s21_strspn(current, delim)];
         }
     }
     return result;
@@ -598,7 +599,7 @@ int isthere(char c, const char *trim_chars) {
 
 void *s21_trim(const char *src, const char *trim_chars) {
     char *result = s21_NULL;
-    if (trim_chars == s21_NULL || *trim_chars == '\0'){
+    if (trim_chars == s21_NULL || *trim_chars == '\0') {
         trim_chars = " \f\n\r\t\v";
     }
     if (src != s21_NULL) {

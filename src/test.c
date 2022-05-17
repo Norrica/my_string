@@ -811,9 +811,10 @@ END_TEST
 // MARK: -STRTOK 6
 
 START_TEST(STRTOKTest1) {
-    char str[30] = "test1/test2/test3/test4";
+    char str[30] =  "test1/test2/test3/test4";
+    char str2[30] = "test1/test2/test3/test4";
     char *delim = "/";
-    ck_assert_msg(s21_strtok(str, delim) == strtok(str, delim), "Failed on 1");
+    ck_assert_msg(s21_strtok(str, delim) == strtok(str2, delim), "Failed on 1");
 }
 END_TEST
 
@@ -1458,6 +1459,7 @@ START_TEST(SPRINTF32) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
+//TODO %ld %hd %s
 /*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
