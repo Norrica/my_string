@@ -820,7 +820,7 @@ char *stringer(enum conversion_flags flags, const char *p, char *buf, int width)
             else
                 *buf++ = ' ';
         }
-        char *save = buf;
+
         if (p)
             while (*p)
                 *buf++ = *(p++);
