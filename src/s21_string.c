@@ -849,7 +849,10 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
             c = *fmt++;
             switch (c) {
                 case '%': {}
-                    *buf++ = c;
+                    char b[2] = "";
+                    b[0]= '%';
+                    b[1]= '\0';
+                    buf = stringer(flags,b,buf,width);
                     start_fmt = 0;
                     continue;
                 case 'L':flags |= L;

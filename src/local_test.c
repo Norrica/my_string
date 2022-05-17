@@ -5,7 +5,7 @@ int main(int argc, char const *argv[])
     char std[20];
     char s21[20];
     int d = 10;
-    char *fmt = "|%-5c|";
+    char *fmt = "|%.5%|";
     sprintf(std,fmt,48);
     s21_sprintf(s21,fmt,48);
     puts(std);
