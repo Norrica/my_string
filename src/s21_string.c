@@ -809,21 +809,30 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
 
 char *stringer(enum conversion_flags flags, const char *p, char *buf, int width) {
     int a = s21_strlen(p);
-    //char *string = (char *) malloc(a + width);
-    while ((((width)--) - a) >= 0) {
-        if (flags & FILL_ZERO)
-            *buf++ = '0';
-        else
+    // char *string = (char *) malloc(a + width);
+    // width -= a;
+    if (width < a){
+        width = 0;
+    }
+    if (!(flags & JUSTIFY_LEFT)) {
+        while ((((width)--) - a) > 0) {
+            if (flags & FILL_ZERO)
+                *buf++ = '0';
+            else
+                *buf++ = ' ';
+        }
+        char *save = buf;
+        if (p)
+            while (*p)
+                *buf++ = *(p++);
+    } else {
+        if (p)
+            while (*p)
+                *buf++ = *(p++);
+        while ((((width)--) - a) > 0) {
             *buf++ = ' ';
+        }
     }
-    char *save = buf;
-    if (p)
-        while (*p)
-            *buf++ = *(p++);
-
-    if (flags & IS_NEGATIVE) {
-    }
-    //free(string);
     return buf;
 }
 int s21_vsprintf(char *buf, const char *fmt, va_list va) {
@@ -886,7 +895,6 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
                     start_fmt = 0;
                     continue;
-
                 case 'p':
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags |IS_ADDRESS);
                     start_fmt = 0;
@@ -912,6 +920,9 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
+                    if (width == 0 && (flags & SET_PRECISION)) {
+                        width = s21_strlen(p);
+                    }
                     buf = stringer(flags, p, buf, width);
                     start_fmt = 0;
                     continue;
@@ -939,8 +950,6 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                 case '.': {}
                     if (!(flags & SET_PRECISION))
                         flags |= SET_PRECISION;
-                    else
-                        *(buf++) = '?';
                     continue;
                 case '0':
                     if (!width) {
