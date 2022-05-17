@@ -755,13 +755,13 @@ char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags f
         else
             *buf++ = 'X';
         buf = s21_strcpy(buf, "7ffe");/*Костыль*/
-        buf +=4;
+        buf += 4;
     }
 
     if (num < 0) {
         num = -num;
         flags |= IS_NEGATIVE;
-        flags &=~PUT_PLUS;
+        flags &= ~PUT_PLUS;
     }
 
     char tmp[32];
@@ -851,9 +851,9 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
             switch (c) {
                 case '%': {}
                     char b[2] = "";
-                    b[0]= '%';
-                    b[1]= '\0';
-                    buf = stringer(flags,b,buf,width);
+                    b[0] = '%';
+                    b[1] = '\0';
+                    buf = stringer(flags, b, buf, width);
                     start_fmt = 0;
                     continue;
                 case 'L':flags |= L;
@@ -869,16 +869,17 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                 case 'c': {}
                     // *buf++ = ;
                     char a[2] = "";
-                    a[0]= va_arg(va, int);
-                    a[1]= '\0';
+                    a[0] = va_arg(va, int);
+                    a[1] = '\0';
                     buf = stringer(flags, a, buf, width);
                     start_fmt = 0;
                     continue;
                 case 'i':
                 case 'd': {}
-                    if (width == 0 && (flags & SET_PRECISION)) {
-                        width = precision;
+                    if (flags & SET_PRECISION) {
+                        width = precision+1;
                         flags |= FILL_ZERO;
+                        flags &= ~JUSTIFY_LEFT;
                     }
                     long long int num;
                     if (flags & l) {
@@ -904,8 +905,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
                     start_fmt = 0;
                     continue;
-                case 'p':
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags |IS_ADDRESS);
+                case 'p':buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | IS_ADDRESS);
                     start_fmt = 0;
                     continue;
                 case 'b': {}
