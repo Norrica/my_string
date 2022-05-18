@@ -74,16 +74,16 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    //while (*str != '\0' && *str != c)
-    //    ++str;
-    //return (char *) (c == *str ? str : s21_NULL);
-    //while (*str != '\0') {
-    //    if (*str == c) {
-    //        return (char *) str;
-    //    }
-    //    str++;
-    //}
-    //return (s21_NULL);
+    /*while (*str != '\0' && *str != c)
+        ++str;
+    return (char *) (c == *str ? str : s21_NULL);
+    while (*str != '\0') {
+        if (*str == c) {
+            return (char *) str;
+        }
+        str++;
+    }
+    return (s21_NULL);*/
     do {
         if (*str == c)
             return (char *) str;
@@ -893,11 +893,6 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 'i':
                 case 'd': {}
-                    //if (flags & SET_PRECISION) {
-                    //    width = precision + 1;
-                    //    flags |= FILL_ZERO;
-                    //    flags &= ~JUSTIFY_LEFT;
-                    //}
                     long long int num;
                     if (flags & l) {
                         num = va_arg(va, long int);
