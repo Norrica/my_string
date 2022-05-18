@@ -814,7 +814,7 @@ START_TEST(STRTOKTest1) {
     char str[30] =  "test1/test2/test3/test4";
     char str2[30] = "test1/test2/test3/test4";
     char *delim = "/";
-    ck_assert_str_eq(s21_strtok(str, delim) ,strtok(str2, delim));
+    ck_assert_msg(s21_strtok(str, delim) == strtok(str2, delim), "Failed on 1");
 }
 END_TEST
 
