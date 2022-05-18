@@ -467,28 +467,46 @@ char *s21_strstr(const char *haystack, const char *needle) {
     return result;
 }
 
+int s21_check_delim(char c, const char *delim) {
+    int result = 0;
+    while (*delim) {
+        if (*delim == c)
+            result++;
+        delim++;
+    }
+    return result;
+}
+
 char *s21_strtok(char *str, const char *delim) {
-    static char *current;
-    char *result = str;
-    if (delim != s21_NULL && *delim) {
-        if (str != s21_NULL && *str) {
-            /*remove delims from start*/
-            str = &str[s21_strspn(str, delim)];
-            s21_size_t second = s21_strcspn(str, delim);
-            current = &str[second] + 1;
-            str[second] = '\0';
-            result = str;
-        } else {
-            current = &current[s21_strspn(current, delim)];
-            s21_size_t first = s21_strspn(current, delim);
-            s21_size_t second = s21_strcspn(current, delim);
-            str = &current[first];
-            str[second] = '\0';
-            current = &current[second] + 1;
-            result = str;
-            if (*result == '\0') {
-                result = s21_NULL;
+    char *result = s21_NULL;
+    int f = 0;
+    static char *pointer_str;
+    if (!str)
+        str = pointer_str;
+    if (str) {
+        while (!f) {
+            if (s21_check_delim(*str, delim)) {
+                str++;
+                continue;
             }
+            if (*str == '\0')
+                f = 1;
+            break;
+        }
+        char *in = str;
+        while (!f) {
+            if (*str == '\0') {
+                pointer_str = str;
+                result = in;
+                f = 1;
+            }
+            if (s21_check_delim(*str, delim)) {
+                *str = '\0';
+                pointer_str = str + 1;
+                result = in;
+                f = 1;
+            }
+            str++;
         }
     }
     return result;

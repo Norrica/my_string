@@ -2259,6 +2259,61 @@ START_TEST(SPRINTF99) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
+
+START_TEST(SPRINTF100) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +-10u|\n";
+    unsigned int src = -153123;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF101) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +10u|\n";
+    unsigned int src = -153123;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF102) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -10u|\n";
+    unsigned int src = -153123;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF103) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10u|\n";
+    unsigned int src = -153123;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF104) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10u|\n";
+    unsigned int src = -153123;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
 /*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
@@ -2561,11 +2616,11 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF97);
     tcase_add_test(sprintftest, SPRINTF98);
     tcase_add_test(sprintftest, SPRINTF99);
-    /*tcase_add_test(sprintftest, SPRINTF100);*/
-    /*tcase_add_test(sprintftest, SPRINTF101);*/
-    /*tcase_add_test(sprintftest, SPRINTF102);*/
-    /*tcase_add_test(sprintftest, SPRINTF103);*/
-    /*tcase_add_test(sprintftest, SPRINTF104);*/
+    tcase_add_test(sprintftest, SPRINTF100);
+    tcase_add_test(sprintftest, SPRINTF101);
+    tcase_add_test(sprintftest, SPRINTF102);
+    tcase_add_test(sprintftest, SPRINTF103);
+    tcase_add_test(sprintftest, SPRINTF104);
     /*tcase_add_test(sprintftest, SPRINTF105);*/
     /*tcase_add_test(sprintftest, SPRINTF106);*/
     /*tcase_add_test(sprintftest, SPRINTF107);*/
