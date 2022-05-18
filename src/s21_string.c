@@ -74,16 +74,23 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    //  while (*str != '\0' && *str != c)
-    //      ++str;
-    //  return (char *) (c == *str ? str : s21_NULL);
-    while (*str != '\0') {
-        if (*str == c) {
+    //while (*str != '\0' && *str != c)
+    //    ++str;
+    //return (char *) (c == *str ? str : s21_NULL);
+    //while (*str != '\0') {
+    //    if (*str == c) {
+    //        return (char *) str;
+    //    }
+    //    str++;
+    //}
+    //return (s21_NULL);
+    do {
+        if (*str == c)
             return (char *) str;
-        }
-        str++;
-    }
-    return (s21_NULL);
+        if (*str == '\0')
+            return s21_NULL;
+    } while (++str);
+    return s21_NULL; /*cppcheck*/
 }
 
 int s21_strcmp(const char *str1, const char *str2) {
@@ -463,7 +470,7 @@ char *s21_strtok(char *str, const char *delim) {
         if (str != s21_NULL && *str) {
             /*remove delims from start*/
             str = &str[s21_strspn(str, delim)];
-            s21_size_t first = s21_strspn(str, delim);
+            //s21_size_t first = s21_strspn(str, delim);
             s21_size_t second = s21_strcspn(str, delim);
             current = &str[second] + 1;
             str[second] = '\0';
@@ -476,7 +483,7 @@ char *s21_strtok(char *str, const char *delim) {
             str[second] = '\0';
             current = &current[second] + 1;
             result = str;
-            if (*result=='\0'){
+            if (*result == '\0') {
                 result = s21_NULL;
             }
         }
