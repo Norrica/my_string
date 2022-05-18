@@ -479,20 +479,15 @@ int s21_check_delim(char c, const char *delim) {
 
 char *s21_strtok(char *str, const char *delim) {
     char *result = s21_NULL;
-    int f = 0;
     static char *pointer_str;
     if (!str)
         str = pointer_str;
     if (str) {
-        while (!f) {
-            if (s21_check_delim(*str, delim)) {
-                str++;
-                continue;
-            }
-            if (*str == '\0')
+        int f = 0;
+        while (s21_check_delim(*str, delim))
+            str++;
+        if (*str == '\0')
                 f = 1;
-            break;
-        }
         char *in = str;
         while (!f) {
             if (*str == '\0') {
@@ -973,7 +968,7 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     flags &= ~IS_NEGATIVE;
                     flags &= ~PUT_PLUS;
                     flags &= ~PUT_SPACE;
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | BASE_10);
+                    buf = s21_sitoa(buf, va_arg(va, long unsigned int), width, precision, flags | BASE_10);
                     start_fmt = 0;
                     continue;
                 case 'o': {}
