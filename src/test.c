@@ -807,7 +807,7 @@ START_TEST(STRTOKTest1) {
     char str[30] = "test1/test2/test3/test4";
     char st2[30] = "test1/test2/test3/test4";
     char *delim = "/";
-    ck_assert_pstr_eq(NULL,NULL);
+    ck_assert_pstr_eq(NULL, NULL);
     ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
     ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
     ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));

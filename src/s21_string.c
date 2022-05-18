@@ -937,11 +937,11 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
-                    if(p) {
+                    if (p) {
                         if (width == 0 && (flags & SET_PRECISION)) {
                             width = s21_strlen(p);
                         }
-                    } else{
+                    } else {
                         p = "(null)";
                     }
                     buf = stringer(flags, p, buf, width);
