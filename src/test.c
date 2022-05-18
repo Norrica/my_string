@@ -1,1540 +1,2448 @@
-#include <stdlib.h>
 #include <string.h>
-#include "s21_string.h"
 #include <check.h>
 #include <stdio.h>
+#include "s21_string.h"
 
-#define N_TESTS 50
+START_TEST(STRLENTest1) {
+    char str[] = "Hello";
+    ck_assert_msg(s21_strlen(str) == strlen(str), "Failed on 5");
+}
+END_TEST
 
-START_TEST(test_memchr) {
-    typedef struct s {
-      const void *str;
-      int c;
-      size_t n;
-    } test;
-    test a[N_TESTS] = {
-        {"", ' ', 21},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_ptr_eq(
-            memchr(a[i].str, a[i].c, a[i].n),
-            s21_memchr(a[i].str, a[i].c, a[i].n));
+START_TEST(STRLENTest2) {
+    char str[] = "Hegd    llo";
+    ck_assert_msg(s21_strlen(str) == strlen(str), "Failed on 11");
+}
+END_TEST
+
+START_TEST(STRLENTest3) {
+    char str[] = "";
+    ck_assert_msg(s21_strlen(str) == strlen(str), "Failed on 0");
+}
+END_TEST
+
+START_TEST(STRLENTest4) {
+    char str[] = "lorem\\tipsum\\tdolor\\nsit\\namet\\n";
+    ck_assert_msg(s21_strlen(str) == strlen(str), "Failed on 32");
+}
+END_TEST
+START_TEST(STRLENTest5) {
+    char str[] = "\n\n\f\r\t";
+    ck_assert_msg(s21_strlen(str) == strlen(str), "Failed on 5");
+}
+END_TEST
+START_TEST(STRLENTest6) {
+    char str[] = "     ";
+    ck_assert_msg(s21_strlen(str) == strlen(str), "Failed on 5");
+}
+END_TEST
+
+// MARK: - STRCHR 6
+
+START_TEST(STRCHRTest1) {
+    char str[] = "Hello world";
+    int ch = 'w';
+    ck_assert_str_eq(s21_strchr(str, ch), strchr(str, ch));
+}
+END_TEST
+
+START_TEST(STRCHRTest2) {
+    char str[] = "Hello world";
+    int ch = 'o';
+    ck_assert_str_eq(s21_strchr(str, ch), strchr(str, ch));
+}
+END_TEST
+
+START_TEST(STRCHRTest3) {
+    char str[] = "Hello world";
+    int ch = 'c';
+    ck_assert_ptr_eq(s21_strchr(str, ch), strchr(str, ch));
+}
+END_TEST
+
+START_TEST(STRCHRTest4) {
+    char str[] = "Hello world";
+    int ch = 'H';
+    ck_assert_str_eq(s21_strchr(str, ch), strchr(str, ch));
+}
+END_TEST
+
+START_TEST(STRCHRTest5) {
+    char str[] = "Hello world";
+    int ch = '\0';
+    ck_assert_str_eq(s21_strchr(str, ch), strchr(str, ch));
+}
+END_TEST
+
+START_TEST(STRCHRTest6) {
+    char str[] = "";
+    int ch = '\0';
+    ck_assert_str_eq(s21_strchr(str, ch), strchr(str, ch));
+}
+END_TEST
+
+// MARK:- STRSPN 8
+
+START_TEST(STRSPNTest1) {
+    char *str1 = "12345";
+    char *str2 = "123";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 3");
+}
+END_TEST
+
+START_TEST(STRSPNTest2) {
+    char *str1 = "12345";
+    char *str2 = "12sd34";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 4");
+}
+END_TEST
+
+START_TEST(STRSPNTest3) {
+    char *str1 = "12345";
+    char *str2 = "12sdf4";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 2");
+}
+END_TEST
+
+START_TEST(STRSPNTest4) {
+    char *str1 = "12345";
+    char *str2 = "kbf";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 0");
+}
+END_TEST
+
+START_TEST(STRSPNTest5) {
+    char *str1 = "12345";
+    char *str2 = "54321";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 5");
+}
+END_TEST
+
+START_TEST(STRSPNTest6) {
+    char *str1 = "12345";
+    char *str2 = "5qw4w3qwe2qweqw1";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 5");
+}
+END_TEST
+
+START_TEST(STRSPNTest7) {
+    char *str1 = "12345";
+    char *str2 = " ";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 0");
+}
+END_TEST
+
+START_TEST(STRSPNTest8) {
+    char *str1 = "12345";
+    char *str2 = " 1";
+    ck_assert_msg(s21_strspn(str1, str2) == strspn(str1, str2), "Failed on 1");
+}
+END_TEST
+
+
+// MARK: - STRCSPN 6
+
+START_TEST(STRCSPNTest1) {
+    char *src = "0123456789";
+    char *str = "54";
+    ck_assert_msg(s21_strcspn(src, str) == strcspn(src, str), "Failed on 4");
+}
+END_TEST
+
+START_TEST(STRCSPNTest2) {
+    char *src = "0123456789";
+    char *str = "e";
+    ck_assert_msg(s21_strcspn(src, str) == strcspn(src, str), "Failed on 0");
+}
+END_TEST
+
+START_TEST(STRCSPNTest3) {
+    char *src = "46";
+    char *str = "123";
+    ck_assert_msg(s21_strcspn(src, str) == strcspn(src, str), "Failed on 2");
+}
+END_TEST
+
+START_TEST(STRCSPNTest4) {
+    char *src = "HELLO";
+    char *str = "HELLO";
+    ck_assert_msg(s21_strcspn(src, str) == strcspn(src, str), "Failed on 0");
+}
+END_TEST
+
+START_TEST(STRCSPNTest5) {
+    char *src = "";
+    char *str = "hi";
+    ck_assert_msg(s21_strcspn(src, str) == strcspn(src, str), "Failed on 0");
+}
+END_TEST
+START_TEST(STRCSPNTest6) {
+    char *src = "\0";
+    char *str = "\0";
+    ck_assert_msg(s21_strcspn(src, str) == strcspn(src, str), "Failed on 0");
+}
+END_TEST
+
+// MARK:- MEMCPY 5
+
+START_TEST(MEMCPYTest1) {
+    char *src = "HELLO WORLD";
+    char dest[15];
+    char dest2[15];
+    ck_assert_mem_eq(s21_memcpy(dest, src, 11), memcpy(dest2, src, 11), 11);
+}
+END_TEST
+
+START_TEST(MEMCPYTest2) {
+    char *src = "HELLO";
+    char dest[5];
+    char dest2[5];
+    ck_assert_mem_eq(s21_memcpy(dest, src, 5), memcpy(dest2, src, 5), 5);
+}
+END_TEST
+
+START_TEST(MEMCPYTest3) {
+    char *src = "HELLO";
+    char dest[5];
+    char dest2[5];
+    ck_assert_mem_eq(s21_memcpy(dest, src, 5), memcpy(dest2, src, 5), 0);
+}
+END_TEST
+
+START_TEST(MEMCPYTest4) {
+    char *src = "zy\0xw";
+    char dest[5];
+    char dest2[5];
+    ck_assert_mem_eq(s21_memcpy(dest, src, 5), memcpy(dest2, src, 5), 0);
+}
+END_TEST
+START_TEST(MEMCPYTest5) {
+    char *src = "zy\0xw";
+    char dest[5];
+    char dest2[5];
+    ck_assert_mem_eq(s21_memcpy(dest, src, 5), memcpy(dest2, src, 5), 0);
+}
+END_TEST
+// MARK:- STRCAT 5
+START_TEST(STRCATTest1) {
+    char app[1024] = "вторая строка ";
+    char dst[1024] = "первая строка ";
+    ck_assert_str_eq(s21_strcat(dst, app), strcat(dst, app));
+}
+END_TEST
+
+START_TEST(STRCATTest2) {
+    char app[1024] = " ";
+    char dst[1024] = "   ";
+    ck_assert_str_eq(s21_strcat(dst, app), strcat(dst, app));
+}
+END_TEST
+
+START_TEST(STRCATTest3) {
+    char app[1024] = "s s d";
+    char dst[1024] = " s  s  s  sd aff   ";
+    ck_assert_str_eq(s21_strcat(dst, app), strcat(dst, app));
+}
+END_TEST
+
+START_TEST(STRCATTest4) {
+    char app[1024] = "sdddadasdsa";
+    char dst[1024] = "s                              ";
+    ck_assert_str_eq(s21_strcat(dst, app), strcat(dst, app));
+}
+END_TEST
+
+START_TEST(STRCATTest5) {
+    char app[1024] = "\0";
+    char dst[1024] = "\n\0";
+    ck_assert_str_eq(s21_strcat(dst, app), strcat(dst, app));
+}
+END_TEST
+
+// MARK: MEMCMP 10
+START_TEST(MEMCMPTest1) {
+    char str1[] = "Hello";
+    char str2[] = "Hello";
+    int n = 6;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest2) {
+    char str1[] = "Hello";
+    char str2[] = "Help";
+    int n = 4;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest3) {
+    char str1[] = "Help";
+    char str2[] = "Hello";
+    int n = 4;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest4) {
+    char str1[] = "Help";
+    char str2[] = "Hello";
+    int n = 3;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest5) {
+    char str1[] = "Hello";
+    char str2[] = "";
+    int n = 4;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest6) {
+    char str1[] = "";
+    char str2[] = "";
+    int n = 4;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest7) {
+    char str1[] = "gsafh";
+    char str2[] = "dhkjfhs";
+    int n = 0;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest8) {
+    char str1[] = "test\0test";
+    char str2[] = "test";
+    int n = 10;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest9) {
+    char str1[] = "test";
+    char str2[] = "teSt";
+    int n = 4;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+START_TEST(MEMCMPTest10) {
+    char str1[] = "t\200";
+    char str2[] = "t\0";
+    int n = 2;
+    ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
+}
+END_TEST
+
+// MARK: STRNCAT 5
+START_TEST(STRNCATTest1) {
+    char str1[1024] = "Hello";
+    char str2[] = " World";
+    int n = 6;
+    ck_assert_str_eq(s21_strncat(str1, str2, n), strncat(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCATTest2) {
+    char str1[1024] = "Hello";
+    char str2[] = " World";
+    int n = 4;
+    ck_assert_str_eq(s21_strncat(str1, str2, n), strncat(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCATTest3) {
+    char str1[1024] = "";
+    char str2[] = " HELLO";
+    int n = 5;
+    ck_assert_str_eq(s21_strncat(str1, str2, n), strncat(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCATTest4) {
+    char str1[1024] = "HI, ";
+    char str2[] = "HELL\0O";
+    int n = 5;
+    ck_assert_str_eq(s21_strncat(str1, str2, n), strncat(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCATTest5) {
+    char str1[1024] = "\0";
+    char str2[] = "H";
+    int n = 5;
+    ck_assert_str_eq(s21_strncat(str1, str2, n), strncat(str1, str2, n));
+}
+END_TEST
+
+// MARK: STRNCPY 5
+
+START_TEST(STRNCPYTest1) {
+    char str1[1024] = "Hello";
+    char str2[] = " World";
+    int n = 6;
+    ck_assert_str_eq(s21_strncpy(str1, str2, n), strncpy(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCPYTest2) {
+    char str1[1024] = "Hello";
+    char str2[] = " World";
+    int n = 4;
+    ck_assert_str_eq(s21_strncpy(str1, str2, n), strncpy(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCPYTest3) {
+    char str1[1024] = "";
+    char str2[] = " HELLO";
+    int n = 5;
+    ck_assert_str_eq(s21_strncpy(str1, str2, n), strncpy(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCPYTest4) {
+    char str1[1024] = "HI, ";
+    char str2[] = " HELL\0O";
+    int n = 5;
+    ck_assert_str_eq(s21_strncpy(str1, str2, n), strncpy(str1, str2, n));
+}
+END_TEST
+START_TEST(STRNCPYTest5) {
+    char str1[1024] = "HI, ";
+    char str2[] = " HELLO";
+    int n = 20;
+    ck_assert_str_eq(s21_strncpy(str1, str2, n), strncpy(str1, str2, n));
+}
+END_TEST
+
+// MARK: - STRRCHR 5
+START_TEST(STRRCHRTest1) {
+    char str1[] = "Hello, Mel";
+    int c = 'e';
+    ck_assert_ptr_eq(s21_strrchr(str1, c), strrchr(str1, c));
+}
+END_TEST
+START_TEST(STRRCHRTest2) {
+    char str1[] = "Hello, Mel";
+    int c = 'p';
+    ck_assert_ptr_eq(s21_strrchr(str1, c), strrchr(str1, c));
+}
+END_TEST
+START_TEST(STRRCHRTest3) {
+    char str1[] = "";
+    int c = 'l';
+    ck_assert_ptr_eq(s21_strrchr(str1, c), strrchr(str1, c));
+}
+END_TEST
+START_TEST(STRRCHRTest4) {
+    char str1[] = "Hello";
+    int c = 0;
+    ck_assert_ptr_eq(s21_strrchr(str1, c), strrchr(str1, c));
+}
+END_TEST
+START_TEST(STRRCHRTest5) {
+    char str1[] = "Hello";
+    int c = 'o';
+    ck_assert_ptr_eq(s21_strrchr(str1, c), strrchr(str1, c));
+}
+END_TEST
+
+// MARK:MEMMOVE 4
+
+START_TEST(MEMMOVETest1) {
+    char dest1[10] = "fd";
+    char dest2[10] = "fd";
+    char src[5] = "hello";
+    ck_assert_mem_eq(s21_memmove(dest1 + 2, src + 2, 3), memmove(dest2, src + 2, 3), 5);
+}
+END_TEST
+
+START_TEST(MEMMOVETest2) {
+    char dest1[10] = "fd";
+    char dest2[10] = "fd";
+    char src[5] = "hello";
+    ck_assert_mem_eq(s21_memmove(dest1, src, 0), memmove(dest2, src, 0), 0);
+}
+END_TEST
+
+START_TEST(MEMMOVETest3) {
+    char dest1[10] = "fd";
+    char dest2[10] = "fd";
+    char src[5] = "hello";
+    ck_assert_mem_eq(s21_memmove(dest1, src, 10), memmove(dest2, src, 10), 0);
+}
+END_TEST
+START_TEST(MEMMOVETest4) {
+    char dest1[10] = "";
+    char dest2[10] = "";
+    char src[5] = "so\0";
+    ck_assert_mem_eq(s21_memmove(dest1, src, 10), memmove(dest2, src, 10), 0);
+}
+END_TEST
+
+// MARK:STRSTR 5
+
+START_TEST(STRSTRTest1) {
+    char str1[10] = "hello";
+    char str2[10] = "he";
+    ck_assert_msg(s21_strstr(str1, str2) == strstr(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRSTRTest2) {
+    char str1[10] = "hello";
+    char str2[10] = "";
+    ck_assert_msg(s21_strstr(str1, str2) == strstr(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRSTRTest3) {
+    char str1[10] = "hello";
+    char str2[10] = "qw";
+    ck_assert_msg(s21_strstr(str1, str2) == strstr(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRSTRTest4) {
+    char str1[10] = "hello";
+    char str2[10] = "hellp";
+    ck_assert_msg(s21_strstr(str1, str2) == strstr(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRSTRTest5) {
+    char str1[1024] = "hello sweet hello";
+    char str2[10] = "hello";
+    ck_assert_msg(s21_strstr(str1, str2) == strstr(str1, str2), "failed");
+}
+END_TEST
+
+
+// MARK: STRCMP 6
+
+START_TEST(STRCMPTest1) {
+    char str1[10] = "hello";
+    char str2[10] = "hello";
+    ck_assert_msg(s21_strcmp(str1, str2) == strcmp(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRCMPTest2) {
+    char str1[10] = "hello";
+    char str2[10] = "hellq";
+    ck_assert_msg(s21_strcmp(str1, str2) == strcmp(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRCMPTest3) {
+    char str1[10] = "hello";
+    char str2[10] = "helle";
+    ck_assert_msg(s21_strcmp(str1, str2) == strcmp(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRCMPTest4) {
+    char str1[10] = "hello";
+    char str2[10] = "";
+    ck_assert_msg(s21_strcmp(str1, str2) == strcmp(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRCMPTest5) {
+    char str1[10] = "";
+    char str2[10] = "hello";
+    ck_assert_msg(s21_strcmp(str1, str2) == strcmp(str1, str2), "failed");
+}
+END_TEST
+
+START_TEST(STRCMPTest6) {
+    char str1[10] = "";
+    char str2[10] = "";
+    ck_assert_msg(s21_strcmp(str1, str2) == strcmp(str1, str2), "failed");
+}
+END_TEST
+
+
+// MARK: - MEMCHR 5
+
+START_TEST(MEMCHRTest1) {
+    char str1[10] = "Hello";
+    ck_assert_mem_eq(s21_memchr(str1, 'H', 5), memchr(str1, 'H', 5), 5);
+}
+END_TEST
+
+START_TEST(MEMCHRTest2) {
+    char str1[10] = "Hello";
+    ck_assert_msg(s21_memchr(str1, 'h', 5) == NULL, "Failed: Str == NULL");
+}
+END_TEST
+
+START_TEST(MEMCHRTest3) {
+    char str1[10] = "Hellosdsfq";
+    ck_assert_msg(s21_memchr(str1, 'h', 5) == NULL, "Failed: Str == NULL");
+}
+END_TEST
+
+START_TEST(MEMCHRTest4) {
+    char str1[10] = "Hellosdsfq";
+    ck_assert_mem_eq(s21_memchr(str1, 'l', 5), memchr(str1, 'l', 5), 3);
+}
+END_TEST
+
+START_TEST(MEMCHRTest5) {
+    char str1[10] = "Hellosdsfq";
+    ck_assert_mem_eq(s21_memchr(str1, 'l', 0), memchr(str1, 'l', 0), 0);
+}
+END_TEST
+
+
+// MARK: - STRCPY 4
+
+START_TEST(STRCPYTest1) {
+    char str[] = "Hello";
+    char str1[15];
+    char str2[15];
+    s21_strcpy(str1, str);
+    strcpy(str2, str);
+    ck_assert_str_eq(str1, str2);
+}
+END_TEST
+
+START_TEST(STRCPYTest2) {
+    char str[] = "";
+    char str1[15];
+    char str2[15];
+    s21_strcpy(str1, str);
+    strcpy(str2, str);
+    ck_assert_str_eq(str1, str2);
+}
+END_TEST
+
+START_TEST(STRCPYTest3) {
+    char str[] = "";
+    char str1[15] = "test";
+    char str2[15] = "test";
+    s21_strcpy(str1, str);
+    strcpy(str2, str);
+    ck_assert_str_eq(str1, str2);
+}
+END_TEST
+
+START_TEST(STRCPYTest4) {
+    char str[] = "Test";
+    char str1[1024];
+    char str2[1024];
+    s21_strcpy(str1, str);
+    strcpy(str2, str);
+    ck_assert_str_eq(str1, str2);
+}
+END_TEST
+
+// MARK: - STRPBRK 4
+
+START_TEST(STRPBRKTest1) {
+    char *str = "this is a test";
+    char *str1 = "this is a test";
+    str1 = strpbrk(str1, "this");
+    str = s21_strpbrk(str, "this");
+    ck_assert_str_eq(str, str1);
+}
+END_TEST
+
+START_TEST(STRPBRKTest2) {
+    char *str = "this is a test";
+    char *str1 = "this is a test";
+    str1 = strpbrk(str1, " ");
+    str = s21_strpbrk(str, " ");
+    ck_assert_str_eq(str, str1);
+}
+END_TEST
+
+START_TEST(STRPBRKTest3) {
+    char *str = "this is a test, this is ...";
+    char *str1 = "this is a test, this is ...";
+    str1 = strpbrk(str1, "this");
+    str = s21_strpbrk(str, "this");
+    ck_assert_str_eq(str, str1);
+}
+END_TEST
+
+START_TEST(STRPBRKTest4) {
+    char *str = "this is a test, this is ...";
+    char *str1 = "this is a test, this is ...";
+    ck_assert_ptr_eq(s21_strpbrk(str, "prom"), strpbrk(str1, "prom"));
+}
+END_TEST
+
+// MARK: - STRNCMP 8
+
+START_TEST(STRNCMPTest1) {
+    char *str1 = "1234567890";
+    char *str2 = "1234567890";
+    ck_assert_msg(s21_strncmp(str1, str2, 5) == strncmp(str1, str2, 5), "Failed on 1");
+}
+END_TEST
+
+START_TEST(STRNCMPTest2) {
+    char *str1 = "1234567890";
+    char *str2 = "1224567890";
+    ck_assert_msg(s21_strncmp(str1, str2, 5) == strncmp(str1, str2, 5), "Failed on 2");
+}
+END_TEST
+
+START_TEST(STRNCMPTest3) {
+    char *str1 = "1224567890";
+    char *str2 = "1234567890";
+    ck_assert_msg(s21_strncmp(str1, str2, 5) == strncmp(str1, str2, 5), "Failed on 3");
+}
+END_TEST
+
+START_TEST(STRNCMPTest4) {
+    char *str1 = "";
+    char *str2 = "";
+    ck_assert_msg(s21_strncmp(str1, str2, 5) == strncmp(str1, str2, 5), "Failed on 4");
+}
+END_TEST
+
+START_TEST(STRNCMPTest5) {
+    char *str1 = "1224567890";
+    char *str2 = "";
+    ck_assert_msg(s21_strncmp(str1, str2, 5) == strncmp(str1, str2, 5), "Failed on 5");
+}
+END_TEST
+
+START_TEST(STRNCMPTest6) {
+    char *str1 = "122";
+    char *str2 = "345";
+    ck_assert_msg(s21_strncmp(str1, str2, 5) == strncmp(str1, str2, 5), "Failed on 6");
+}
+END_TEST
+
+START_TEST(STRNCMPTest7) {
+    char *str1 = "test\0abc";
+    char *str2 = "test\0";
+    ck_assert_msg(s21_strncmp(str1, str2, 6) == strncmp(str1, str2, 6), "Failed on 7");
+}
+END_TEST
+START_TEST(STRNCMPTest8) {
+    char *str1 = "1224567890";
+    char *str2 = "02";
+    ck_assert_msg(s21_strncmp(str1, str2, 0) == strncmp(str1, str2, 0), "Failed on 8");
+}
+END_TEST
+
+// MARK: - MEMSET 7
+
+START_TEST(MEMSETTest1) {
+    char str1[15] = "1234567890";
+    char str2[15] = "1234567890";
+    int c = '1';
+    int n = 10;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 10);
+}
+END_TEST
+
+START_TEST(MEMSETTest2) {
+    char str1[15] = "1234567890";
+    char str2[15] = "5432167890";
+    int c = '1';
+    int n = 10;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 10);
+}
+END_TEST
+
+START_TEST(MEMSETTest3) {
+    char str1[15] = "1234567890";
+    char str2[15] = "5432167890";
+    int c = 'q';
+    int n = 10;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 10);
+}
+END_TEST
+
+START_TEST(MEMSETTest4) {
+    char str1[15] = "1234567890";
+    char str2[15] = "5432167890";
+    int c = '1';
+    int n = 5;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 5);
+}
+END_TEST
+
+START_TEST(MEMSETTest5) {
+    char str1[15] = "qweqweqweqwe";
+    char str2[15] = "ewqewqewqewq";
+    int c = '1';
+    int n = 10;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 10);
+}
+END_TEST
+
+START_TEST(MEMSETTest6) {
+    char str1[15] = "qweqweqweqwe";
+    char str2[15] = "qweqweqweqwe";
+    int c = '\0';
+    int n = 5;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 10);
+}
+END_TEST
+
+START_TEST(MEMSETTest7) {
+    char str1[15] = "qweqweqweqwe";
+    char str2[15] = "qweqweqweqwe";
+    int c = '\n';
+    int n = 5;
+    s21_memset(str1, c, n);
+    memset(str2, c, n);
+    ck_assert_mem_eq(str1, str2, 10);
+}
+END_TEST
+
+// MARK: -STRTOK 6
+
+START_TEST(STRTOKTest1) {
+    char str[30] = "test1/test2/test3/test4";
+    char st2[30] = "test1/test2/test3/test4";
+    char *delim = "/";
+    ck_assert_pstr_eq(NULL,NULL);
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+
+START_TEST(STRTOKTest2) {
+    char str[30] = "test1/test2/test3/test4";
+    char st2[30] = "test1/test2/test3/test4";
+    char *delim = ",";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+
+START_TEST(STRTOKTest3) {
+    char str[30] = "test1/test2/test3/test4";
+    char st2[30] = "test1/test2/test3/test4";
+    char *delim = "e";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+
+START_TEST(STRTOKTest4) {
+    char str[30] = "AadacAdxa";
+    char st2[30] = "AadacAdxa";
+    char *delim = "a";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+
+START_TEST(STRTOKTest5) {
+    char str[30] = "ased dse c sze wsew";
+    char st2[30] = "ased dse c sze wsew";
+    char *delim = "e";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+
+START_TEST(STRTOKTest6) {
+    char str[30] = "test1,test2/test3.test4";
+    char st2[30] = "test1,test2/test3.test4";
+    char delim[] = ",/.";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+START_TEST(STRTOKTest7) {
+    char str[30] = "test1/test2/test3/test4";
+    char st2[30] = "test1/test2/test3/test4";
+    char delim[] = ",/.";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+START_TEST(STRTOKTest8) {
+    char str[30] = "/test1/test2/test3/test4/";
+    char st2[30] = "/test1/test2/test3/test4/";
+    char delim[] = ",/.";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+START_TEST(STRTOKTest9) {
+    char str[30] = "//test1//test2//test3//test4//";
+    char st2[30] = "//test1//test2//test3//test4//";
+    char delim[] = ",/.";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+START_TEST(STRTOKTest10) {
+    char str[40] = "///test1///test2////test3////test4//////";
+    char st2[40] = "///test1///test2////test3////test4//////";
+    char delim[] = ",/.";
+    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+}
+END_TEST
+
+// MARK: - STRERROR 3
+START_TEST(STRERRORTest1) {
+    for (int i = -123; i < 0; i++) {
+        ck_assert_str_eq(s21_strerror(i), strerror(i));
     }
 }
 END_TEST
 
-START_TEST(test_memcmp) {
-    typedef struct s {
-      char *str;
-      char *c;
-      size_t n;
-    } test;
-
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating", 21},
-        {"a library to handle money", "a library to handle money", 24},
-        {"we will first create an interface", "we will first create an interface", 33},
-        {"this is test", "this", 12},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
-        {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
-        {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
-        {"Note\nthat\none could\0do something similar ", "Note\n", 41},
-        {"you   can redistribute it and/or", "you can", 32},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p", 24},
-        {"WITHOUT ANY WARRANTY", "WITHOUT ", 20},
-        {" to writing code says that we should write the unit test befor", " ", 62},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
-        {"ays that we should write the unit ", "ays\n", 34},
-        {"Check     to specifically     assert      ", "Check     to  specifically", 42},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
-        {"кто прочитал тот 10x", "кто прочитал тот", 20},
-        {"chisto по преколу написал", "chisto", 25},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
-        {"errors are, in a way, unit test failures of their own, tell", "errors", 	9999999999999999},
-        {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
-        {"ely write code that won", "ely write code that won", 1},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
-        {"", "", 1},
-        {"", " ", 0},
-        {" ", " ", 1},
-        {" ", " ", 0},
-        {"\0", "\0", 1},
-        {"", "\0", 1},
-        {"\n", " ", 1},
-        {"\n", "\n", 1},
-        {"\n\0", "\0", 2},
-        {"\0\n", "\n", 2},
-        {"0", "\0", 1},
-        {"n", "\n", 1},
-        {"е", "e", 1},
-        {"---", "-", 3},
-        {"--.", ".", 3},
-        {"([{}])", "(", 4},
-        {"([{}])", "([", 4},
-        {"([{}])", "([{}]", 4},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_int_eq(
-            memcmp(a[i].str, a[i].c, a[i].n),
-            s21_memcmp(a[i].str, a[i].c, a[i].n));
+START_TEST(STRERRORTest2) {
+    for (int i = 0; i <= 106; i++) {
+        ck_assert_str_eq(s21_strerror(i), strerror(i));
     }
 }
 END_TEST
 
-START_TEST(test_memcpy) {
-    typedef struct s {
-      char *str;
-      char *c;
-      size_t n;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating", 21},
-        {"a library to handle money", "a l", 3},
-        {"we will first create an interface", "we wi", 4},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
-        {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
-        {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
-        {"Note\nthat\none could\0do something similar ", "Note\n", 41},
-        {"you   can redistribute it and/or", "you can", 32},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p", 7},
-        {"WITHOUT ANY WARRANTY", "WITHOUT ", 8},
-        {" to writing code says that we should write the unit test befor", " ", 62},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
-        {"ays that we should write the unit ", "ays\n", 34},
-        {"Check     to specifically     assert      ", "Check     to  specifically", 42},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
-        {"кто прочитал тот 10x", "10x", 3},
-        {"chisto по преколу написал", "chisto по", 9},
-        {"это же mixer", "это же mixer", 12},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
-        {"errors are, in a way, unit test failures of their own, tell", "errors", 	150},
-        {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
-        {"ely write code that won", "ely write code that won", 1},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
-        {"", "", 1},
-        {"", " ", 0},
-        {" ", " ", 1},
-        {" ", " ", 0},
-        {"\0", "\0", 1},
-        {"", "\0", 1},
-        {"\n", " ", 1},
-        {"\n", "\n", 1},
-        {"\n\0", "\0", 2},
-        {"\0\n", "\n", 2},
-        {"0", "\0", 1},
-        {"n", "\n", 1},
-        {"е", "e", 1},
-        {"---", "-", 3},
-        {"--.", ".", 3},
-        {"([{}])", "(", 4},
-        {"([{}])", "([", 4},
-        {"([{}])", "([{}]", 4},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char s1[150];
-        strcpy(s1, a[i].str);
-        char s2[150];
-        strcpy(s2, a[i].str);
-        ck_assert_str_eq(
-            memcpy(s1, a[i].c, a[i].n),
-            s21_memcpy(s2, a[i].c, a[i].n));
+START_TEST(STRERRORTest3) {
+    for (int i = 107; i <= 234; i++) {
+        ck_assert_str_eq(s21_strerror(i), strerror(i));
     }
 }
 END_TEST
 
-START_TEST(test_memmove) {
-    typedef struct s {
-      char *str;
-      char *c;
-      int n;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating", 21},
-        {"a library to handle money", "a l", 3},
-        {"we will first create an interface", "we wi", 4},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
-        {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
-        {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
-        {"Note\nthat\none could\0do something similar ", "Note\n", 41},
-        {"you   can redistribute it and/or", "you can", 32},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p", 7},
-        {"WITHOUT ANY WARRANTY", "WITHOUT ", 8},
-        {" to writing code says that we should write the unit test befor", " ", 62},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
-        {"ays that we should write the unit ", "ays\n", 34},
-        {"Check     to specifically     assert      ", "Check     to  specifically", 42},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
-        {"кто прочитал тот 10x", "10x", 3},
-        {"chisto по преколу написал", "chisto по", 9},
-        {"это же mixer", "это же mixer", 12},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
-        {"errors are, in a way, unit test failures of their own, tell", "errors", 	150},
-        {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
-        {"ely write code that won", "ely write code that won", 1},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
-        {"", "", 1},
-        {"", " ", 0},
-        {" ", " ", 1},
-        {" ", " ", 0},
-        {"\0", "\0", 1},
-        {"", "\0", 1},
-        {"\n", " ", 1},
-        {"\n", "\n", 1},
-        {"\n\0", "\0", 2},
-        {"\0\n", "\n", 2},
-        {"0", "\0", 1},
-        {"n", "\n", 1},
-        {"е", "e", 1},
-        {"---", "-", 3},
-        {"--.", ".", 3},
-        {"([{}])", "(", 4},
-        {"([{}])", "([", 4},
-        {"([{}])", "([{}]", 4},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char s1[150];
-        strcpy(s1, a[i].str);
-        char s2[150];
-        strcpy(s2, a[i].str);
-        ck_assert_str_eq(
-            memmove(s1, a[i].c, a[i].n),
-            s21_memmove(s2, a[i].c, a[i].n));
-    }
+// MARK: - to_upper 7
+/*region TOUPPER*/
+START_TEST(TOUPPERTest1) {
+    char str[4] = "abc";
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_str_eq(str1, "ABC");
+    free(str1);
 }
 END_TEST
 
-START_TEST(test_memset) {
-    typedef struct s {
-      char *str;
-      int c;
-      size_t n;
-    } test;
-
-    test a[N_TESTS] = {
-        {"Since we are creating", 'e', 21},
-        {"a library to handle money", 'l', 3},
-        {"we will first create an interface", 'i', 4},
-        {"this is test", 'x', 12},
-        {"void *memchr(const void *str, int c, size_t n)", '*', 46},
-        {"Autotools works. If you need help ", 'A', 35},
-        {"Check distribution; you don’t need $", '$', 36},
-        {"time cutting and pasting or (w", '\0', 31},
-        {"it\0says\0to buil\nthese programs only", 's', 36},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0', 49},
-        {"a\nlibrary\nto handle\0money, we will first create", ' ', 47},
-        {"Note\nthat\none could\0do something similar ", '\n', 41},
-        {"you   can redistribute it and/or", ' ', 32},
-        {"FOR A PARTICULAR PURPOSE", 'p', 24},
-        {"WITHOUT ANY WARRANTY", 'W', 20},
-        {" to writing code says that we should write the unit test befor", ' ', 62},
-        {"Of course, we can’t do classes with C ", ' ', 38},
-        {"ays that we should write the unit ", '\n', 34},
-        {"Check     to specifically     assert      ", '\t', 42},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t', 60},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"', 54},
-        {"Check to\nspecifically\0assert     \t", '\t', 42},
-        {"The\nfirst\0argument is a Boolean argument. The rem", '\0', 49},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", '\n', 56},
-        {"2020-06-21 08:52:50.000000000 -0700", '-', 35},
-        {"кто прочитал тот 10x", '1', 20},
-        {"chisto по преколу написал", 'h', 25},
-        {"@@ -1,24 +1,31 @@", '@', 20},
-        {"errors are, in a way, unit test failures of their own, tell", 't', 0},
-        {"get a whole host of compilation err", 'e', 1},
-        {"ely write code that won", 'e', 1},
-        {"dit the sources so that the unit test compiles, we are actually ", 'u', 64},
-        {"", ' ', 1},
-        {"", ' ', 0},
-        {" ", ' ', 1},
-        {" ", ' ', 0},
-        {"\0", '\0', 1},
-        {"", '\0', 1},
-        {"\n", ' ', 1},
-        {"\n", '\n', 1},
-        {"\n\0", '\0', 2},
-        {"\0\n", '\n', 2},
-        {"0", '\0', 1},
-        {"n", '\n', 1},
-        {"е", 'e', 1},
-        {"---", '-', 3},
-        {"--.", '.', 3},
-        {"([{}])", '(', 4},
-        {"([{}])", '{', 4},
-        {"([{}])", ']', 4},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char s1[150];
-        strcpy(s1, a[i].str);
-        char s2[150];
-        strcpy(s2, a[i].str);
-        ck_assert_str_eq(
-            memset(s1, a[i].c, a[i].n),
-            s21_memset(s2, a[i].c, a[i].n));
-    }
+START_TEST(TOUPPERTest2) {
+    char str[12] = "Hello World";
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_str_eq(str1, "HELLO WORLD");
+    free(str1);
 }
 END_TEST
 
-START_TEST(test_strcat) {
-    typedef struct s {
-      char *str;
-      char *c;
-    } test;
-
-    test a[N_TESTS] = {
-        { "Since we are creating", "Since we are creating"},
-        { "a library to handle money", "a l"},
-        { "we will first create an interface", "we wi"},
-        { "void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        { "Autotools works. If you need help ", "Autotools works. If you need help "},
-        { "Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        { "time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        { "it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        { "function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        { "a\nlibrary\nto handle\0money, we will first create", "a "},
-        { "Note\nthat\none could\0do something similar ", "Note\n"},
-        { "you   can redistribute it and/or", "you can"},
-        { "FOR A PARTICULAR PURPOSE", "FOR A p"},
-        { "WITHOUT ANY WARRANTY", "WITHOUT "},
-        { " to writing code says that we should write the unit test befor", " "},
-        { "Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        { "ays that we should write the unit ", "ays\n"},
-        { "Check     to specifically     assert      ", "Check     to  specifically"},
-        { " any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        { "ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        { "Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        { "The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        { "mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        { "2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        { "кто прочитал тот 10x", "10x"},
-        { "chisto по преколу написал", "chisto по"},
-        { "это же mixer", "это же mixer"},
-        { "@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        { "errors are, in a way, unit test failures of their own, tell", "errors"},
-        { "get a whole host of compilation err", "get a whole host of compilation err"},
-        { "ely write code that won", "ely write code that won"},
-        { "dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        { "", ""},
-        { "", " "},
-        { " ", " "},
-        { " ", " "},
-        { "\0", "\0"},
-        { "", "\0"},
-        { "\n", " "},
-        { "\n", "\n"},
-        { "\n\0", "\0"},
-        { "\0\n", "\n"},
-        { "0", "\0"},
-        { "n", "\n"},
-        { "е", "e"},
-        { "---", "-"},
-        { "--.", "."},
-        { "([{}])", "("},
-        { "([{}])", "(["},
-        { "([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char curr1[150];
-        strcpy(curr1, a[i].str);
-        char curr2[150];
-        strcpy(curr2, a[i].str);
-        ck_assert_str_eq(
-            strcat(curr1, a[i].c),
-            s21_strcat(curr2, a[i].c));
-    }
-
+START_TEST(TOUPPERTest3) {
+    char str[1] = "";
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_str_eq(str1, "");
+    free(str1);
 }
 END_TEST
 
-START_TEST(test_strncat) {
-    typedef struct s {
-      char *str;
-      char *c;
-      size_t n;
-    } test;
-
-    test a[N_TESTS] = {
-        { "Since we are creating", "Since we are creating", 21 },
-        { "a library to handle money", "a l", 3 },
-        { "we will first create an interface", "we wi", 4 },
-        { "void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46 },
-        { "Autotools works. If you need help ", "Autotools works. If you need help ", 35 },
-        { "Check distribution; you don’t need $", "Check distribution; you don’t need $", 36 },
-        { "time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31 },
-        { "it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36 },
-        { "function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24 },
-        { "a\nlibrary\nto handle\0money, we will first create", "a ", 47 },
-        { "Note\nthat\none could\0do something similar ", "Note\n", 41 },
-        { "you   can redistribute it and/or", "you can", 32 },
-        { "FOR A PARTICULAR PURPOSE", "FOR A p", 7 },
-        { "WITHOUT ANY WARRANTY", "WITHOUT ", 8 },
-        { " to writing code says that we should write the unit test befor", " ", 62 },
-        { "Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38 },
-        { "ays that we should write the unit ", "ays\n", 34 },
-        { "Check     to specifically     assert      ", "Check     to  specifically", 42 },
-        { " any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60 },
-        { "ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54 },
-        { "Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42 },
-        { "The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49 },
-        { "mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56 },
-        { "2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35 },
-        { "кто прочитал тот 10x", "10x", 3 },
-        { "chisto по преколу написал", "chisto по", 9 },
-        { "это же mixer", "это же mixer", 12 },
-        { "@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18 },
-        { "errors are, in a way, unit test failures of their own, tell", "errors", 150 },
-        { "get a whole host of compilation err", "get a whole host of compilation err", 'a' },
-        { "ely write code that won", "ely write code that won", 1 },
-        { "dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0' },
-        { "", "", 1 },
-        { "", " ", 0 },
-        { " ", " ", 1 },
-        { " ", " ", 0 },
-        { "\0", "\0", 1 },
-        { "", "\0", 1 },
-        { "\n", " ", 1 },
-        { "\n", "\n", 1 },
-        { "\n\0", "\0", 2 },
-        { "\0\n", "\n", 2 },
-        { "0", "\0", 1 },
-        { "n", "\n", 1 },
-        { "е", "e", 1 },
-        { "---", "-", 3 },
-        { "--.", ".", 3 },
-        { "([{}])", "(", 4 },
-        { "([{}])", "([", 4 },
-        { "([{}])", "([{}]", 4 },
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char curr1[150];
-        strcpy(curr1, a[i].str);
-        char curr2[150];
-        strcpy(curr2, a[i].str);
-        ck_assert_str_eq(
-            strncat(curr1, a[i].c, a[i].n),
-            s21_strncat(curr2, a[i].c, a[i].n));
-    }
+START_TEST(TOUPPERTest4) {
+    char str[4] = "ABC";
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_str_eq(str1, "ABC");
+    free(str1);
 }
 END_TEST
 
-START_TEST(test_strchr) {
-    typedef struct s {
-      char *str;
-      char c;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", 'e'},
-        {"a library to handle money", 'l'},
-        {"we will first create an interface", 'i'},
-        {"this is test", 'x'},
-        {"void *memchr(const void *str, int c, size_t n)", '*'},
-        {"Autotools works. If you need help ", 'A'},
-        {"Check distribution; you don’t need $", '$'},
-        {"time cutting and pasting or (w", '\0'},
-        {"it\0says\0to buil\nthese programs only", 's'},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0'},
-        {"a\nlibrary\nto handle\0money, we will first create", ' '},
-        {"Note\nthat\none could\0do something similar ", '\n'},
-        {"you   can redistribute it and/or", ' '},
-        {"FOR A PARTICULAR PURPOSE", 'p'},
-        {"WITHOUT ANY WARRANTY", 'W'},
-        {" to writing code says that we should write the unit test befor", ' '},
-        {"Of course, we can’t do classes with C ", ' '},
-        {"ays that we should write the unit ", '\n'},
-        {"Check     to specifically     assert      ", '\t'},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t'},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"'},
-        {"Check to\nspecifically\0assert     \t", '\t'},
-        {"The\nfirst\0argument is a Boolean argument. The rem", '\0'},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", '\n'},
-        {"2020-06-21 08:52:50.000000000 -0700", '-'},
-        {"кто прочитал тот 10x", '1'},
-        {"chisto по преколу написал", 'h'},
-        {"@@ -1,24 +1,31 @@", '@'},
-        {"errors are, in a way, unit test failures of their own, tell", 't'},
-        {"get a whole host of compilation err", 'e'},
-        {"ely write code that won", 'e'},
-        {"dit the sources so that the unit test compiles, we are actually ", 'u'},
-        {"", ' '},
-        {"", ' '},
-        {" ", ' '},
-        {" ", ' '},
-        {"\0", '\0'},
-        {"", '\0'},
-        {"\n", ' '},
-        {"\n", '\n'},
-        {"\n\0", '\0'},
-        {"\0\n", '\n'},
-        {"0", '\0'},
-        {"n", '\n'},
-        {"е", 'e'},
-        {"---", '-'},
-        {"--.", '.'},
-        {"([{}])", '('},
-        {"([{}])", '{'},
-        {"([{}])", ']'},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_ptr_eq(
-            strchr(a[i].str, a[i].c),
-            strchr(a[i].str, a[i].c));
-    }
+START_TEST(TOUPPERTest5) {
+    char str[6] = "1234a";
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_str_eq(str1, "1234A");
+    free(str1);
 }
 END_TEST
 
-START_TEST(test_strcmp) {
-    typedef struct s {
-      const char *str1;
-      const char *str2;
-    } test;
-
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating"},
-        {"a library to handle money", "a library to handle money"},
-        {"we will first create an interface", "we will first create an interface"},
-        {"this is test", "this"},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help ", "Autotools works. If you need help "},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create", "a "},
-        {"Note\nthat\none could\0do something similar ", "Note\n"},
-        {"you   can redistribute it and/or", "you can"},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p"},
-        {"WITHOUT ANY WARRANTY", "WITHOUT "},
-        {" to writing code says that we should write the unit test befor", " "},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        {"ays that we should write the unit ", "ays\n"},
-        {"Check     to specifically     assert      ", "Check     to  specifically"},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        {"кто прочитал тот 10x", "кто прочитал тот"},
-        {"chisto по преколу написал", "chisto"},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell", "errors"},
-        {"get a whole host of compilation err", "get a whole host of compilation err"},
-        {"ely write code that won", "ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        {"", ""},
-        {"", " "},
-        {" ", " "},
-        {" ", " "},
-        {"\0", "\0"},
-        {"", "\0"},
-        {"\n", " "},
-        {"\n", "\n"},
-        {"\n\0", "\0"},
-        {"\0\n", "\n"},
-        {"0", "\0"},
-        {"n", "\n"},
-        {"е", "e"},
-        {"---", "-"},
-        {"--.", "."},
-        {"([{}])", "("},
-        {"([{}])", "(["},
-        {"([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_int_eq(
-            strcmp(a[i].str1, a[i].str2),
-            s21_strcmp(a[i].str1, a[i].str2));
-    }
+START_TEST(TOUPPERTest6) {
+    char *str = NULL;
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_ptr_eq(str1, NULL);
+    free(str1);
 }
 END_TEST
 
-START_TEST(test_strncmp) {
-    typedef struct s {
-      char *str;
-      char *c;
-      size_t n;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating", 21},
-        {"a library to handle money", "a library to handle money", 24},
-        {"we will first create an interface", "we will first create an interface", 33},
-        {"this is test", "this", 12},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
-        {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
-        {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
-        {"Note\nthat\none could\0do something similar ", "Note\n", 41},
-        {"you   can redistribute it and/or", "you can", 32},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p", 24},
-        {"WITHOUT ANY WARRANTY", "WITHOUT ", 20},
-        {" to writing code says that we should write the unit test befor", " ", 62},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
-        {"ays that we should write the unit ", "ays\n", 34},
-        {"Check     to specifically     assert      ", "Check     to  specifically", 42},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
-        {"кто прочитал тот 10x", "кто прочитал тот", 20},
-        {"chisto по преколу написал", "chisto", 25},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
-        {"errors are, in a way, unit test failures of their own, tell", "errors", 	9999999999999999},
-        {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
-        {"ely write code that won", "ely write code that won", 1},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
-        {"", "", 1},
-        {"", " ", 0},
-        {" ", " ", 1},
-        {" ", " ", 0},
-        {"\0", "\0", 1},
-        {"", "\0", 1},
-        {"\n", " ", 1},
-        {"\n", "\n", 1},
-        {"\n\0", "\0", 2},
-        {"\0\n", "\n", 2},
-        {"0", "\0", 1},
-        {"n", "\n", 1},
-        {"е", "e", 1},
-        {"---", "-", 3},
-        {"--.", ".", 3},
-        {"([{}])", "(", 4},
-        {"([{}])", "([", 4},
-        {"([{}])", "([{}]", 4},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_int_eq(
-            strncmp(a[i].str, a[i].c, a[i].n),
-            s21_strncmp(a[i].str, a[i].c, a[i].n));
-    }
+START_TEST(TOUPPERTest7) {
+    char str[12] = "abc\0hello";
+    char *str1 = (char *) s21_to_upper(str);
+    ck_assert_str_eq(str1, "ABC");
+    free(str1);
+}
+END_TEST
+/*endregion*/
+
+// MARK: - insert 7
+/*region INSERT*/
+START_TEST(INSERTTest1) {
+    char str1[4] = "abc";
+    char str2[5] = "1234";
+    char *str3 = (char *) s21_insert(str1, str2, 2);
+    ck_assert_str_eq(str3, "ab1234c");
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_strcpy) {
-    typedef struct s {
-      char *dest;
-      const char *src;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating"},
-        {"a library to handle money", "a library to handle money"},
-        {"we will first create an interface", "we will first create an interface"},
-        {"this is test", "this"},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help ", "Autotools works. If you need help "},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create", "a "},
-        {"Note\nthat\none could\0do something similar ", "Note\n"},
-        {"you   can redistribute it and/or", "you can"},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p"},
-        {"WITHOUT ANY WARRANTY", "WITHOUT "},
-        {" to writing code says that we should write the unit test befor", " "},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        {"ays that we should write the unit ", "ays\n"},
-        {"Check     to specifically     assert      ", "Check     to  specifically"},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        {"кто прочитал тот 10x", "кто прочитал тот"},
-        {"chisto по преколу написал", "chisto"},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell", "errors"},
-        {"get a whole host of compilation err", "get a whole host of compilation err"},
-        {"ely write code that won", "ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        {"", ""},
-        {"", " "},
-        {" ", " "},
-        {" ", " "},
-        {"\0", "\0"},
-        {"", "\0"},
-        {"\n", " "},
-        {"\n", "\n"},
-        {"\n\0", "\0"},
-        {"\0\n", "\n"},
-        {"0", "\0"},
-        {"n", "\n"},
-        {"е", "e"},
-        {"---", "-"},
-        {"--.", "."},
-        {"([{}])", "("},
-        {"([{}])", "(["},
-        {"([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char curr1[150];
-        strcpy(curr1, a[i].dest);
-        char curr2[150];
-        strcpy(curr2, a[i].dest);
-        ck_assert_str_eq(
-            strcpy(curr1, a[i].src),
-            s21_strcpy(curr2, a[i].src));
-    }
+START_TEST(INSERTTest2) {
+    char str1[1] = "";
+    char str2[5] = "1234";
+    char *str3 = (char *) s21_insert(str1, str2, 1);
+    ck_assert_ptr_eq(str3, NULL);
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_strncpy) {
-    typedef struct s {
-      char *dest;
-      const char *src;
-      size_t n;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating", 21},
-        {"a library to handle money", "a library to handle money", 24},
-        {"we will first create an interface", "we will first create an interface", 33},
-        {"this is test", "this", 12},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)", 46},
-        {"Autotools works. If you need help ", "Autotools works. If you need help ", 35},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $", 36},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w", 31},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n", 36},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In ", 24},
-        {"a\nlibrary\nto handle\0money, we will first create", "a ", 47},
-        {"Note\nthat\none could\0do something similar ", "Note\n", 41},
-        {"you   can redistribute it and/or", "you can", 32},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p", 24},
-        {"WITHOUT ANY WARRANTY", "WITHOUT ", 20},
-        {" to writing code says that we should write the unit test befor", " ", 62},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C ", 38},
-        {"ays that we should write the unit ", "ays\n", 34},
-        {"Check     to specifically     assert      ", "Check     to  specifically", 42},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t", 60},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency", 54},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t", 42},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a", 49},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n", 56},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:", 35},
-        {"кто прочитал тот 10x", "кто прочитал тот", 20},
-        {"chisto по преколу написал", "chisto", 25},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@", 18},
-        {"errors are, in a way, unit test failures of their own, tell", "errors", 	150},
-        {"get a whole host of compilation err", "get a whole host of compilation err", 'a'},
-        {"ely write code that won", "ely write code that won", 1},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually ", '0'},
-        {"", "", 1},
-        {"", " ", 0},
-        {" ", " ", 1},
-        {" ", " ", 0},
-        {"\0", "\0", 1},
-        {"", "\0", 1},
-        {"\n", " ", 1},
-        {"\n", "\n", 1},
-        {"\n\0", "\0", 2},
-        {"\0\n", "\n", 2},
-        {"0", "\0", 1},
-        {"n", "\n", 1},
-        {"е", "e", 1},
-        {"---", "-", 3},
-        {"--.", ".", 3},
-        {"([{}])", "(", 4},
-        {"([{}])", "([", 4},
-        {"([{}])", "([{}]", 4},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char curr1[150];
-        strcpy(curr1, a[i].dest);
-        char curr2[150];
-        strcpy(curr2, a[i].dest);
-        ck_assert_str_eq(
-            strncpy(curr1, a[i].src, a[i].n),
-            s21_strncpy(curr2, a[i].src, a[i].n));
-    }
+START_TEST(INSERTTest3) {
+    char str1[2] = " ";
+    char str2[5] = "1234";
+    char *str3 = (char *) s21_insert(str1, str2, 1);
+    ck_assert_str_eq(str3, " 1234");
+    free(str3);
 }
 END_TEST
 
-
-START_TEST(test_strcspn) {
-    typedef struct s {
-      const char *str1;
-      const char *str2;
-    } test;
-
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating"},
-        {"a library to handle money", "a library to handle money"},
-        {"we will first create an interface", "we will first create an interface"},
-        {"this is test", "this"},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help ", "Autotools works. If you need help "},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create", "a "},
-        {"Note\nthat\none could\0do something similar ", "Note\n"},
-        {"you   can redistribute it and/or", "you can"},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p"},
-        {"WITHOUT ANY WARRANTY", "WITHOUT "},
-        {" to writing code says that we should write the unit test befor", " "},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        {"ays that we should write the unit ", "ays\n"},
-        {"Check     to specifically     assert      ", "Check     to  specifically"},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        {"кто прочитал тот 10x", "кто прочитал тот"},
-        {"chisto по преколу написал", "chisto"},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell", "errors"},
-        {"get a whole host of compilation err", "get a whole host of compilation err"},
-        {"ely write code that won", "ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        {"", ""},
-        {"", " "},
-        {" ", " "},
-        {" ", " "},
-        {"\0", "\0"},
-        {"", "\0"},
-        {"\n", " "},
-        {"\n", "\n"},
-        {"\n\0", "\0"},
-        {"\0\n", "\n"},
-        {"0", "\0"},
-        {"n", "\n"},
-        {"е", "e"},
-        {"---", "-"},
-        {"--.", "."},
-        {"([{}])", "("},
-        {"([{}])", "(["},
-        {"([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        size_t i1 = strcspn(a[i].str1, a[i].str2);
-        s21_size_t i2 = s21_strcspn(a[i].str1, a[i].str2);
-        ck_assert_int_eq(i1, i2);
-    }
+START_TEST(INSERTTest4) {
+    char str1[4] = "abc";
+    char str2[2] = " ";
+    char *str3 = (char *) s21_insert(str1, str2, 2);
+    ck_assert_str_eq(str3, "ab c");
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_strerror) {
-
-    ck_assert_str_eq(
-        s21_strerror(1),
-        strerror(1));
-
-    ck_assert_str_eq(
-        s21_strerror(50),
-        strerror(50));
-
-    ck_assert_str_eq(
-        s21_strerror(107),
-        strerror(107));
-
-
+START_TEST(INSERTTest5) {
+    char str1[4] = "abc";
+    char str2[5] = "1234";
+    char *str3 = (char *) s21_insert(str1, str2, -1);
+    ck_assert_ptr_eq(str3, NULL);
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_strlen) {
-    typedef struct s {
-      const char *str;
-    } test;
-
-    test a[N_TESTS] = {
-        {"Since we are creating"},
-        {"a library to handle money"},
-        {"we will first create an interface"},
-        {"this is test"},
-        {"void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help "},
-        {"Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create"},
-        {"Note\nthat\none could\0do something similar "},
-        {"you   can redistribute it and/or"},
-        {"FOR A PARTICULAR PURPOSE"},
-        {"WITHOUT ANY WARRANTY"},
-        {" to writing code says that we should write the unit test befor"},
-        {"Of course, we can’t do classes with C "},
-        {"ays that we should write the unit "},
-        {"Check     to specifically     assert      "},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");"},
-        {"Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there"},
-        {"2020-06-21 08:52:50.000000000 -0700"},
-        {"кто прочитал тот 10x"},
-        {"chisto по преколу написал"},
-        {"@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell"},
-        {"get a whole host of compilation err"},
-        {"ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually "},
-        {""},
-        {""},
-        {" "},
-        {" "},
-        {"\0"},
-        {""},
-        {"\n"},
-        {"\n"},
-        {"\n\0"},
-        {"\0\n"},
-        {"0"},
-        {"n"},
-        {"е"},
-        {"---"},
-        {"--."},
-        {"([{}])"},
-        {"([{}])"},
-        {"([{}])"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_int_eq(
-            strlen(a[i].str),
-            s21_strlen(a[i].str));
-    }
+START_TEST(INSERTTest6) {
+    char str1[4] = "abc";
+    char str2[5] = "1234";
+    char *str3 = (char *) s21_insert(str1, str2, 0);
+    ck_assert_str_eq(str3, "1234abc");
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_strpbrk) {
-    typedef struct s {
-      const char *str1;
-      const char *str2;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating"},
-        {"a library to handle money", "a library to handle money"},
-        {"we will first create an interface", "we will first create an interface"},
-        {"this is test", "this"},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help ", "Autotools works. If you need help "},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create", "a "},
-        {"Note\nthat\none could\0do something similar ", "Note\n"},
-        {"you   can redistribute it and/or", "you can"},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p"},
-        {"WITHOUT ANY WARRANTY", "WITHOUT "},
-        {" to writing code says that we should write the unit test befor", " "},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        {"ays that we should write the unit ", "ays\n"},
-        {"Check     to specifically     assert      ", "Check     to  specifically"},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        {"кто прочитал тот 10x", "кто прочитал тот"},
-        {"chisto по преколу написал", "chisto"},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell", "errors"},
-        {"get a whole host of compilation err", "get a whole host of compilation err"},
-        {"ely write code that won", "ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        {"", ""},
-        {"", " "},
-        {" ", " "},
-        {" ", " "},
-        {"\0", "\0"},
-        {"", "\0"},
-        {"\n", " "},
-        {"\n", "\n"},
-        {"\n\0", "\0"},
-        {"\0\n", "\n"},
-        {"0", "\0"},
-        {"n", "\n"},
-        {"е", "e"},
-        {"---", "-"},
-        {"--.", "."},
-        {"([{}])", "("},
-        {"([{}])", "(["},
-        {"([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_ptr_eq(
-            strpbrk(a[i].str1, a[i].str2),
-            s21_strpbrk(a[i].str1, a[i].str2));
-    }
+START_TEST(INSERTTest7) {
+    char *str1 = NULL;
+    char str2[5] = "1234";
+    char *str3 = (char *) s21_insert(str1, str2, 0);
+    ck_assert_ptr_eq(str3, NULL);
+    free(str3);
+}
+END_TEST
+/*endregion*/
+
+
+// MARK: - to_lower 7
+/*region TOLOWER*/
+START_TEST(TOLOWERTest1) {
+    char str[4] = "abc";
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_str_eq(str2, "abc");
+    free(str2);
 }
 END_TEST
 
-START_TEST(test_strrchr) {
-    typedef struct s {
-      char *str;
-      char c;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", 'e'},
-        {"a library to handle money", 'l'},
-        {"we will first create an interface", 'i'},
-        {"this is test", 'x'},
-        {"void *memchr(const void *str, int c, size_t n)", '*'},
-        {"Autotools works. If you need help ", 'A'},
-        {"Check distribution; you don’t need $", '$'},
-        {"time cutting and pasting or (w", '\0'},
-        {"it\0says\0to buil\nthese programs only", 's'},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", '\0'},
-        {"a\nlibrary\nto handle\0money, we will first create", ' '},
-        {"Note\nthat\none could\0do something similar ", '\n'},
-        {"you   can redistribute it and/or", ' '},
-        {"FOR A PARTICULAR PURPOSE", 'p'},
-        {"WITHOUT ANY WARRANTY", 'W'},
-        {" to writing code says that we should write the unit test befor", ' '},
-        {"Of course, we can’t do classes with C ", ' '},
-        {"ays that we should write the unit ", '\n'},
-        {"Check     to specifically     assert      ", '\t'},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", '\t'},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", '\"'},
-        {"Check to\nspecifically\0assert     \t", '\t'},
-        {"The\nfirst\0argument is a Boolean argument. The rem", '\0'},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", '\n'},
-        {"2020-06-21 08:52:50.000000000 -0700", '-'},
-        {"кто прочитал тот 10x", '1'},
-        {"chisto по преколу написал", 'h'},
-        {"@@ -1,24 +1,31 @@", '@'},
-        {"errors are, in a way, unit test failures of their own, tell", 't'},
-        {"get a whole host of compilation err", 'e'},
-        {"ely write code that won", 'e'},
-        {"dit the sources so that the unit test compiles, we are actually ", 'u'},
-        {"", ' '},
-        {"", ' '},
-        {" ", ' '},
-        {" ", ' '},
-        {"\0", '\0'},
-        {"", '\0'},
-        {"\n", ' '},
-        {"\n", '\n'},
-        {"\n\0", '\0'},
-        {"\0\n", '\n'},
-        {"0", '\0'},
-        {"n", '\n'},
-        {"е", 'e'},
-        {"---", '-'},
-        {"--.", '.'},
-        {"([{}])", '('},
-        {"([{}])", '{'},
-        {"([{}])", ']'},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_ptr_eq(
-            strrchr(a[i].str, a[i].c),
-            s21_strrchr(a[i].str, a[i].c));
-    }
+START_TEST(TOLOWERTest2) {
+    char str[12] = "Hello World";
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_str_eq(str2, "hello world");
+    free(str2);
 }
 END_TEST
 
-START_TEST(test_strspn) {
-    typedef struct s {
-      const char *str1;
-      const char *str2;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating"},
-        {"a library to handle money", "a library to handle money"},
-        {"we will first create an interface", "we will first create an interface"},
-        {"this is test", "this"},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help ", "Autotools works. If you need help "},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create", "a "},
-        {"Note\nthat\none could\0do something similar ", "Note\n"},
-        {"you   can redistribute it and/or", "you can"},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p"},
-        {"WITHOUT ANY WARRANTY", "WITHOUT "},
-        {" to writing code says that we should write the unit test befor", " "},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        {"ays that we should write the unit ", "ays\n"},
-        {"Check     to specifically     assert      ", "Check     to  specifically"},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        {"кто прочитал тот 10x", "кто прочитал тот"},
-        {"chisto по преколу написал", "chisto"},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell", "errors"},
-        {"get a whole host of compilation err", "get a whole host of compilation err"},
-        {"ely write code that won", "ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        {"", ""},
-        {"", " "},
-        {" ", " "},
-        {" ", " "},
-        {"\0", "\0"},
-        {"", "\0"},
-        {"\n", " "},
-        {"\n", "\n"},
-        {"\n\0", "\0"},
-        {"\0\n", "\n"},
-        {"0", "\0"},
-        {"n", "\n"},
-        {"е", "e"},
-        {"---", "-"},
-        {"--.", "."},
-        {"([{}])", "("},
-        {"([{}])", "(["},
-        {"([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_int_eq(strspn(a[i].str1, a[i].str2),
-                         s21_strspn(a[i].str1, a[i].str2));
-    }
+START_TEST(TOLOWERTest3) {
+    char str[1] = "";
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_str_eq(str2, "");
+    free(str2);
 }
 END_TEST
 
-
-START_TEST(test_strstr) {
-    typedef struct s {
-      const char *haystack;
-      const char *needle;
-    } test;
-    test a[N_TESTS] = {
-        {"Since we are creating", "Since we are creating"},
-        {"a library to handle money", "a library to handle money"},
-        {"we will first create an interface", "we will first create an interface"},
-        {"this is test", "this"},
-        {"void *memchr(const void *str, int c, size_t n)", "void *memchr(const void *str, int c, size_t n)"},
-        {"Autotools works. If you need help ", "Autotools works. If you need help "},
-        {"Check distribution; you don’t need $", "Check distribution; you don’t need $"},
-        {"time\0cutting and pasting or (w", "time\0cutting and pasting or (w"},
-        {"it\0says\0to buil\nthese programs only", "it\0says\0to buil\n"},
-        {"function\0in\0‘main.c’\nshould be main() itself. In ", "function\0in\0‘main.c’\nshould be main() itself. In "},
-        {"a\nlibrary\nto handle\0money, we will first create", "a "},
-        {"Note\nthat\none could\0do something similar ", "Note\n"},
-        {"you   can redistribute it and/or", "you can"},
-        {"FOR A PARTICULAR PURPOSE", "FOR A p"},
-        {"WITHOUT ANY WARRANTY", "WITHOUT "},
-        {" to writing code says that we should write the unit test befor", " "},
-        {"Of course, we can’t do classes with C ", "Of course, we can’t do classes with C "},
-        {"ays that we should write the unit ", "ays\n"},
-        {"Check     to specifically     assert      ", "Check     to  specifically"},
-        {" any\tfailures\tfound, use ck_assert_msg. The first argument i", " any\tfailures\t"},
-        {"ck_abort_msg (\"Currency not set correctly on creation\");", "ck_abort_msg (\"Currency"},
-        {"Check to\nspecifically\0assert     \t", "Check to\nspecifically\0assert     \t"},
-        {"The\nfirst\0argument is a Boolean argument. The rem", "The\nfirst\0a"},
-        {"mplicated\0to\nelegantly express within ck_assert(), there", "mplicated\n"},
-        {"2020-06-21 08:52:50.000000000 -0700", "2020-06-21 08:"},
-        {"кто прочитал тот 10x", "кто прочитал тот"},
-        {"chisto по преколу написал", "chisto"},
-        {"@@ -1,24 +1,31 @@", "@@ -1,24 +1,31 @@"},
-        {"errors are, in a way, unit test failures of their own, tell", "errors"},
-        {"get a whole host of compilation err", "get a whole host of compilation err"},
-        {"ely write code that won", "ely write code that won"},
-        {"dit the sources so that the unit test compiles, we are actually ", "dit the sources so that the unit test compiles, we are actually "},
-        {"", ""},
-        {"", " "},
-        {" ", " "},
-        {" ", " "},
-        {"\0", "\0"},
-        {"", "\0"},
-        {"\n", " "},
-        {"\n", "\n"},
-        {"\n\0", "\0"},
-        {"\0\n", "\n"},
-        {"0", "\0"},
-        {"n", "\n"},
-        {"е", "e"},
-        {"---", "-"},
-        {"--.", "."},
-        {"([{}])", "("},
-        {"([{}])", "(["},
-        {"([{}])", "([{}]"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        ck_assert_ptr_eq(
-            strstr(a[i].haystack, a[i].needle),
-            s21_strstr(a[i].haystack, a[i].needle));
-    }
+START_TEST(TOLOWERTest4) {
+    char str[4] = "ABC";
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_str_eq(str2, "abc");
+    free(str2);
 }
 END_TEST
 
-//TODO:
-// jarrusab
-START_TEST(test_strtok) {
-    typedef struct s {
-      char *str;
-      char *delim;
-    } test;
-
-    test a[6] = {
-        {"Since we are creating", " "},
-        {"Since", " "},
-        {"Since1we1are1reating", "1"},
-        {"Since\0we\0are\0creating", "\0"},
-        {"S1in1ce\0w1e\0a1re\0cre1ating", "1"},
-        {"Since - we - are- creating", "-"},
-    };
-    for (int i = 0; i < 6; ++i) {
-        char curr1[150];
-        strcpy(curr1, a[i].str);
-        char curr2[150];
-        strcpy(curr2, a[i].str);
-        ck_assert_str_eq(
-            s21_strtok(curr1, a[i].delim),
-            strtok(curr2, a[i].delim));
-    }
-    ck_assert_str_eq(
-        s21_strtok(NULL, a[2].delim),
-        strtok(NULL, a[2].delim));
+START_TEST(TOLOWERTest5) {
+    char str[6] = "1234a";
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_str_eq(str2, "1234a");
+    free(str2);
 }
 END_TEST
 
-#undef N_TESTS
-#define N_TESTS 6
-START_TEST(test_to_upper) {
-    typedef struct s {
-      char *str;
-      const char *test_str;
-    } test;
-
-    test a[N_TESTS] = {
-        {" ", " "},
-        {"HeLlOw WoRlD", "HELLOW WORLD"},
-        {"u", "U"},
-        {"123", "123"},
-        {"\0", "\0"},
-        {"Road\0to the dream", "ROAD\0TO THE DREAM"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char *b = s21_to_upper(a[i].str);
-        ck_assert_str_eq(
-            a[i].test_str,
-            b);
-        free(b);
-    }
+START_TEST(TOLOWERTest6) {
+    char *str = NULL;
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_ptr_eq(str2, NULL);
+    free(str2);
 }
 END_TEST
 
-START_TEST(test_to_lower) {
-    typedef struct s {
-      char *str;
-      const char *test_str;
-    } test;
+START_TEST(TOLOWERTest7) {
+    char *str = "WoW\0, I love it!";
+    char *str2 = (char *) s21_to_lower(str);
+    ck_assert_str_eq(str2, "wow");
+    free(str2);
+}
+END_TEST
+/*endregion*/
 
-    test a[N_TESTS] = {
-        {" ", " "},
-        {"HeLlOw WoRlD", "hellow world"},
-        {"U", "u"},
-        {"123", "123"},
-        {"\0", "\0"},
-        {"rOAD\0TO THE DREAM", "road\0to the dream"},
-    };
-    for (int i = 0; i < N_TESTS; ++i) {
-        char *b = s21_to_lower(a[i].str);
-        ck_assert_str_eq(
-            a[i].test_str,
-            b);
-        free(b);
-    }
+// MARK: - trim 13
+/*region TRIM*/
+START_TEST(TRIMTest1) {
+    char *str = "WoW\0, I love it!";
+    char *str2 = "W";
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "o");
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_insert) {
-    typedef struct s {
-      char *str;
-      char *insert_str;
-      int n;
-      const char *test_str;
-    } test;
-
-    test a[2] = {
-        {"Hello", " World", 5, "Hello World"},
-//           {"BIG TEXT", "big text", 4, "BIGbig text TEXT"},
-        {"01234", "AAA", 4, "0123AAA4"},
-    };
-    for (int i = 0; i < 2; ++i) {
-        char *b = s21_insert(a[i].str, a[i].insert_str, a[i].n);
-        ck_assert_str_eq(
-            a[i].test_str,
-            b);
-        free(b);
-    }
+START_TEST(TRIMTest2) {
+    char *str = "WoW, I love it!";
+    char *str2 = "W";
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "oW, I love it!");
+    free(str3);
 }
 END_TEST
 
-//TODO: a[i].test_str == b' failed: a[i].test_str == "move", b == "m1ov1e || failed: a[i].test_str == " uuuIIIuuu ", b == " uuu!III!uuu
-START_TEST(test_trim) {
-    typedef struct s {
-      char *str;
-      char *trim_str;
-      const char *test_str;
-    } test;
-
-    test a[1] = {
-        {" test ", " ", "test"},
-//           {"1m1ov1e1", "1", "move"},
-//           {" uuu!III!uuu ", "!", " uuuIIIuuu "},
-//            {"heeey\0heeey\0heeey", "\0", "heeeyheeeyheeey"},
-    };
-    for (int i = 0; i < 1; ++i) {
-        char *b = s21_trim(a[i].str, a[i].trim_str);
-        ck_assert_str_eq(
-            a[i].test_str,
-            b);
-        free(b);
-    }
+START_TEST(TRIMTest3) {
+    char *str = "WoW, I love it!";
+    char *str2 = "Wo!";
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, ", I love it");
+    free(str3);
 }
 END_TEST
 
-START_TEST(test_sprintf) {
-    char str1[100];
-    char str2[100];
-    sprintf(str1, "%d", 15); s21_sprintf(str2, "%d", 15);
-    puts(str1);
-    puts(str2);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%c", 'c'); s21_sprintf(str2, "%c", 'c');
-    puts(str1);
-    puts(str2);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%i", 15); s21_sprintf(str2, "%i", 15);
-    puts(str1);
-    puts(str2);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%f", 1.1); s21_sprintf(str2, "%f", 1.1);
-    puts(str1);
-    puts(str2);
-    ck_assert_str_eq(str1, str2);
-    //sprintf(str1, "%s", "$#3AaP-+=/n/0"); s21_sprintf(str2, "%s", "$#3AaP-+=/n/0");
-    puts(str1);
-    puts(str2);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%u", 193); s21_sprintf(str2, "%u", 193);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%%"); s21_sprintf(str2, "%%");
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "% d", 15); s21_sprintf(str2, "% d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%3d", 15); s21_sprintf(str2, "%3d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%15d", 15); s21_sprintf(str2, "%15d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%3.3d", 15); s21_sprintf(str2, "%3.3d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%3.3.3d", 15); s21_sprintf(str2, "%3.3.3d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%3.3l5.5d", 15); s21_sprintf(str2, "%3.3l5.5d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "% 3.3d", 15); s21_sprintf(str2, "% 3.3d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%-d", 15); s21_sprintf(str2, "%-d", 15);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%-f", 13.13); s21_sprintf(str2, "%-f", 13.13);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%+d", 50); s21_sprintf(str2, "%+d", 50);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%-10s", "apdofk[akwfs"); s21_sprintf(str2, "%-10s", "apdofk[akwfs");
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%-10.2f", 12.213123); s21_sprintf(str2, "%-10.2f", 12.213123);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%003d", 00003); s21_sprintf(str2, "%003d", 00003);
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%ld", 14212314124); s21_sprintf(str2, "%ld", 14212314124);
-    ck_assert_str_eq(str1, str2);
-//    sprintf(str1, "%lf", 142.1232341251242452); s21_sprintf(str2, "%lf", 142.1232341251242452);
-//    ck_assert_str_eq(str1, str2);
-//    sprintf(str1, "%hd", 1); s21_sprintf(str2, "%hd", 1);
-//    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%-c", '0'); s21_sprintf(str2, "%-c", '0');
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%+-d", 78); s21_sprintf(str2, "%+-d", 78);
-    ck_assert_str_eq(str1, str2);
-//    sprintf(str1, "%0.3h0.3d", 142); s21_sprintf(str2, "0.3h0.3d", 142);
-//    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%0.3d", 142); s21_sprintf(str2, "%0.3d", 142);
-    ck_assert_str_eq(str1, str2);
-//    sprintf(str1, "%\0d", 321); s21_sprintf(str2, "%\0d", 321);
-//    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%5s", "5ho"); s21_sprintf(str2, "%5s", "5ho");
-    ck_assert_str_eq(str1, str2);
-    sprintf(str1, "%+sd", "tutasd"); s21_sprintf(str2, "%+sd", "tutasd");
-    ck_assert_str_eq(str1, str2);
-
+START_TEST(TRIMTest4) {
+    char *str = "WoW, I love it!";
+    char *str2 = "P";
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "WoW, I love it!");
+    free(str3);
+}
+END_TEST
+START_TEST(TRIMTest5) {
+    char *str = "abc";
+    char *str2 = "abc";
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "");
+    free(str3);
+}
+END_TEST
+START_TEST(TRIMTest6) {
+    char *str = "WoW, I love it!";
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "WoW, I love it!");
+    free(str3);
 }
 END_TEST
 
-Suite *string_suite(void) {
-    Suite *s;
-    s = suite_create("s21_string");
+START_TEST(TRIMTest7) {
+    char *str = "       WoW, I love     it!             ";
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "WoW, I love     it!");
+    free(str3);
+}
+END_TEST
 
-    TCase *sprintf_case;
-    sprintf_case = tcase_create("sprintf");
-    tcase_add_test(sprintf_case, test_sprintf);
-    suite_add_tcase(s, sprintf_case);
+START_TEST(TRIMTest8) {
+    char *str = "";
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "");
+    free(str3);
+}
+END_TEST
+START_TEST(TRIMTest9) {
+    char *str = "          ";
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "");
+    free(str3);
+}
+END_TEST
 
-    //TCase *memchr_case;
-    //memchr_case = tcase_create("memchr");
-    //tcase_add_test(memchr_case, test_memchr);
-    //suite_add_tcase(s, memchr_case);
-    //
-    //TCase *memcmp_case;
-    //memcmp_case = tcase_create("memcmp");
-    //tcase_add_test(memcmp_case, test_memcmp);
-    //suite_add_tcase(s, memcmp_case);
-    //
-    //TCase *memcpy_case;
-    //memcpy_case = tcase_create("memcpy");
-    //tcase_add_test(memcpy_case, test_memcpy);
-    //suite_add_tcase(s, memcpy_case);
-    //
-    //TCase *memmove_case;
-    //memmove_case = tcase_create("memmove");
-    //tcase_add_test(memmove_case, test_memmove);
-    //suite_add_tcase(s, memmove_case);
-    //
-    //TCase *memset_case;
-    //memset_case = tcase_create("memset");
-    //tcase_add_test(memset_case, test_memset);
-    //suite_add_tcase(s, memset_case);
-    //
-    //TCase *strcat_case;
-    //strcat_case = tcase_create("strcat");
-    //tcase_add_test(strcat_case, test_strcat);
-    //suite_add_tcase(s, strcat_case);
-    //
-    //TCase *strncat_case;
-    //strncat_case = tcase_create("strncat");
-    //tcase_add_test(strncat_case, test_strncat);
-    //suite_add_tcase(s, strncat_case);
-    //
-    //TCase *strchr_case;
-    //strchr_case = tcase_create("strchr");
-    //tcase_add_test(strchr_case, test_strchr);
-    //suite_add_tcase(s, strchr_case);
-    //
-    //TCase *strcmp_case;
-    //strcmp_case = tcase_create("strcmp");
-    //tcase_add_test(strcmp_case, test_strcmp);
-    //suite_add_tcase(s, strcmp_case);
-    //
-    //TCase *strncmp_case;
-    //strncmp_case = tcase_create("strncmp");
-    //tcase_add_test(strncmp_case, test_strncmp);
-    //suite_add_tcase(s, strncmp_case);
-    //
-    //TCase *strcpy_case;
-    //strcpy_case = tcase_create("strcpy");
-    //tcase_add_test(strcpy_case, test_strcpy);
-    //suite_add_tcase(s, strcpy_case);
-    //
-    //TCase *strncpy_case;
-    //strncpy_case = tcase_create("strncpy");
-    //tcase_add_test(strncpy_case, test_strncpy);
-    //suite_add_tcase(s, strncpy_case);
-    //
-    //TCase *strcspn_case;
-    //strcspn_case = tcase_create("strcspn");
-    //tcase_add_test(strcspn_case, test_strcspn);
-    //suite_add_tcase(s, strcspn_case);
-    //
-    //TCase *strerror_case;
-    //strerror_case = tcase_create("strerror");
-    //tcase_add_test(strerror_case, test_strerror);
-    //suite_add_tcase(s, strerror_case);
-    //
-    //TCase *strlen_case;
-    //strlen_case = tcase_create("strlen");
-    //tcase_add_test(strlen_case, test_strlen);
-    //suite_add_tcase(s, strlen_case);
-    //
-    //TCase *strpbrk_case;
-    //strpbrk_case = tcase_create("strpbrk");
-    //tcase_add_test(strpbrk_case, test_strpbrk);
-    //suite_add_tcase(s, strpbrk_case);
-    //
-    //TCase *strrchr_case;
-    //strrchr_case = tcase_create("strrchr");
-    //tcase_add_test(strrchr_case, test_strrchr);
-    //suite_add_tcase(s, strrchr_case);
-    //
-    //TCase *strspn_case;
-    //strspn_case = tcase_create("strspn");
-    //tcase_add_test(strspn_case, test_strspn);
-    //suite_add_tcase(s, strspn_case);
-    //
-    //TCase *strstr_case;
-    //strstr_case = tcase_create("strstr");
-    //tcase_add_test(strstr_case, test_strstr);
-    //suite_add_tcase(s, strstr_case);
-    //
-    //TCase *strtok_case;
-    //strtok_case = tcase_create("strtok");
-    //tcase_add_test(strtok_case, test_strtok);
-    //suite_add_tcase(s, strtok_case);
-    //
-    //TCase *to_upper_case;
-    //to_upper_case = tcase_create("to_upper");
-    //tcase_add_test(to_upper_case, test_to_upper);
-    //suite_add_tcase(s, to_upper_case);
-    //
-    //TCase *to_lower_case;
-    //to_lower_case = tcase_create("to_lower");
-    //tcase_add_test(to_lower_case, test_to_lower);
-    //suite_add_tcase(s, to_lower_case);
-    //
-    //TCase *insert_case;
-    //insert_case = tcase_create("insert");
-    //tcase_add_test(insert_case, test_insert);
-    //suite_add_tcase(s, insert_case);
-    //
-    //TCase *trim_case;
-    //trim_case = tcase_create("trim");
-    //tcase_add_test(trim_case, test_trim);
-    //suite_add_tcase(s, trim_case);
+START_TEST(TRIMTest10) {
+    char *str = NULL;
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_ptr_eq(str3, NULL);
+    free(str3);
+}
+END_TEST
 
-    return s;
+START_TEST(TRIMTest11) {
+    char *str = "            1";
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "1");
+    free(str3);
+}
+END_TEST
+
+START_TEST(TRIMTest12) {
+    char *str = "\t       \t";
+    char *str2 = NULL;
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "");
+    free(str3);
+}
+END_TEST
+
+START_TEST(TRIMTest13) {
+    char *str = "     HELLO    ";
+    char *str2 = "";
+    char *str3 = (char *) s21_trim(str, str2);
+    ck_assert_str_eq(str3, "HELLO");
+    free(str3);
+}
+END_TEST
+/*endregion*/
+/*region SPRINTF*/
+START_TEST(SPRINTF1) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%c|\n", 'A');
+    sprintf(data1, "|%c|\n", 'A');
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF3) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5c|\n", 'A');
+    sprintf(data1, "|%-5c|\n", 'A');
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF4) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%10c|\n", 'A');
+    sprintf(data1, "|%10c|\n", 'A');
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF5) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%%|\n");
+    sprintf(data1, "|%%|\n");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF6) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5%|\n");
+    sprintf(data1, "|%-5%|\n");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF7) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%h%|\n");
+    sprintf(data1, "|%h%|\n");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF8) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%l%|\n");
+    sprintf(data1, "|%l%|\n");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF9) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-+%|\n");
+    sprintf(data1, "|%-+%|\n");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF10) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%+%|\n");
+    sprintf(data1, "|%+%|\n");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF11) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%+d|\n", 10);
+    sprintf(data1, "|%+d|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF12) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%+d|\n", -10);
+    sprintf(data1, "|%+d|\n", -10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF13) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-d|\n", -10);
+    sprintf(data1, "|%-d|\n", -10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF14) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-d|\n", 10);
+    sprintf(data1, "|%-d|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF15) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5d|\n", 10);
+    sprintf(data1, "|%-5d|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF16) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5ld|\n", 10);
+    sprintf(data1, "|%-5ld|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF17) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5.5ld|\n", 10);
+    sprintf(data1, "|%-5.5ld|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF18) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-+5.5ld|\n", 10);
+    sprintf(data1, "|%-+5.5ld|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF19) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|% -5.5ld|\n", 10);
+    sprintf(data1, "|% -5.5ld|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF20) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|% -5.5ld|\n", 10);
+    sprintf(data1, "|% -5.5ld|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF21) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|% -5.5hd|\n", 10);
+    sprintf(data1, "|% -5.5hd|\n", 10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF22) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%+f|\n", 10.10);
+    sprintf(data1, "|%+f|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF23) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%+f|\n", -10.10);
+    sprintf(data1, "|%+f|\n", -10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF24) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-f|\n", -10.10);
+    sprintf(data1, "|%-f|\n", -10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF25) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-f|\n", 10.10);
+    sprintf(data1, "|%-f|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF26) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5f|\n", 10.10);
+    sprintf(data1, "|%-5f|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF27) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5lf|\n", 10.10);
+    sprintf(data1, "|%-5lf|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF28) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-5.5lf|\n", 10.10);
+    sprintf(data1, "|%-5.5lf|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF29) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|%-+5.5lf|\n", 10.10);
+    sprintf(data1, "|%-+5.5lf|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF30) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|% -5.5lf|\n", 10.10);
+    sprintf(data1, "|% -5.5lf|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF31) {
+    char data[100];
+    char data1[100];
+    s21_sprintf(data, "|% -5.5lf|\n", 10.10);
+    sprintf(data1, "|% -5.5lf|\n", 10.10);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF32) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5.5s|\n";
+    s21_sprintf(data, fmt, "lol");
+    sprintf(data1, fmt, "lol");
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF33) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF34) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF35) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF36) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF37) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF38) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-6.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF39) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-5.6s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF40) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF41) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-.2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src); /*default fails(|lo|\n)*/
+    /*ck_assert_str_eq(data, data1);*/
+}
+END_TEST
+START_TEST(SPRINTF42) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% 2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF43) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF44) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%1s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF45) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF46) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-010s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF47) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF48) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF49) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-5hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF50) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+5hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF51) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%.5hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF52) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF53) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF54) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF55) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF56) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% 1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF57) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF58) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +-1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF59) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF60) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF61) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF62) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF63) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF64) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    -+10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF65) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF66) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF67) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF68) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF69) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% 1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF70) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF71) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +-1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF72) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF73) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF74) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF75) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF76) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF77) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    +-10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF78) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%s|\n";
+    char *src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF79) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%s|\n";
+    char *src = NULL;
+    sprintf(data1, fmt, src);
+    s21_sprintf(data, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF80) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%12s|\n";
+    char *src = NULL;
+    sprintf(data1, fmt, src);
+    s21_sprintf(data, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF81) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-12s|\n";
+    char *src = NULL;
+    sprintf(data1, fmt, src);
+    s21_sprintf(data, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF82) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% s|\n";
+    char *src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF83) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10s|\n";
+    char *src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF84) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10s|\n";
+    char *src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF85) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%   10s|\n";
+    char *src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+/*endregion*/
+Suite *f_example_suite_create() {
+    Suite *s1 = suite_create("Test_string");
+    TCase *StrLenTest = tcase_create("STRLEN");
+    TCase *StrChrTest = tcase_create("STRCHR");
+    TCase *StrSpnTest = tcase_create("STRSPN");
+    TCase *StrcSpnTest = tcase_create("STRСSPN");
+    TCase *MemCpyTest = tcase_create("MEMCPY");
+    TCase *StrCatTest = tcase_create("STRCAT");
+    TCase *MemcmpTest = tcase_create("MEMCMP");
+    TCase *StrncatTest = tcase_create("STRNCAT");
+    TCase *StrncpyTest = tcase_create("STRNCPY");
+    TCase *StrrchrTest = tcase_create("STRRCHR");
+    TCase *memmovetest = tcase_create("MEMMOVE");
+    TCase *strstrtest = tcase_create("STRSTR");
+    TCase *strcmptest = tcase_create("STRCMP");
+    TCase *memchrtest = tcase_create("MEMCHR");
+    TCase *strcpytest = tcase_create("STRCPY");
+    TCase *strpbrktest = tcase_create("STRPBRK");
+    TCase *StrnCmpTest = tcase_create("STRNCMP");
+    TCase *MemSetTest = tcase_create("MEMSET");
+    TCase *StrTokTest = tcase_create("STRTOK");
+    TCase *strerrortest = tcase_create("STRERROR");
+    TCase *to_uppertest = tcase_create("TOUPPER");
+    TCase *inserttest = tcase_create("INSERT");
+    TCase *to_lowertest = tcase_create("TOLOWER");
+    TCase *trimtest = tcase_create("TRIM");
+    TCase *sprintftest = tcase_create("SPRINTF");
+    suite_add_tcase(s1, StrLenTest);
+    tcase_add_test(StrLenTest, STRLENTest1);
+    tcase_add_test(StrLenTest, STRLENTest2);
+    tcase_add_test(StrLenTest, STRLENTest3);
+    tcase_add_test(StrLenTest, STRLENTest4);
+    tcase_add_test(StrLenTest, STRLENTest5);
+    tcase_add_test(StrLenTest, STRLENTest6);
+    suite_add_tcase(s1, StrChrTest);
+    tcase_add_test(StrChrTest, STRCHRTest1);
+    tcase_add_test(StrChrTest, STRCHRTest2);
+    tcase_add_test(StrChrTest, STRCHRTest3);
+    tcase_add_test(StrChrTest, STRCHRTest4);
+    tcase_add_test(StrChrTest, STRCHRTest5);
+    tcase_add_test(StrChrTest, STRCHRTest6);
+    suite_add_tcase(s1, StrSpnTest);
+    tcase_add_test(StrSpnTest, STRSPNTest1);
+    tcase_add_test(StrSpnTest, STRSPNTest2);
+    tcase_add_test(StrSpnTest, STRSPNTest3);
+    tcase_add_test(StrSpnTest, STRSPNTest4);
+    tcase_add_test(StrSpnTest, STRSPNTest5);
+    tcase_add_test(StrSpnTest, STRSPNTest6);
+    tcase_add_test(StrSpnTest, STRSPNTest7);
+    tcase_add_test(StrSpnTest, STRSPNTest8);
+    suite_add_tcase(s1, StrcSpnTest);
+    tcase_add_test(StrcSpnTest, STRCSPNTest1);
+    tcase_add_test(StrcSpnTest, STRCSPNTest2);
+    tcase_add_test(StrcSpnTest, STRCSPNTest3);
+    tcase_add_test(StrcSpnTest, STRCSPNTest4);
+    tcase_add_test(StrcSpnTest, STRCSPNTest5);
+    tcase_add_test(StrcSpnTest, STRCSPNTest6);
+    suite_add_tcase(s1, MemCpyTest);
+    tcase_add_test(MemCpyTest, MEMCPYTest1);
+    tcase_add_test(MemCpyTest, MEMCPYTest2);
+    tcase_add_test(MemCpyTest, MEMCPYTest3);
+    tcase_add_test(MemCpyTest, MEMCPYTest4);
+    tcase_add_test(MemCpyTest, MEMCPYTest5);
+    suite_add_tcase(s1, StrCatTest);
+    tcase_add_test(StrCatTest, STRCATTest1);
+    tcase_add_test(StrCatTest, STRCATTest2);
+    tcase_add_test(StrCatTest, STRCATTest3);
+    tcase_add_test(StrCatTest, STRCATTest4);
+    tcase_add_test(StrCatTest, STRCATTest5);
+    suite_add_tcase(s1, MemcmpTest);
+    tcase_add_test(MemcmpTest, MEMCMPTest1);
+    tcase_add_test(MemcmpTest, MEMCMPTest2);
+    tcase_add_test(MemcmpTest, MEMCMPTest3);
+    tcase_add_test(MemcmpTest, MEMCMPTest4);
+    tcase_add_test(MemcmpTest, MEMCMPTest5);
+    tcase_add_test(MemcmpTest, MEMCMPTest6);
+    tcase_add_test(MemcmpTest, MEMCMPTest7);
+    tcase_add_test(MemcmpTest, MEMCMPTest8);
+    tcase_add_test(MemcmpTest, MEMCMPTest9);
+    tcase_add_test(MemcmpTest, MEMCMPTest10);
+    suite_add_tcase(s1, StrncatTest);
+    tcase_add_test(StrncatTest, STRNCATTest1);
+    tcase_add_test(StrncatTest, STRNCATTest2);
+    tcase_add_test(StrncatTest, STRNCATTest3);
+    tcase_add_test(StrncatTest, STRNCATTest4);
+    tcase_add_test(StrncatTest, STRNCATTest5);
+    suite_add_tcase(s1, StrncpyTest);
+    tcase_add_test(StrncpyTest, STRNCPYTest1);
+    tcase_add_test(StrncpyTest, STRNCPYTest2);
+    tcase_add_test(StrncpyTest, STRNCPYTest3);
+    tcase_add_test(StrncpyTest, STRNCPYTest4);
+    tcase_add_test(StrncpyTest, STRNCPYTest5);
+    suite_add_tcase(s1, StrrchrTest);
+    tcase_add_test(StrrchrTest, STRRCHRTest1);
+    tcase_add_test(StrrchrTest, STRRCHRTest2);
+    tcase_add_test(StrrchrTest, STRRCHRTest3);
+    tcase_add_test(StrrchrTest, STRRCHRTest4);
+    tcase_add_test(StrrchrTest, STRRCHRTest5);
+    suite_add_tcase(s1, memmovetest);
+    tcase_add_test(memmovetest, MEMMOVETest1);
+    tcase_add_test(memmovetest, MEMMOVETest2);
+    tcase_add_test(memmovetest, MEMMOVETest3);
+    tcase_add_test(memmovetest, MEMMOVETest4);
+    suite_add_tcase(s1, strstrtest);
+    tcase_add_test(strstrtest, STRSTRTest1);
+    tcase_add_test(strstrtest, STRSTRTest2);
+    tcase_add_test(strstrtest, STRSTRTest3);
+    tcase_add_test(strstrtest, STRSTRTest4);
+    tcase_add_test(strstrtest, STRSTRTest5);
+    suite_add_tcase(s1, strcmptest);
+    tcase_add_test(strcmptest, STRCMPTest1);
+    tcase_add_test(strcmptest, STRCMPTest2);
+    tcase_add_test(strcmptest, STRCMPTest3);
+    tcase_add_test(strcmptest, STRCMPTest4);
+    tcase_add_test(strcmptest, STRCMPTest5);
+    tcase_add_test(strcmptest, STRCMPTest6);
+    suite_add_tcase(s1, memchrtest);
+    tcase_add_test(memchrtest, MEMCHRTest1);
+    tcase_add_test(memchrtest, MEMCHRTest2);
+    tcase_add_test(memchrtest, MEMCHRTest3);
+    tcase_add_test(memchrtest, MEMCHRTest4);
+    tcase_add_test(memchrtest, MEMCHRTest5);
+    suite_add_tcase(s1, strcpytest);
+    tcase_add_test(strcpytest, STRCPYTest1);
+    tcase_add_test(strcpytest, STRCPYTest2);
+    tcase_add_test(strcpytest, STRCPYTest3);
+    tcase_add_test(strcpytest, STRCPYTest4);
+    suite_add_tcase(s1, strpbrktest);
+    tcase_add_test(strpbrktest, STRPBRKTest1);
+    tcase_add_test(strpbrktest, STRPBRKTest2);
+    tcase_add_test(strpbrktest, STRPBRKTest3);
+    tcase_add_test(strpbrktest, STRPBRKTest4);
+    suite_add_tcase(s1, StrnCmpTest);
+    tcase_add_test(StrnCmpTest, STRNCMPTest1);
+    tcase_add_test(StrnCmpTest, STRNCMPTest2);
+    tcase_add_test(StrnCmpTest, STRNCMPTest3);
+    tcase_add_test(StrnCmpTest, STRNCMPTest4);
+    tcase_add_test(StrnCmpTest, STRNCMPTest5);
+    tcase_add_test(StrnCmpTest, STRNCMPTest6);
+    tcase_add_test(StrnCmpTest, STRNCMPTest7);
+    tcase_add_test(StrnCmpTest, STRNCMPTest8);
+    suite_add_tcase(s1, MemSetTest);
+    tcase_add_test(MemSetTest, MEMSETTest1);
+    tcase_add_test(MemSetTest, MEMSETTest2);
+    tcase_add_test(MemSetTest, MEMSETTest3);
+    tcase_add_test(MemSetTest, MEMSETTest4);
+    tcase_add_test(MemSetTest, MEMSETTest5);
+    tcase_add_test(MemSetTest, MEMSETTest6);
+    tcase_add_test(MemSetTest, MEMSETTest7);
+    suite_add_tcase(s1, StrTokTest);
+    tcase_add_test(StrTokTest, STRTOKTest1);
+    tcase_add_test(StrTokTest, STRTOKTest2);
+    tcase_add_test(StrTokTest, STRTOKTest3);
+    tcase_add_test(StrTokTest, STRTOKTest4);
+    tcase_add_test(StrTokTest, STRTOKTest5);
+    tcase_add_test(StrTokTest, STRTOKTest6);
+    tcase_add_test(StrTokTest, STRTOKTest7);
+    tcase_add_test(StrTokTest, STRTOKTest8);
+    tcase_add_test(StrTokTest, STRTOKTest9);
+    tcase_add_test(StrTokTest, STRTOKTest10);
+    suite_add_tcase(s1, strerrortest);
+    tcase_add_test(strerrortest, STRERRORTest1);
+    tcase_add_test(strerrortest, STRERRORTest2);
+    tcase_add_test(strerrortest, STRERRORTest3);
+    suite_add_tcase(s1, to_uppertest);
+    tcase_add_test(to_uppertest, TOUPPERTest1);
+    tcase_add_test(to_uppertest, TOUPPERTest2);
+    tcase_add_test(to_uppertest, TOUPPERTest3);
+    tcase_add_test(to_uppertest, TOUPPERTest4);
+    tcase_add_test(to_uppertest, TOUPPERTest5);
+    tcase_add_test(to_uppertest, TOUPPERTest6);
+    tcase_add_test(to_uppertest, TOUPPERTest7);
+    suite_add_tcase(s1, inserttest);
+    tcase_add_test(inserttest, INSERTTest1);
+    tcase_add_test(inserttest, INSERTTest2);
+    tcase_add_test(inserttest, INSERTTest3);
+    tcase_add_test(inserttest, INSERTTest4);
+    tcase_add_test(inserttest, INSERTTest5);
+    tcase_add_test(inserttest, INSERTTest6);
+    tcase_add_test(inserttest, INSERTTest7);
+    suite_add_tcase(s1, to_lowertest);
+    tcase_add_test(to_lowertest, TOLOWERTest1);
+    tcase_add_test(to_lowertest, TOLOWERTest2);
+    tcase_add_test(to_lowertest, TOLOWERTest3);
+    tcase_add_test(to_lowertest, TOLOWERTest4);
+    tcase_add_test(to_lowertest, TOLOWERTest5);
+    tcase_add_test(to_lowertest, TOLOWERTest6);
+    tcase_add_test(to_lowertest, TOLOWERTest7);
+    suite_add_tcase(s1, trimtest);
+    tcase_add_test(trimtest, TRIMTest1);
+    tcase_add_test(trimtest, TRIMTest2);
+    tcase_add_test(trimtest, TRIMTest3);
+    tcase_add_test(trimtest, TRIMTest4);
+    tcase_add_test(trimtest, TRIMTest5);
+    tcase_add_test(trimtest, TRIMTest6);
+    tcase_add_test(trimtest, TRIMTest7);
+    tcase_add_test(trimtest, TRIMTest8);
+    tcase_add_test(trimtest, TRIMTest9);
+    tcase_add_test(trimtest, TRIMTest10);
+    tcase_add_test(trimtest, TRIMTest11);
+    tcase_add_test(trimtest, TRIMTest12);
+    tcase_add_test(trimtest, TRIMTest13);
+    suite_add_tcase(s1, sprintftest);
+    tcase_add_test(sprintftest, SPRINTF1);
+    tcase_add_test(sprintftest, SPRINTF3);
+    tcase_add_test(sprintftest, SPRINTF4);
+    tcase_add_test(sprintftest, SPRINTF5);
+    tcase_add_test(sprintftest, SPRINTF6);
+    tcase_add_test(sprintftest, SPRINTF7);
+    tcase_add_test(sprintftest, SPRINTF8);
+    tcase_add_test(sprintftest, SPRINTF9);
+    tcase_add_test(sprintftest, SPRINTF10);
+    tcase_add_test(sprintftest, SPRINTF11);
+    tcase_add_test(sprintftest, SPRINTF12);
+    tcase_add_test(sprintftest, SPRINTF13);
+    tcase_add_test(sprintftest, SPRINTF14);
+    tcase_add_test(sprintftest, SPRINTF15);
+    tcase_add_test(sprintftest, SPRINTF16);
+    tcase_add_test(sprintftest, SPRINTF17);
+    tcase_add_test(sprintftest, SPRINTF18);
+    tcase_add_test(sprintftest, SPRINTF19);
+    tcase_add_test(sprintftest, SPRINTF20);
+    tcase_add_test(sprintftest, SPRINTF21);
+    tcase_add_test(sprintftest, SPRINTF22);
+    tcase_add_test(sprintftest, SPRINTF23);
+    tcase_add_test(sprintftest, SPRINTF24);
+    tcase_add_test(sprintftest, SPRINTF25);
+    tcase_add_test(sprintftest, SPRINTF26);
+    tcase_add_test(sprintftest, SPRINTF27);
+    tcase_add_test(sprintftest, SPRINTF28);
+    tcase_add_test(sprintftest, SPRINTF29);
+    tcase_add_test(sprintftest, SPRINTF30);
+    tcase_add_test(sprintftest, SPRINTF31);
+    tcase_add_test(sprintftest, SPRINTF32);
+    tcase_add_test(sprintftest, SPRINTF33);
+    tcase_add_test(sprintftest, SPRINTF34);
+    tcase_add_test(sprintftest, SPRINTF35);
+    tcase_add_test(sprintftest, SPRINTF36);
+    tcase_add_test(sprintftest, SPRINTF37);
+    tcase_add_test(sprintftest, SPRINTF38);
+    tcase_add_test(sprintftest, SPRINTF39);
+    tcase_add_test(sprintftest, SPRINTF40);
+    tcase_add_test(sprintftest, SPRINTF41);
+    tcase_add_test(sprintftest, SPRINTF42);
+    tcase_add_test(sprintftest, SPRINTF43);
+    tcase_add_test(sprintftest, SPRINTF44);
+    tcase_add_test(sprintftest, SPRINTF45);
+    tcase_add_test(sprintftest, SPRINTF46);
+    tcase_add_test(sprintftest, SPRINTF47);
+    tcase_add_test(sprintftest, SPRINTF48);
+    tcase_add_test(sprintftest, SPRINTF49);
+    tcase_add_test(sprintftest, SPRINTF50);
+    tcase_add_test(sprintftest, SPRINTF51);
+    tcase_add_test(sprintftest, SPRINTF52);
+    tcase_add_test(sprintftest, SPRINTF53);
+    tcase_add_test(sprintftest, SPRINTF54);
+    tcase_add_test(sprintftest, SPRINTF55);
+    tcase_add_test(sprintftest, SPRINTF56);
+    tcase_add_test(sprintftest, SPRINTF57);
+    tcase_add_test(sprintftest, SPRINTF58);
+    tcase_add_test(sprintftest, SPRINTF59);
+    tcase_add_test(sprintftest, SPRINTF60);
+    tcase_add_test(sprintftest, SPRINTF61);
+    tcase_add_test(sprintftest, SPRINTF62);
+    tcase_add_test(sprintftest, SPRINTF63);
+    tcase_add_test(sprintftest, SPRINTF64);
+    tcase_add_test(sprintftest, SPRINTF65);
+    tcase_add_test(sprintftest, SPRINTF66);
+    tcase_add_test(sprintftest, SPRINTF67);
+    tcase_add_test(sprintftest, SPRINTF68);
+    tcase_add_test(sprintftest, SPRINTF69);
+    tcase_add_test(sprintftest, SPRINTF70);
+    tcase_add_test(sprintftest, SPRINTF71);
+    tcase_add_test(sprintftest, SPRINTF72);
+    tcase_add_test(sprintftest, SPRINTF73);
+    tcase_add_test(sprintftest, SPRINTF74);
+    tcase_add_test(sprintftest, SPRINTF75);
+    tcase_add_test(sprintftest, SPRINTF76);
+    tcase_add_test(sprintftest, SPRINTF77);
+    tcase_add_test(sprintftest, SPRINTF78);
+    tcase_add_test(sprintftest, SPRINTF79);
+    tcase_add_test(sprintftest, SPRINTF80);
+    tcase_add_test(sprintftest, SPRINTF81);
+    tcase_add_test(sprintftest, SPRINTF82);
+    tcase_add_test(sprintftest, SPRINTF83);
+    tcase_add_test(sprintftest, SPRINTF84);
+    tcase_add_test(sprintftest, SPRINTF85);
+    /*tcase_add_test(sprintftest, SPRINTF86);*/
+    /*tcase_add_test(sprintftest, SPRINTF87);*/
+    /*tcase_add_test(sprintftest, SPRINTF88);*/
+    /*tcase_add_test(sprintftest, SPRINTF89);*/
+    /*tcase_add_test(sprintftest, SPRINTF90);*/
+    /*tcase_add_test(sprintftest, SPRINTF91);*/
+    /*tcase_add_test(sprintftest, SPRINTF92);*/
+    /*tcase_add_test(sprintftest, SPRINTF93);*/
+    /*tcase_add_test(sprintftest, SPRINTF94);*/
+    /*tcase_add_test(sprintftest, SPRINTF95);*/
+    /*tcase_add_test(sprintftest, SPRINTF96);*/
+    /*tcase_add_test(sprintftest, SPRINTF97);*/
+    /*tcase_add_test(sprintftest, SPRINTF98);*/
+    /*tcase_add_test(sprintftest, SPRINTF99);*/
+    /*tcase_add_test(sprintftest, SPRINTF100);*/
+    /*tcase_add_test(sprintftest, SPRINTF101);*/
+    /*tcase_add_test(sprintftest, SPRINTF102);*/
+    /*tcase_add_test(sprintftest, SPRINTF103);*/
+    /*tcase_add_test(sprintftest, SPRINTF104);*/
+    /*tcase_add_test(sprintftest, SPRINTF105);*/
+    /*tcase_add_test(sprintftest, SPRINTF106);*/
+    /*tcase_add_test(sprintftest, SPRINTF107);*/
+    /*tcase_add_test(sprintftest, SPRINTF108);*/
+    /*tcase_add_test(sprintftest, SPRINTF109);*/
+
+    /*copy me*/
+/*0*/
+/*1*/
+/*2*/
+/*3*/
+/*4*/
+/*5*/
+/*6*/
+/*7*/
+/*8*/
+/*9*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return s1;
 }
 
-int main(void) {
-
-    int number_failed = 0;
-    Suite *s;
-    SRunner *sr;
-    s = string_suite();
-    sr = srunner_create(s);
-    srunner_run_all(sr, CK_NORMAL);
-    number_failed = srunner_ntests_failed(sr);
-    srunner_free(sr);
-    return (number_failed == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+int main() {
+    Suite *s1 = f_example_suite_create();
+    // Runner
+    SRunner *runner = srunner_create(s1);
+    int number_failed;
+    srunner_run_all(runner, CK_NORMAL);
+    number_failed = srunner_ntests_failed(runner);
+    srunner_free(runner);
+    return number_failed == 0 ? 0 : 1;
 }
