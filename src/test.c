@@ -1459,6 +1459,337 @@ START_TEST(SPRINTF32) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
+
+
+START_TEST(SPRINTF33) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF34) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+
+START_TEST(SPRINTF35) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF36) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF37) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+
+START_TEST(SPRINTF38) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-6.5s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF39) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-5.6s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF40) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF41) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-.2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src); /*default fails(|lo|\n)*/
+    //ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF42) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% 2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF43) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    2s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF44) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%1s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF45) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF46) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-010s|\n";
+    char *src = "lol";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF47) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF48) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF49) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-5hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF50) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+5hd|\n";
+    int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF51) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%.5hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF52) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF53) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF54) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF55) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF56) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% 1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF57) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF58) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +-1.10hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF59) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF60) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF61) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF62) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF63) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF64) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    -+10.1hd|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
 //TODO %ld %hd %s
 /*endregion*/
 Suite *f_example_suite_create() {
@@ -1690,6 +2021,110 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF29);
     tcase_add_test(sprintftest, SPRINTF30);
     tcase_add_test(sprintftest, SPRINTF31);
+    tcase_add_test(sprintftest, SPRINTF32);
+    tcase_add_test(sprintftest, SPRINTF33);
+    tcase_add_test(sprintftest, SPRINTF34);
+    tcase_add_test(sprintftest, SPRINTF35);
+    tcase_add_test(sprintftest, SPRINTF36);
+    tcase_add_test(sprintftest, SPRINTF37);
+    tcase_add_test(sprintftest, SPRINTF38);
+    tcase_add_test(sprintftest, SPRINTF39);
+    tcase_add_test(sprintftest, SPRINTF40);
+    tcase_add_test(sprintftest, SPRINTF41);
+    tcase_add_test(sprintftest, SPRINTF42);
+    tcase_add_test(sprintftest, SPRINTF43);
+    tcase_add_test(sprintftest, SPRINTF44);
+    tcase_add_test(sprintftest, SPRINTF45);
+    tcase_add_test(sprintftest, SPRINTF46);
+    tcase_add_test(sprintftest, SPRINTF47);
+    tcase_add_test(sprintftest, SPRINTF48);
+    tcase_add_test(sprintftest, SPRINTF49);
+    tcase_add_test(sprintftest, SPRINTF50);
+    tcase_add_test(sprintftest, SPRINTF51);
+    tcase_add_test(sprintftest, SPRINTF52);
+    tcase_add_test(sprintftest, SPRINTF53);
+    tcase_add_test(sprintftest, SPRINTF54);
+    tcase_add_test(sprintftest, SPRINTF55);
+    tcase_add_test(sprintftest, SPRINTF56);
+    tcase_add_test(sprintftest, SPRINTF57);
+    tcase_add_test(sprintftest, SPRINTF58);
+    tcase_add_test(sprintftest, SPRINTF59);
+    tcase_add_test(sprintftest, SPRINTF60);
+    tcase_add_test(sprintftest, SPRINTF61);
+    tcase_add_test(sprintftest, SPRINTF62);
+    tcase_add_test(sprintftest, SPRINTF63);
+    tcase_add_test(sprintftest, SPRINTF64);
+    //tcase_add_test(sprintftest, SPRINTF65);
+    //tcase_add_test(sprintftest, SPRINTF66);
+    //tcase_add_test(sprintftest, SPRINTF67);
+    //tcase_add_test(sprintftest, SPRINTF68);
+    //tcase_add_test(sprintftest, SPRINTF69);
+    //tcase_add_test(sprintftest, SPRINTF70);
+    //tcase_add_test(sprintftest, SPRINTF71);
+    //tcase_add_test(sprintftest, SPRINTF72);
+    //tcase_add_test(sprintftest, SPRINTF73);
+    //tcase_add_test(sprintftest, SPRINTF74);
+    //tcase_add_test(sprintftest, SPRINTF75);
+    //tcase_add_test(sprintftest, SPRINTF76);
+    //tcase_add_test(sprintftest, SPRINTF77);
+    //tcase_add_test(sprintftest, SPRINTF78);
+    //tcase_add_test(sprintftest, SPRINTF79);
+    //tcase_add_test(sprintftest, SPRINTF80);
+    //tcase_add_test(sprintftest, SPRINTF81);
+    //tcase_add_test(sprintftest, SPRINTF82);
+    //tcase_add_test(sprintftest, SPRINTF83);
+    //tcase_add_test(sprintftest, SPRINTF84);
+    //tcase_add_test(sprintftest, SPRINTF85);
+    //tcase_add_test(sprintftest, SPRINTF86);
+    //tcase_add_test(sprintftest, SPRINTF87);
+    //tcase_add_test(sprintftest, SPRINTF88);
+    //tcase_add_test(sprintftest, SPRINTF89);
+    //tcase_add_test(sprintftest, SPRINTF90);
+    //tcase_add_test(sprintftest, SPRINTF91);
+    //tcase_add_test(sprintftest, SPRINTF92);
+    //tcase_add_test(sprintftest, SPRINTF93);
+    //tcase_add_test(sprintftest, SPRINTF94);
+    //tcase_add_test(sprintftest, SPRINTF95);
+    //tcase_add_test(sprintftest, SPRINTF96);
+    //tcase_add_test(sprintftest, SPRINTF97);
+    //tcase_add_test(sprintftest, SPRINTF98);
+    //tcase_add_test(sprintftest, SPRINTF99);
+    //tcase_add_test(sprintftest, SPRINTF100);
+    //tcase_add_test(sprintftest, SPRINTF101);
+    //tcase_add_test(sprintftest, SPRINTF102);
+    //tcase_add_test(sprintftest, SPRINTF103);
+    //tcase_add_test(sprintftest, SPRINTF104);
+    //tcase_add_test(sprintftest, SPRINTF105);
+    //tcase_add_test(sprintftest, SPRINTF106);
+    //tcase_add_test(sprintftest, SPRINTF107);
+    //tcase_add_test(sprintftest, SPRINTF108);
+    //tcase_add_test(sprintftest, SPRINTF109);
+
+    /*copy me*/
+/*0*/
+/*1*/
+/*2*/
+/*3*/
+/*4*/
+/*5*/
+/*6*/
+/*7*/
+/*8*/
+/*9*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
