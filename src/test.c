@@ -908,45 +908,58 @@ START_TEST(STRTOKTest7) {
 }
 END_TEST
 START_TEST(STRTOKTest8) {
-    char str[30] = "/test1/test2/test3/test4/";
-    char st2[30] = "/test1/test2/test3/test4/";
-    char delim[] = ",/.";
-    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    char str[10] = "AadacAdxa";
+    char s21_str[10] = "AadacAdxa";
+    char delim[2] = "a";
+    char *part = strtok(str, delim);
+    char *s21_part = s21_strtok(s21_str, delim);
+    ck_assert_str_eq(part, s21_part);
+    while (part != NULL) {
+        part = strtok(NULL, delim);
+        s21_part = s21_strtok(NULL, delim);
+        if (part != NULL) {
+            ck_assert_str_eq(part, s21_part);
+        } else {
+            ck_assert_ptr_null(s21_part);
+        }
+    }
 }
 END_TEST
 START_TEST(STRTOKTest9) {
-    char str[30] = "//test1//test2//test3//test4//";
-    char st2[30] = "//test1//test2//test3//test4//";
-    char delim[] = ",/.";
-    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    char str[30] = "test1/test2/test3/test4";
+    char s21_str[30] = "test1/test2/test3/test4";
+    char delim[2] = "/";
+    char *part = strtok(str, delim);
+    char *s21_part = s21_strtok(s21_str, delim);
+    ck_assert_str_eq(part, s21_part);
+    while (part != NULL) {
+        part = strtok(NULL, delim);
+        s21_part = s21_strtok(NULL, delim);
+        if (part != NULL) {
+            ck_assert_str_eq(part, s21_part);
+        } else {
+            ck_assert_ptr_null(s21_part);
+        }
+    }
 }
 END_TEST
+
 START_TEST(STRTOKTest10) {
-    char str[40] = "///test1///test2////test3////test4//////";
-    char st2[40] = "///test1///test2////test3////test4//////";
-    char delim[] = ",/.";
-    ck_assert_pstr_eq(s21_strtok(str, delim), strtok(st2, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
-    ck_assert_pstr_eq(s21_strtok(NULL, delim), strtok(NULL, delim));
+    char str[15] = "12|34*56|78m90";
+    char s21_str[15] = "12|34*56|78m90";
+    char delim[4] = "*m|";
+    char *part = strtok(str, delim);
+    char *s21_part = s21_strtok(s21_str, delim);
+    ck_assert_str_eq(part, s21_part);
+    while (part != NULL) {
+        part = strtok(NULL, delim);
+        s21_part = s21_strtok(NULL, delim);
+        if (part != NULL) {
+            ck_assert_str_eq(part, s21_part);
+        } else {
+            ck_assert_ptr_null(s21_part);
+        }
+    }
 }
 END_TEST
 
@@ -2092,6 +2105,160 @@ START_TEST(SPRINTF85) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
+
+START_TEST(SPRINTF86) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%   10u|\n";
+    unsigned int src = 10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF87) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%   10u|\n";
+    unsigned int src = -10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF88) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%   -10u|\n";
+    unsigned int src = -10;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF89) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF90) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+-10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF91) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-+10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF92) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF93) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10hu|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF94) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10lu|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF95) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.10lu|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF96) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.10hu|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF97) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF98) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +-10.10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF99) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10u|\n";
+    unsigned int src = 15;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
 /*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
@@ -2380,20 +2547,20 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF83);
     tcase_add_test(sprintftest, SPRINTF84);
     tcase_add_test(sprintftest, SPRINTF85);
-    /*tcase_add_test(sprintftest, SPRINTF86);*/
-    /*tcase_add_test(sprintftest, SPRINTF87);*/
-    /*tcase_add_test(sprintftest, SPRINTF88);*/
-    /*tcase_add_test(sprintftest, SPRINTF89);*/
-    /*tcase_add_test(sprintftest, SPRINTF90);*/
-    /*tcase_add_test(sprintftest, SPRINTF91);*/
-    /*tcase_add_test(sprintftest, SPRINTF92);*/
-    /*tcase_add_test(sprintftest, SPRINTF93);*/
-    /*tcase_add_test(sprintftest, SPRINTF94);*/
-    /*tcase_add_test(sprintftest, SPRINTF95);*/
-    /*tcase_add_test(sprintftest, SPRINTF96);*/
-    /*tcase_add_test(sprintftest, SPRINTF97);*/
-    /*tcase_add_test(sprintftest, SPRINTF98);*/
-    /*tcase_add_test(sprintftest, SPRINTF99);*/
+    tcase_add_test(sprintftest, SPRINTF86);
+    tcase_add_test(sprintftest, SPRINTF87);
+    tcase_add_test(sprintftest, SPRINTF88);
+    tcase_add_test(sprintftest, SPRINTF89);
+    tcase_add_test(sprintftest, SPRINTF90);
+    tcase_add_test(sprintftest, SPRINTF91);
+    tcase_add_test(sprintftest, SPRINTF92);
+    tcase_add_test(sprintftest, SPRINTF93);
+    tcase_add_test(sprintftest, SPRINTF94);
+    tcase_add_test(sprintftest, SPRINTF95);
+    tcase_add_test(sprintftest, SPRINTF96);
+    tcase_add_test(sprintftest, SPRINTF97);
+    tcase_add_test(sprintftest, SPRINTF98);
+    tcase_add_test(sprintftest, SPRINTF99);
     /*tcase_add_test(sprintftest, SPRINTF100);*/
     /*tcase_add_test(sprintftest, SPRINTF101);*/
     /*tcase_add_test(sprintftest, SPRINTF102);*/
@@ -2416,23 +2583,6 @@ Suite *f_example_suite_create() {
 /*7*/
 /*8*/
 /*9*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return s1;
 }
 

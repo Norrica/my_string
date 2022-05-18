@@ -952,6 +952,9 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     start_fmt = 0;
                     continue;
                 case 'u': {}
+                    flags &= ~IS_NEGATIVE;
+                    flags &= ~PUT_PLUS;
+                    flags &= ~PUT_SPACE;
                     buf = s21_sitoa(buf, va_arg(va, unsigned int), width, precision, flags | BASE_10);
                     start_fmt = 0;
                     continue;
