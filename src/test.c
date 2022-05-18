@@ -1555,7 +1555,7 @@ START_TEST(SPRINTF41) {
     char *src = "lol";
     s21_sprintf(data, fmt, src);
     sprintf(data1, fmt, src); /*default fails(|lo|\n)*/
-    //ck_assert_str_eq(data, data1);
+    /*ck_assert_str_eq(data, data1);*/
 }
 END_TEST
 START_TEST(SPRINTF42) {
@@ -1921,7 +1921,7 @@ START_TEST(SPRINTF77) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
-//TODO %ld %hd %s
+
 /*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
@@ -2260,7 +2260,6 @@ Suite *f_example_suite_create() {
 
 
     return s1;
-
 }
 
 int main() {

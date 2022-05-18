@@ -470,7 +470,6 @@ char *s21_strtok(char *str, const char *delim) {
         if (str != s21_NULL && *str) {
             /*remove delims from start*/
             str = &str[s21_strspn(str, delim)];
-            //s21_size_t first = s21_strspn(str, delim);
             s21_size_t second = s21_strcspn(str, delim);
             current = &str[second] + 1;
             str[second] = '\0';
@@ -759,7 +758,7 @@ char *s21_sitoa(char *buf, long long int num, int width, int precision, enum con
         }
     }
     /*endregion*/
-    //region HEX
+    /*region HEX*/
     if (flags & IS_ADDRESS) {
         *buf++ = '0';
         if (hex_size == 'a')
@@ -769,7 +768,7 @@ char *s21_sitoa(char *buf, long long int num, int width, int precision, enum con
         buf = s21_strcpy(buf, "7ffe");/*Костыль*/
         buf += 4;
     }
-    //endregion
+    /*endregion*/
 
     if (num < 0) {
         num = -num;
