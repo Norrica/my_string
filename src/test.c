@@ -1790,6 +1790,137 @@ START_TEST(SPRINTF64) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
+
+START_TEST(SPRINTF65) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%5ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF66) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF67) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF68) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF69) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% 1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF70) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF71) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +-1.10ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF72) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF73) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF74) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF75) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% +10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF76) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% -+10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF77) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%    +-10.1ld|\n";
+    int src = 100000;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
 //TODO %ld %hd %s
 /*endregion*/
 Suite *f_example_suite_create() {
@@ -2054,19 +2185,19 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF62);
     tcase_add_test(sprintftest, SPRINTF63);
     tcase_add_test(sprintftest, SPRINTF64);
-    /*tcase_add_test(sprintftest, SPRINTF65);*/
-    /*tcase_add_test(sprintftest, SPRINTF66);*/
-    /*tcase_add_test(sprintftest, SPRINTF67);*/
-    /*tcase_add_test(sprintftest, SPRINTF68);*/
-    /*tcase_add_test(sprintftest, SPRINTF69);*/
-    /*tcase_add_test(sprintftest, SPRINTF70);*/
-    /*tcase_add_test(sprintftest, SPRINTF71);*/
-    /*tcase_add_test(sprintftest, SPRINTF72);*/
-    /*tcase_add_test(sprintftest, SPRINTF73);*/
-    /*tcase_add_test(sprintftest, SPRINTF74);*/
-    /*tcase_add_test(sprintftest, SPRINTF75);*/
-    /*tcase_add_test(sprintftest, SPRINTF76);*/
-    /*tcase_add_test(sprintftest, SPRINTF77);*/
+    tcase_add_test(sprintftest, SPRINTF65);
+    tcase_add_test(sprintftest, SPRINTF66);
+    tcase_add_test(sprintftest, SPRINTF67);
+    tcase_add_test(sprintftest, SPRINTF68);
+    tcase_add_test(sprintftest, SPRINTF69);
+    tcase_add_test(sprintftest, SPRINTF70);
+    tcase_add_test(sprintftest, SPRINTF71);
+    tcase_add_test(sprintftest, SPRINTF72);
+    tcase_add_test(sprintftest, SPRINTF73);
+    tcase_add_test(sprintftest, SPRINTF74);
+    tcase_add_test(sprintftest, SPRINTF75);
+    tcase_add_test(sprintftest, SPRINTF76);
+    tcase_add_test(sprintftest, SPRINTF77);
     /*tcase_add_test(sprintftest, SPRINTF78);*/
     /*tcase_add_test(sprintftest, SPRINTF79);*/
     /*tcase_add_test(sprintftest, SPRINTF80);*/
