@@ -5,7 +5,7 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
     const unsigned char *p = str;
     while (n--)
         if (*p++ == c) {
-            result = (void *) p - 1;
+            result = (void *) (p - 1);
             break;
         }
     return result;
@@ -647,10 +647,10 @@ char *SetFill(char *buf, int width, char fill) {
     }
     return buf;
 }
-char *SetSign(char *buf, enum conversion_flags *flags) {
-    if (*flags & IS_NEGATIVE) {
+char *SetSign(char *buf, enum conversion_flags flags) {
+    if (flags & IS_NEGATIVE) {
         *buf++ = '-';
-    } else if ((*flags) & PUT_PLUS) {
+    } else if ((flags) & PUT_PLUS) {
         *buf++ = '+';
     }
     return buf;
@@ -658,7 +658,6 @@ char *SetSign(char *buf, enum conversion_flags *flags) {
 
 char *s21_ftoa(char *buf, long double num, int width, int precision, enum conversion_flags flags) {
     char fill/* = (flags & FILL_ZERO) ? '0' : ' '*/;
-    __attribute__((unused)) char *save = buf;
     if (flags & FILL_ZERO) {
         fill = '0';
     } else {
@@ -711,22 +710,22 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
         width--;
     }
     if ((flags & JUSTIFY_LEFT)) {
-        buf = SetSign(buf, &flags);
+        buf = SetSign(buf, flags);
         while (*b != '\0') {
             *buf++ = *b++;
         }
         if (fill == ' ') {
             buf = SetFill(buf, width, fill);
         } else {
-            buf = SetSign(buf, &flags);
+            buf = SetSign(buf, flags);
             buf = SetFill(buf, width, fill);
         }
     } else {
         if (fill == ' ') {
             buf = SetFill(buf, width, fill);
-            buf = SetSign(buf, &flags);
+            buf = SetSign(buf, flags);
         } else {
-            buf = SetSign(buf, &flags);
+            buf = SetSign(buf, flags);
             buf = SetFill(buf, width, fill);
         }
         while (*b != '\0') {
@@ -802,18 +801,18 @@ char *s21_sitoa(char *buf, long long int num, int width, int precision, enum con
     }
     if ((flags & JUSTIFY_LEFT)) {
         fill = ' ';
-        buf = SetSign(buf, &flags);
+        buf = SetSign(buf, flags);
         do {
             *(buf++) = *(--p);
         } while (tmp < p);
         buf = SetFill(buf, width, fill);
     } else {
         if (fill == '0') {
-            buf = SetSign(buf, &flags);
+            buf = SetSign(buf, flags);
             buf = SetFill(buf, width, fill);
         } else {
             buf = SetFill(buf, width, fill);
-            buf = SetSign(buf, &flags);
+            buf = SetSign(buf, flags);
         }
         do {
             *(buf++) = *(--p);
@@ -837,11 +836,9 @@ char *stringer(enum conversion_flags flags, const char *p, char *buf, int width)
                 *buf++ = ' ';
         }
         /* char *save = buf; */
-        if (p)
             while (*p)
                 *buf++ = *(p++);
     } else {
-        if (p)
             while (*p)
                 *buf++ = *(p++);
         while ((((width)--) - a) > 0) {
@@ -940,8 +937,12 @@ int s21_vsprintf(char *buf, const char *fmt, va_list va) {
                     continue;
                 case 's': {}
                     const char *p = va_arg(va, const char *);
-                    if (width == 0 && (flags & SET_PRECISION)) {
-                        width = s21_strlen(p);
+                    if(p) {
+                        if (width == 0 && (flags & SET_PRECISION)) {
+                            width = s21_strlen(p);
+                        }
+                    } else{
+                        p = "(null)";
                     }
                     buf = stringer(flags, p, buf, width);
                     start_fmt = 0;

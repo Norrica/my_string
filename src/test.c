@@ -1921,7 +1921,86 @@ START_TEST(SPRINTF77) {
     ck_assert_str_eq(data, data1);
 }
 END_TEST
-
+START_TEST(SPRINTF78) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%s|\n";
+    char* src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF79) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%s|\n";
+    char* src = NULL;
+    sprintf(data1, fmt, src);
+    s21_sprintf(data, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF80) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%12s|\n";
+    char* src = NULL;
+    sprintf(data1, fmt, src);
+    s21_sprintf(data, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF81) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-12s|\n";
+    char* src = NULL;
+    sprintf(data1, fmt, src);
+    s21_sprintf(data, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF82) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|% s|\n";
+    char* src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF83) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%-10s|\n";
+    char* src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF84) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%+10s|\n";
+    char* src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+START_TEST(SPRINTF85) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%   10s|\n";
+    char* src = "";
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
 /*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
@@ -2198,14 +2277,14 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF75);
     tcase_add_test(sprintftest, SPRINTF76);
     tcase_add_test(sprintftest, SPRINTF77);
-    /*tcase_add_test(sprintftest, SPRINTF78);*/
-    /*tcase_add_test(sprintftest, SPRINTF79);*/
-    /*tcase_add_test(sprintftest, SPRINTF80);*/
-    /*tcase_add_test(sprintftest, SPRINTF81);*/
-    /*tcase_add_test(sprintftest, SPRINTF82);*/
-    /*tcase_add_test(sprintftest, SPRINTF83);*/
-    /*tcase_add_test(sprintftest, SPRINTF84);*/
-    /*tcase_add_test(sprintftest, SPRINTF85);*/
+    tcase_add_test(sprintftest, SPRINTF78);
+    tcase_add_test(sprintftest, SPRINTF79);
+    tcase_add_test(sprintftest, SPRINTF80);
+    tcase_add_test(sprintftest, SPRINTF81);
+    tcase_add_test(sprintftest, SPRINTF82);
+    tcase_add_test(sprintftest, SPRINTF83);
+    tcase_add_test(sprintftest, SPRINTF84);
+    tcase_add_test(sprintftest, SPRINTF85);
     /*tcase_add_test(sprintftest, SPRINTF86);*/
     /*tcase_add_test(sprintftest, SPRINTF87);*/
     /*tcase_add_test(sprintftest, SPRINTF88);*/
