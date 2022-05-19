@@ -542,9 +542,9 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     if (src != s21_NULL && str != s21_NULL) {
         s21_size_t size_src = s21_strlen(src);
         s21_size_t size_str = s21_strlen(str);
-        s21_size_t size_total = size_src + size_str;
+        s21_size_t size_total = size_src + size_str;  // + 1???????
         if (size_src >= start_index) {
-            result = (char *) malloc(size_total * sizeof(char));
+            result = (char *) calloc(size_total + 1, sizeof(char));  // added +1 so that \0 fits
             if (result != s21_NULL) {
                 for (s21_size_t i = 0; i < size_src; i++) {
                     result[i] = src[i];
@@ -567,7 +567,7 @@ void *s21_to_lower(const char *str) {
         return s21_NULL;
     }
     int len = s21_strlen(str);
-    char *result = malloc(len * sizeof(char));
+    char *result = calloc(len, sizeof(char));  // Address 0x4d78863 is 0 bytes after a block of size 3 alloc'd ;;; use calloc()?
     if (result == s21_NULL) {
         return s21_NULL;
     }
@@ -578,6 +578,7 @@ void *s21_to_lower(const char *str) {
         else
             result[i] = str[i];
     }
+    /* result[len] = '\0'; */
     return result;
 }
 
@@ -586,7 +587,7 @@ void *s21_to_upper(const char *str) {
         return s21_NULL;
     }
     s21_size_t len = s21_strlen(str);
-    char *result = malloc(len * sizeof(char));
+    char *result = calloc(len, sizeof(char));  //  result = "" ? or calloc()?
     if (result == s21_NULL) {
         return s21_NULL;
     }

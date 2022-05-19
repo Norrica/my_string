@@ -38,11 +38,11 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
     int int_part = (int) num;
     double float_part = num - int_part;
 
-    char int_res[50];
+    char int_res[50] = "";
     s21_itoa(int_part, int_res);
 
     long long float_num = float_part * pow(10, precision);
-    char float_res[50];
+    char float_res[50] = "";
     s21_itoa(float_num, float_res);
 
     char new_float_res[50] = "";
@@ -51,7 +51,7 @@ char *s21_ftoa(char *buf, long double num, int width, int precision, enum conver
     s21_strcat(new_float_res, float_res);
     s21_strcpy(float_res, new_float_res);
 
-    char res_buf[100];
+    char res_buf[100] = "";
     s21_strcpy(res_buf, int_res);
     if (precision != 0) {
         s21_strcat(res_buf, ".");
