@@ -1,54 +1,51 @@
-#all, clean, test, s21_string.a, gcov_report
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra
+TEST_LIBS = -lcheck -lm -lpthread
+OBJECTS = s21_sprintf.o s21_string.o
+SOURSES = s21_sprintf.c s21_string.c
+GCOVFLAGS = -fprofile-arcs -ftest-coverage
 
-TARGET=test.c local_test.c
+ifeq ($(OS),Linux)
+	CFLAGS+=-D LINUX
+	TST_LIBS+= -lcheck_pic -lrt -lsubunit
+else
+	ifeq ($(OS),Darwin)
+		CFLAGS+=-D MAC
+	else
+		CFLAGS+=-D LINUX
+		TST_LIBS+= -lcheck_pic -lrt -lsubunit
+	endif
+endif
 
-.PHONY : all build clean
+all: clean s21_string.a test gcov_report
 
-all: build
-.DBG: CFLAGS += -g
-build: test
-
-debug:CFLAGS += -DDEV
-debug:CFLAGS += -g
-debug: local_debug
-	./local_test
+s21_string.a: s21_string.o
+	$(CC) -c $(SOURSES)
+	ar rcs s21_string.a $(OBJECTS)
 
 clean:
-	-rm s21_string.a
-	-rm s21_string.o
-	-rm test
-	-rm *.gc*
-	-rm -rf report
-	-rm *.info
+	rm -rf ./*.o ./*.a ./a.out gcov_test *.html *.css ./GcovReport ./*.gcno ./*.gcda ./report ./*.info ./sprintf_o ./string_o ./*.dSYM ./s21_string_test ./CPPLINT* test
 
-rebuild: clean build
+test: test.c s21_string.a
+	$(CC) $(CFLAGS) -c test.c -o test.o
+	$(CC) -g test.o s21_string.a $(TEST_LIBS) -o test
 
-s21_string.a: clean
-	$(CC) $(CFLAGS) -c s21_string.c -o s21_string.o
-	ar rcs s21_string.a s21_string.o
+gcov_report: s21_string.a 
+	$(CC) $(CFLAGS) --coverage test.c s21_string.c s21_sprintf.c s21_string.a $(TEST_LIBS) -o gcov_test
+	chmod +x *
+	./gcov_test
+	lcov -t "gcov_test" -o gcov_test.info --no-external -c -d .
+	genhtml -o report/ gcov_test.info
+	
+check: s21_string.a
+	cppcheck *.h *.c
+	cp ../materials/linters/CPPLINT.cfg CPPLINT.cfg
+	python3 ../materials/linters/cpplint.py --extension=c *.c *.h
+	$(CC) test.c s21_string.a -lcheck
+	$(CC) $(CFLAGS) -c test.c -o test.o
+	$(CC) test.o s21_string.a $(TEST_LIBS) -o test
+	CK_FORK=no leaks --atExit -- ./test
 
-test: s21_string.a
-	$(CC) s21_string.c test.c  -o test -lcheck
+rebuild: clean all
+	open ./report/index.html
 
-gcov_report:CFLAGS += -fprofile-arcs -ftest-coverage
-gcov_report: test
-	./test
-	gcov test.c
-	geninfo . -b . -o ./test.info
-	genhtml test.info --output-directory report
-
-local:
-	$(CC)  -g s21_string.c local_test.c -o local_test
-
-#.PHONY: all build clean
-for_docker:
-	cp ../materials/linters/CPPLINT.cfg ./
-	python3 ../materials/linters/cpplint.py ./*.c
-	rm CPPLINT.cfg
-	cppcheck --enable = all --suppress = missingIncludeSystem  --inconclusive --check-config *.c *.h unit_tests/*.c unit_tests/*.h
-
-
-leaks:
-	leaks -atExit -- ./a.out

@@ -2,6 +2,7 @@
 #include <check.h>
 #include <stdio.h>
 #include "s21_string.h"
+#include <limits.h>
 
 START_TEST(STRLENTest1) {
     char str[] = "Hello";
@@ -1854,7 +1855,7 @@ START_TEST(SPRINTF60) {
     char data[100];
     char data1[100];
     char *fmt = "|%-10.1hd|\n";
-    long int src = 2147483647;
+    short int src = 21474;
     s21_sprintf(data, fmt, src);
     sprintf(data1, fmt, src);
     ck_assert_str_eq(data, data1);
@@ -2279,9 +2280,10 @@ END_TEST
 START_TEST(SPRINTF101) {
     char data[100];
     char data1[100];
-    char *fmt = "|%lu|\n";
-    long unsigned int src = -153123;
-    s21_sprintf(data, fmt, src);
+
+    char *fmt = "|%u|\n";
+    long unsigned int src = -1;
+    s21_sprintf(data, fmt, -1);
     sprintf(data1, fmt, src);
     ck_assert_str_eq(data, data1);
 }
@@ -2385,8 +2387,8 @@ END_TEST
 START_TEST(SPRINTF111) {
     char data[100];
     char data1[100];
-    char *fmt = "|%    +-10.1li|\n";
-    long int src = 100000;
+    char *fmt = "|%+lu|\n";
+    long unsigned int src = 1844674407370955161;
     s21_sprintf(data, fmt, src);
     sprintf(data1, fmt, src);
     ck_assert_str_eq(data, data1);
@@ -2702,9 +2704,10 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF105);
     tcase_add_test(sprintftest, SPRINTF106);
     tcase_add_test(sprintftest, SPRINTF107);
-    /*tcase_add_test(sprintftest, SPRINTF108);*/
-    /*tcase_add_test(sprintftest, SPRINTF109);*/
-
+    tcase_add_test(sprintftest, SPRINTF108);
+    tcase_add_test(sprintftest, SPRINTF109);
+    tcase_add_test(sprintftest, SPRINTF110);
+    tcase_add_test(sprintftest, SPRINTF111);
     /*copy me*/
 /*0*/
 /*1*/
