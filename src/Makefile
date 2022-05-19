@@ -36,7 +36,7 @@ gcov_report: s21_string.a
 	./gcov_test
 	lcov -t "gcov_test" -o gcov_test.info --no-external -c -d .
 	genhtml -o report/ gcov_test.info
-	
+
 check: s21_string.a
 	cppcheck *.h *.c
 	cp ../materials/linters/CPPLINT.cfg CPPLINT.cfg
