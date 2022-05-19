@@ -567,7 +567,8 @@ void *s21_to_lower(const char *str) {
         return s21_NULL;
     }
     int len = s21_strlen(str);
-    char *result = calloc(len, sizeof(char));  // Address 0x4d78863 is 0 bytes after a block of size 3 alloc'd ;;; use calloc()?
+    // Address 0x4d78863 is 0 bytes after a block of size 3 alloc'd ;;; use calloc()?
+    char *result = calloc(len, sizeof(char));
     if (result == s21_NULL) {
         return s21_NULL;
     }
