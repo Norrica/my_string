@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -std=c11
 TEST_LIBS = -lcheck -lm -lpthread
 OBJECTS = s21_sprintf.o s21_string.o
 SOURSES = s21_sprintf.c s21_string.c
@@ -20,7 +20,7 @@ endif
 all: clean s21_string.a test
 
 s21_string.a: s21_string.o
-	$(CC) -g -c  $(SOURSES)
+	$(CC) $(CFLAGS) -g -c  $(SOURSES)
 	ar rcs s21_string.a $(OBJECTS)
 
 clean:
@@ -28,7 +28,7 @@ clean:
 
 test: test.c s21_string.a
 	$(CC) $(CFLAGS) -c test.c -o test.o
-	$(CC) -g test.o s21_string.a $(TEST_LIBS) -o test
+	$(CC) $(CFLAGS) -g test.o s21_string.a $(TEST_LIBS) -o test
 
 gcov_report: s21_string.a 
 	$(CC) $(CFLAGS) --coverage test.c s21_string.c s21_sprintf.c s21_string.a $(TEST_LIBS) -o gcov_test
