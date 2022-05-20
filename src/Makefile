@@ -26,6 +26,7 @@ gcov_report: s21_string.a
 	./gcov_test
 	lcov -t "gcov_test" -o gcov_test.info --no-external -c -d .
 	genhtml -o report/ gcov_test.info
+	open ./report/index.html
 
 check: s21_string.a
 	cppcheck *.h *.c
@@ -37,5 +38,4 @@ check: s21_string.a
 	CK_FORK=no leaks --atExit -- ./test
 
 rebuild: clean all
-	open ./report/index.html
 
