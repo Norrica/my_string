@@ -17,10 +17,10 @@ else
 	endif
 endif
 
-all: clean s21_string.a test gcov_report
+all: clean s21_string.a test
 
 s21_string.a: s21_string.o
-	$(CC) -c $(SOURSES)
+	$(CC) -g -c  $(SOURSES)
 	ar rcs s21_string.a $(OBJECTS)
 
 clean:
