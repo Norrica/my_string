@@ -144,7 +144,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 char *s21_strerror(int errnum) {
     static char result[100] = "";
 #if defined(__APPLE__) || defined(__MACH__)
-    int n = 106;
+    int n = 107;
     const char *str_error[] = {
         "Undefined error: 0",
         "Operation not permitted",
@@ -256,7 +256,7 @@ char *s21_strerror(int errnum) {
     };
 
 #elif defined(__linux__)
-    int n = 131;
+    int n = 132;
     const char *str_error[] = {
         "No error information",
         "Operation not permitted",
@@ -392,15 +392,15 @@ char *s21_strerror(int errnum) {
         "State not recoverable",
     };
 #endif
-    if (errnum > n || errnum < 0) {
+    if (errnum >= n || errnum < 0) {
 #if defined(__APPLE__) || defined(__MACH__)
-        char res[30] = "";
-        s21_sprintf(res, "Unknown error: %d", errnum);
-        s21_strcpy(result, res);
+        /* char res[30] = ""; */
+        s21_sprintf(result, "Unknown error: %d", errnum);
+        /* s21_strcpy(result, res); */
 #elif defined(__linux__)
-        char res[30] = "";
-        s21_sprintf(res, "No error information");
-        s21_strcpy(result, res);
+        /* char res[30] = ""; */
+        s21_sprintf(result, "No error information");
+        /* s21_strcpy(result, res); */
 #endif
     } else {
         s21_strcpy(result, str_error[errnum]);
