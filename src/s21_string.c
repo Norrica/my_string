@@ -141,7 +141,7 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 }
 // TODO(f): не решено
 char *s21_strerror(int errnum) {
-    static char result[100];
+    static char result[100] = "";
 #if defined(__APPLE__) || defined(__MACH__)
     int n = 106;
     const char *str_error[] = {
@@ -393,11 +393,11 @@ char *s21_strerror(int errnum) {
 #endif
     if (errnum > n || errnum < 0) {
 #if defined(__APPLE__) || defined(__MACH__)
-        char res[30];
+        char res[30] = "";
         s21_sprintf(res, "Unknown error: %d", errnum);
         s21_strcpy(result, res);
 #elif defined(__linux__)
-        char res[30];
+        char res[30] = "";
         s21_sprintf(res, "No error information");
         s21_strcpy(result, res);
 #endif
@@ -568,7 +568,7 @@ void *s21_to_lower(const char *str) {
     }
     int len = s21_strlen(str);
     // Address 0x4d78863 is 0 bytes after a block of size 3 alloc'd ;;; use calloc()?
-    char *result = calloc(len, sizeof(char));
+    char *result = calloc(len + 1, sizeof(char));
     if (result == s21_NULL) {
         return s21_NULL;
     }
@@ -579,7 +579,7 @@ void *s21_to_lower(const char *str) {
         else
             result[i] = str[i];
     }
-    /* result[len] = '\0'; */
+    result[len] = '\0';
     return result;
 }
 
@@ -588,7 +588,7 @@ void *s21_to_upper(const char *str) {
         return s21_NULL;
     }
     s21_size_t len = s21_strlen(str);
-    char *result = calloc(len, sizeof(char));  //  result = "" ? or calloc()?
+    char *result = calloc(len + 1, sizeof(char));  //  result = "" ? or calloc()?
     if (result == s21_NULL) {
         return s21_NULL;
     }
@@ -598,6 +598,7 @@ void *s21_to_upper(const char *str) {
             result[i] = str[i] - 32;
         else
             result[i] = str[i];
+    result[len] = '\0';
     return result;
 }
 
