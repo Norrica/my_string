@@ -290,8 +290,8 @@ START_TEST(MEMCMPTest4) {
 }
 END_TEST
 START_TEST(MEMCMPTest5) {
-    char str1[] = "Hello";
-    char str2[] = "";
+    char str1[6] = "Hello";
+    char str2[6] = "";
     int n = 4;
     ck_assert_int_eq(s21_memcmp(str1, str2, n), memcmp(str1, str2, n));
 }
