@@ -5,17 +5,7 @@ OBJECTS = s21_sprintf.o s21_string.o
 SOURSES = s21_sprintf.c s21_string.c
 GCOVFLAGS = -fprofile-arcs -ftest-coverage
 
-ifeq ($(OS),Linux)
-	CFLAGS+=-D LINUX
-	TST_LIBS+= -lcheck_pic -lrt -lsubunit
-else
-	ifeq ($(OS),Darwin)
-		CFLAGS+=-D MAC
-	else
-		CFLAGS+=-D LINUX
-		TST_LIBS+= -lcheck_pic -lrt -lsubunit
-	endif
-endif
+
 
 all: clean s21_string.a test
 
