@@ -1,37 +1,41 @@
-#all, clean, test, s21_string.a, gcov_report
 CC = gcc
-FLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -std=c11
+TEST_LIBS = -lcheck -lm -lpthread
+OBJECTS = s21_sprintf.o s21_string.o
+SOURSES = s21_sprintf.c s21_string.c
+GCOVFLAGS = -fprofile-arcs -ftest-coverage
 
-TARGET=test.c
 
-all: build
 
-build: s21_string.a test
+all: clean s21_string.a test
 
-debug: FLAGS += -g -O0
+s21_string.a: s21_string.o
+	$(CC) $(CFLAGS) -g -c  $(SOURSES)
+	ar rcs s21_string.a $(OBJECTS)
 
 clean:
-	-rm s21_string.a
-	-rm s21_string.o
-	-rm test
+	rm -rf ./*.o ./*.a ./a.out gcov_test *.html *.css ./GcovReport ./*.gcno ./*.gcda ./report ./*.info ./sprintf_o ./string_o ./*.dSYM ./s21_string_test ./CPPLINT* test
 
-rebuild: clean build
+test: test.c s21_string.a
+	$(CC) $(CFLAGS) -c test.c -o test.o
+	$(CC) $(CFLAGS) -g test.o s21_string.a $(TEST_LIBS) -o test
 
-s21_string.a: clean
-	$(CC) $(FLAGS) -c -o s21_string.o s21_string.c
-	ar rcs s21_string.a s21_string.o
+gcov_report: s21_string.a
+	$(CC) $(CFLAGS) --coverage test.c s21_string.c s21_sprintf.c s21_string.a $(TEST_LIBS) -o gcov_test
+	chmod +x *
+	./gcov_test
+	lcov -t "gcov_test" -o gcov_test.info --no-external -c -d .
+	genhtml -o report/ gcov_test.info
 
-test: s21_string.a
-	FLAGS += -fprofile-arcs -ftest-coverage
-	$(CC) $(FLAGS) -lcheck s21_string.a test.c  -o test
+check: s21_string.a
+	cppcheck *.h *.c
+	cp ../materials/linters/CPPLINT.cfg CPPLINT.cfg
+	python3 ../materials/linters/cpplint.py --extension=c *.c *.h
+	$(CC) test.c s21_string.a -lcheck
+	$(CC) $(CFLAGS) -c test.c -o test.o
+	$(CC) test.o s21_string.a $(TEST_LIBS) -o test
+	CK_FORK=no leaks --atExit -- ./test
 
-gcov_report: test
-	./test
-	gcov test.c
-	lcov --directory . --zerocounters
-	lcov -c --directory . --output-file test.info # вынести директорию в отдельную переменную?
-	genhtml test.info --output-directory report
+rebuild: clean all
+	open ./report/index.html
 
-local_debug:
-		$(CC) $(FLAGS) -g s21_string.c -o local_test
-.PHONY : all build clean
