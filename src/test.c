@@ -2388,12 +2388,67 @@ START_TEST(SPRINTF111) {
     char data[100];
     char data1[100];
     char *fmt = "|%+lu|\n";
-    long unsigned int src = 1844674407370955161;
+    long unsigned int src = ULLONG_MAX+1;
     s21_sprintf(data, fmt, src);
     sprintf(data1, fmt, src);
     ck_assert_str_eq(data, data1);
 }
 END_TEST
+
+START_TEST(SPRINTF112) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%x|\n";
+    int src = 0x2f;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF113) {
+    char data[100];
+    char data1[100];
+    char *fmt = "asdasdasdasdasdadadadadasdfgqwfdeawdf\n";
+    s21_sprintf(data, fmt);
+    sprintf(data1, fmt);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF114) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%X|\n";
+    int src = 0X2F;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF115) {
+    char data[100];
+    char data1[100];
+    char *fmt = "|%*o|\n";
+    int src = 077;
+    s21_sprintf(data, fmt, 5, src);
+    sprintf(data1, fmt, 5, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
+START_TEST(SPRINTF116) {
+    char data[100] = "";
+    char data1[100] = "";
+    char *fmt = "|%p|\n";
+    long int src = 0x7ffee8c368cc;
+    s21_sprintf(data, fmt, src);
+    sprintf(data1, fmt, src);
+    ck_assert_str_eq(data, data1);
+}
+END_TEST
+
 /*endregion*/
 Suite *f_example_suite_create() {
     Suite *s1 = suite_create("Test_string");
@@ -2708,6 +2763,11 @@ Suite *f_example_suite_create() {
     tcase_add_test(sprintftest, SPRINTF109);
     tcase_add_test(sprintftest, SPRINTF110);
     tcase_add_test(sprintftest, SPRINTF111);
+    tcase_add_test(sprintftest, SPRINTF112);
+    tcase_add_test(sprintftest, SPRINTF113);
+    tcase_add_test(sprintftest, SPRINTF114);
+    tcase_add_test(sprintftest, SPRINTF115);
+    tcase_add_test(sprintftest, SPRINTF116);
     /*copy me*/
 /*0*/
 /*1*/

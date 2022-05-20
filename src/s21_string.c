@@ -59,6 +59,7 @@ char *s21_strcat(char *dest, const char *src) {
         p++;
     while (*src)
         *p++ = *src++;
+
     *p = '\0';
     return dest;
 }
