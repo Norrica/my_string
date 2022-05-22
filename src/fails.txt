@@ -1,0 +1,5 @@
+strncmp
+strcpy
+strncmp
+sscanf (build fail)
+sprintf x2
