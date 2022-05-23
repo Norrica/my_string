@@ -5,7 +5,7 @@ void *s21_memchr(const void *str, int c, s21_size_t n) {
     const unsigned char *p = str;
     while (n--)
         if (*p++ == c) {
-            result = (void *) p - 1;
+            result = (void *) (p - 1);
             break;
         }
     return result;
@@ -59,6 +59,7 @@ char *s21_strcat(char *dest, const char *src) {
         p++;
     while (*src)
         *p++ = *src++;
+
     *p = '\0';
     return dest;
 }
@@ -74,16 +75,23 @@ char *s21_strncat(char *dest, const char *src, s21_size_t n) {
 }
 
 char *s21_strchr(const char *str, int c) {
-    //  while (*str != '\0' && *str != c)
-    //      ++str;
-    //  return (char *) (c == *str ? str : s21_NULL);
+    /*while (*str != '\0' && *str != c)
+        ++str;
+    return (char *) (c == *str ? str : s21_NULL);
     while (*str != '\0') {
         if (*str == c) {
             return (char *) str;
         }
         str++;
     }
-    return (s21_NULL);
+    return (s21_NULL);*/
+    do {
+        if (*str == c)
+            return (char *) str;
+        if (*str == '\0')
+            return s21_NULL;
+    } while (++str);
+    return s21_NULL; /*cppcheck*/
 }
 
 int s21_strcmp(const char *str1, const char *str2) {
@@ -134,9 +142,9 @@ s21_size_t s21_strcspn(const char *str1, const char *str2) {
 }
 // TODO(f): не решено
 char *s21_strerror(int errnum) {
-    static char result[100];
+    static char result[100] = "";
 #if defined(__APPLE__) || defined(__MACH__)
-    int n = 106;
+    int n = 107;
     const char *str_error[] = {
         "Undefined error: 0",
         "Operation not permitted",
@@ -248,149 +256,151 @@ char *s21_strerror(int errnum) {
     };
 
 #elif defined(__linux__)
-    int n = 131;
+    int n = 132;
     const char *str_error[] = {
         "No error information",
-        "Operation is not permitted",
-        "No such file or directory exists",
-        "No such process exists",
-        "Interrupted system cal",
-        "Input/output error",
-        "No such device or address exists.",
-        "Argument list is too long",
+        "Operation not permitted",
+        "No such file or directory",
+        "No such process",
+        "Interrupted system call",
+        "I/O error",
+        "No such device or address",
+        "Argument list too long",
         "Exec format error",
         "Bad file descriptor",
-        "No child process exists",
-        "Resource is temporarily unavailable",
-        "System cannot allocate memory",
-        "Permission is denied",
+        "No child process",
+        "Resource temporarily unavailable",
+        "Out of memory",
+        "Permission denied",
         "Bad address",
-        "Block device is required",
-        "Device or resource is busy",
-        "File already exists",
-        "Invalid cross-device link",
+        "Block device required",
+        "Resource busy",
+        "File exists",
+        "Cross-device link",
         "No such device",
         "Not a directory",
-        "A directory",
-        "An invalid argument",
+        "Is a directory",
+        "Invalid argument",
         "Too many open files in system",
-        "Too many open files",
-        "An inappropriate ioctl for device",
-        "Text file is busy",
-        "File is too large",
+        "No file descriptors available",
+        "Not a tty",
+        "Text file busy",
+        "File too large",
         "No space left on device",
-        "Illegal seek",
+        "Invalid seek",
         "Read-only file system",
         "Too many links",
-        "Case of broken pipe",
-        "Numerical argument is out of domain",
-        "Numerical result is out of range",
-        "Resource deadlock is avoided",
-        "File name is too long",
-        "No locks are available",
-        "Function is not implemented",
-        "Directory is not empty",
-        "Too many levels of symbolic links",
+        "Broken pipe",
+        "Domain error",
+        "Result not representable",
+        "Resource deadlock would occur",
+        "Filename too long",
+        "No locks available",
+        "Function not implemented",
+        "Directory not empty",
+        "Symbolic link loop",
+        "No error information",
         "No message of desired type",
-        "Identifier is removed",
-        "Channel number is out of range",
-        "Level 2 is not synchronized",
-        "Level 3 is halted",
-        "Level 3 is reset",
-        "Link number is out of range",
-        "Protocol driver is not attached",
-        "No CSI structure available",
-        "Level 2 is halted",
-        "Invalid exchange",
-        "Invalid request descriptor",
-        "Exchange is full",
-        "No anode",
-        "Invalid request code",
-        "Invalid slot",
-        "Bad font file format",
-        "Device is not a stream",
+        "Identifier removed",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "Device not a stream",
         "No data available",
-        "Timer is expired",
+        "Device timeout",
         "Out of streams resources",
-        "Machine is not on the network",
-        "Package is not installed",
-        "Object is remote",
-        "The link has been severed",
-        "Advertise error",
-        "Srmount error",
-        "Communication error on send",
+        "No error information",
+        "No error information",
+        "No error information",
+        "Link has been severed",
+        "No error information",
+        "No error information",
+        "No error information",
         "Protocol error",
         "Multihop attempted",
-        "Rfs specific error",
+        "No error information",
         "Bad message",
-        "Value is too large for defined data type",
-        "Name is not unique on network",
-        "File descriptor is in bad state",
-        "Remote address is changed",
-        "Cannot access a needed shared library",
-        "Accessing a corrupted shared library",
-        ".Lib section in a.out is corrupted",
-        "Attempting to link in too many shared libraries",
-        "Cannot exec a shared library directly",
-        "An invalid or incomplete multibyte or wide character",
-        "Interrupted system call should be restarted",
-        "Streams pipe error",
-        "Too many users",
-        "Socket operation on non-socket",
-        "Destination address is required",
-        "Message is too long",
-        "Protocol is wrong type for socket",
-        "Protocol is not available",
-        "Protocol is not supported",
-        "Socket type is not supported",
-        "Operation is not supported",
-        "Protocol family is not supported",
-        "Address family is not supported by protocol",
-        "Address is already in use",
-        "System cannot assign requested address",
+        "Value too large for data type",
+        "No error information",
+        "File descriptor in bad state",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "Illegal byte sequence",
+        "No error information",
+        "No error information",
+        "No error information",
+        "Not a socket",
+        "Destination address required",
+        "Message too large",
+        "Protocol wrong type for socket",
+        "Protocol not available",
+        "Protocol not supported",
+        "Socket type not supported",
+        "Not supported",
+        "Protocol family not supported",
+        "Address family not supported by protocol",
+        "Address in use",
+        "Address not available",
         "Network is down",
-        "Network is unreachable",
-        "Network has dropped connection on reset",
-        "Software caused connection abort",
-        "Connection is reset by peer",
+        "Network unreachable",
+        "Connection reset by network",
+        "Connection aborted",
+        "Connection reset by peer",
         "No buffer space available",
-        "Transport endpoint is already connected",
-        "Transport endpoint is not connected",
-        "System cannot send after transport endpoint shutdown",
+        "Socket is connected",
         "Socket not connected",
-        "Connection is timed out",
-        "Connection is refused",
+        "Cannot send after socket shutdown",
+        "No error information",
+        "Operation timed out",
+        "Connection refused",
         "Host is down",
-        "No route to host",
-        "Operation is already in progress",
-        "Operation is now in progress",
+        "Host is unreachable",
+        "Operation already in progress",
+        "Operation in progress",
         "Stale file handle",
-        "Structure needs cleaning",
-        "Not a XENIX named type file",
-        "No XENIX semaphores are available",
-        "Named type file",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
         "Remote I/O error",
-        "Disk quota is exceeded",
+        "Quota exceeded",
         "No medium found",
         "Wrong medium type",
-        "Operation is cancelled",
-        "Required key is not available",
-        "Key has expired",
-        "Key has been revoked",
-        "Key was rejected by service",
-        "Owner is died",
-        "No recoverable state",
-        "Operation is not possible due to RF-kill",
-        "Memory page has hardware error",
+        "Operation canceled",
+        "No error information",
+        "No error information",
+        "No error information",
+        "No error information",
+        "Previous owner died",
+        "State not recoverable",
     };
 #endif
-    if (errnum > n || errnum < 0) {
+    if (errnum >= n || errnum < 0) {
 #if defined(__APPLE__) || defined(__MACH__)
-        char res[30];
-        s21_sprintf(res, "Unknown error: %d", errnum);
-        s21_strcpy(result, res);
+        /* char res[30] = ""; */
+        s21_sprintf(result, "Unknown error: %d", errnum);
+        /* s21_strcpy(result, res); */
 #elif defined(__linux__)
-        s21_strcpy(result, "No error information");
+        /* char res[30] = ""; */
+        s21_sprintf(result, "No error information");
+        /* s21_strcpy(result, res); */
 #endif
     } else {
         s21_strcpy(result, str_error[errnum]);
@@ -456,34 +466,41 @@ char *s21_strstr(const char *haystack, const char *needle) {
     return result;
 }
 
+int s21_check_delim(char c, const char *delim) {
+    int result = 0;
+    while (*delim) {
+        if (*delim == c)
+            result++;
+        delim++;
+    }
+    return result;
+}
+
 char *s21_strtok(char *str, const char *delim) {
-    static char *current;
     char *result = s21_NULL;
-    if (delim != NULL) {
-        if (str != s21_NULL) {
-            /*remove delims from start*/
-            str = &str[s21_strspn(str, delim)];
-            s21_size_t first = s21_strspn(str, delim);
-            s21_size_t second = s21_strcspn(str, delim);
-            if (second == s21_strlen(str) || first == s21_strlen(str)) {
-                if (current != s21_NULL)
-                    return str;
-                else
-                    return s21_NULL;
+    static char *pointer_str;
+    if (!str)
+        str = pointer_str;
+    if (str) {
+        int f = 0;
+        while (s21_check_delim(*str, delim))
+            str++;
+        if (*str == '\0')
+                f = 1;
+        char *in = str;
+        while (!f) {
+            if (*str == '\0') {
+                pointer_str = str;
+                result = in;
+                f = 1;
             }
-            current = &str[second] + 1;
-            result = malloc((first + second) * sizeof(char));
-            for (s21_size_t i = first; i < second; ++i) {
-                result[i - first] = str[i];
+            if (s21_check_delim(*str, delim)) {
+                *str = '\0';
+                pointer_str = str + 1;
+                result = in;
+                f = 1;
             }
-            return result;
-        } else {
-            if (current == s21_NULL || current[0] == '\0') {
-                return s21_NULL;
-            } else {
-                result = s21_strtok(current, delim);
-                current = &current[s21_strspn(current, result)];
-            }
+            str++;
         }
     }
     return result;
@@ -526,9 +543,9 @@ void *s21_insert(const char *src, const char *str, s21_size_t start_index) {
     if (src != s21_NULL && str != s21_NULL) {
         s21_size_t size_src = s21_strlen(src);
         s21_size_t size_str = s21_strlen(str);
-        s21_size_t size_total = size_src + size_str;
+        s21_size_t size_total = size_src + size_str;  // + 1???????
         if (size_src >= start_index) {
-            result = (char *) malloc(size_total * sizeof(char));
+            result = (char *) calloc(size_total + 1, sizeof(char));  // added +1 so that \0 fits
             if (result != s21_NULL) {
                 for (s21_size_t i = 0; i < size_src; i++) {
                     result[i] = src[i];
@@ -551,7 +568,8 @@ void *s21_to_lower(const char *str) {
         return s21_NULL;
     }
     int len = s21_strlen(str);
-    char *result = malloc(len * sizeof(char));
+    // Address 0x4d78863 is 0 bytes after a block of size 3 alloc'd ;;; use calloc()?
+    char *result = calloc(len + 1, sizeof(char));
     if (result == s21_NULL) {
         return s21_NULL;
     }
@@ -562,6 +580,7 @@ void *s21_to_lower(const char *str) {
         else
             result[i] = str[i];
     }
+    result[len] = '\0';
     return result;
 }
 
@@ -570,7 +589,7 @@ void *s21_to_upper(const char *str) {
         return s21_NULL;
     }
     s21_size_t len = s21_strlen(str);
-    char *result = malloc(len * sizeof(char));
+    char *result = calloc(len + 1, sizeof(char));  //  result = "" ? or calloc()?
     if (result == s21_NULL) {
         return s21_NULL;
     }
@@ -580,6 +599,7 @@ void *s21_to_upper(const char *str) {
             result[i] = str[i] - 32;
         else
             result[i] = str[i];
+    result[len] = '\0';
     return result;
 }
 
@@ -598,6 +618,9 @@ int isthere(char c, const char *trim_chars) {
 
 void *s21_trim(const char *src, const char *trim_chars) {
     char *result = s21_NULL;
+    if (trim_chars == s21_NULL || *trim_chars == '\0') {
+        trim_chars = " \f\n\r\t\v";
+    }
     if (src != s21_NULL) {
         int len = s21_strlen(src);
         int last_n = len;
@@ -635,374 +658,4 @@ void *s21_trim(const char *src, const char *trim_chars) {
         result[temp] = '\0';
     }
     return result;
-}
-
-char *SetFill(char *buf, int width, char fill) {
-    while (width-- > 0) {
-        *buf++ = fill;
-    }
-    return buf;
-}
-char *SetSign(char *buf, enum conversion_flags *flags) {
-    if ((*flags) & PUT_PLUS) {
-        *buf++ = '+';
-    } else if ((*flags) & IS_NEGATIVE) {
-        *buf++ = '-';
-    }
-    return buf;
-}
-
-char *s21_ftoa(char *buf, long double num, int width, int precision, enum conversion_flags flags) {
-    char fill/* = (flags & FILL_ZERO) ? '0' : ' '*/;
-    if (flags & FILL_ZERO) {
-        fill = '0';
-    } else {
-        fill = ' ';
-    }
-    if ((flags & PUT_SPACE) && width == 0) {
-        width++;
-    }
-    if (precision == 0 && !(flags & SET_PRECISION)) {
-        precision = 6;
-    } else if (precision == 0 && (flags & SET_PRECISION)) {
-        precision = 0;
-    }
-
-    if (flags & IS_NEGATIVE) {
-        num *= -1;
-    }
-
-    int int_part = (int) num;
-    double float_part = num - int_part;
-
-    char int_res[50];
-    s21_itoa(int_part, int_res);
-
-    long long float_num = float_part * pow(10, precision);
-    char float_res[50];
-    s21_itoa(float_num, float_res);
-
-    char new_float_res[50] = "";
-    if ((size) precision > s21_strlen(float_res))
-        s21_memset(new_float_res, '0', precision - s21_strlen(float_res));
-    s21_strcat(new_float_res, float_res);
-    s21_strcpy(float_res, new_float_res);
-
-    char res_buf[100];
-    s21_strcpy(res_buf, int_res);
-    if (precision != 0) {
-        s21_strcat(res_buf, ".");
-        s21_strcat(res_buf, float_res);
-    }
-
-    if (flags & IS_NEGATIVE || flags & PUT_PLUS) {
-        --width;
-    }
-    s21_size_t res_len = s21_strlen(res_buf);
-    width -= res_len;
-    char *b = res_buf;
-    if ((flags & JUSTIFY_LEFT) && !(flags & PUT_SPACE)) {
-        while (*b != '\0') {
-            *buf++ = *b++;
-        }
-        if (fill == ' ') {
-            buf = SetFill(buf, width, fill);
-            buf = SetSign(buf, &flags);
-        } else {
-            buf = SetSign(buf, &flags);
-            buf = SetFill(buf, width, fill);
-        }
-    } else {
-        if (fill == ' ') {
-            buf = SetFill(buf, width, fill);
-            buf = SetSign(buf, &flags);
-        } else {
-            buf = SetSign(buf, &flags);
-            buf = SetFill(buf, width, fill);
-        }
-        while (*b != '\0') {
-            *buf++ = *b++;
-        }
-    }
-    if ((int) s21_strlen(res_buf) < width + precision) {
-        for (int i = 0; i < width + precision; ++i) {
-            s21_strcat(res_buf, "0");
-        }
-    }
-    return buf;
-}
-
-char *s21_sitoa(char *buf, long long int num, int width, enum conversion_flags flags) {
-    unsigned int base;
-    char hex_size = 'a';
-    if (flags & BASE_2) {
-        base = 2;
-    } else if (flags & BASE_8) {
-        base = 8;
-    } else if (flags & BASE_10) {
-        base = 10;
-    } else {
-        base = 16;
-        if (flags & BIG_HEX) {
-            hex_size = 'A';
-        }
-    }
-
-    if (flags & IS_ADDRESS) {
-        *buf++ = '0';
-        if (hex_size == 'a')
-            *buf++ = 'x';
-        else
-            *buf++ = 'X';
-        buf = s21_strcpy(buf, "7ffe");/*Костыль*/
-        buf +=4;
-    }
-
-    if (num < 0) {
-        num = -num;
-        flags |= IS_NEGATIVE;
-    }
-
-    char tmp[32];
-    char *p = tmp;
-    do {
-        int rem = num % base;
-        *p++ = (rem <= 9) ? (rem + '0') : (rem + hex_size - 0xA);
-    } while ((num /= base));
-    width -= p - tmp;
-    if ((flags & PUT_SPACE)) {
-        width = 1;
-    }
-
-    char fill;
-    if ((flags & FILL_ZERO)) {
-        fill = '0';
-    } else {
-        fill = ' ';
-    }
-    if (flags & IS_NEGATIVE || flags & PUT_PLUS) {
-        --width;
-    }
-    if ((flags & JUSTIFY_LEFT) && !(flags & PUT_SPACE)) {
-        fill = ' ';
-        buf = SetSign(buf, &flags);
-        do {
-            *(buf++) = *(--p);
-        } while (tmp < p);
-        buf = SetFill(buf, width, fill);
-    } else {
-        if (fill == '0') {
-            buf = SetSign(buf, &flags);
-            buf = SetFill(buf, width, fill);
-        } else {
-            buf = SetFill(buf, width, fill);
-            buf = SetSign(buf, &flags);
-        }
-        do {
-            *(buf++) = *(--p);
-        } while (tmp < p);
-    }
-    return buf;
-}
-
-char *stringer(enum conversion_flags flags, const char *p, char *buf, int width) {
-    int a = s21_strlen(p);
-    // char *string = (char *) malloc(a + width);
-    // width -= a;
-    if (width < a) {
-        width = 0;
-    }
-    if (!(flags & JUSTIFY_LEFT)) {
-        while ((((width)--) - a) > 0) {
-            if (flags & FILL_ZERO)
-                *buf++ = '0';
-            else
-                *buf++ = ' ';
-        }
-        /* char *save = buf; */
-        if (p)
-            while (*p)
-                *buf++ = *(p++);
-    } else {
-        if (p)
-            while (*p)
-                *buf++ = *(p++);
-        while ((((width)--) - a) > 0) {
-            *buf++ = ' ';
-        }
-    }
-    return buf;
-}
-int s21_vsprintf(char *buf, const char *fmt, va_list va) {
-    char c;
-    const char *save = buf;
-    while ((c = *fmt++)) {
-        int width = 0;
-        int precision = 0;
-        enum conversion_flags flags = 0;
-        if (c != '%') {
-            *(buf++) = c;
-            continue;
-        }
-        int start_fmt = 1;
-        for (char *i = (char *) fmt; start_fmt; ++i) {
-            c = *fmt++;
-            switch (c) {
-                case '%': {}
-                    *buf++ = c;
-                    start_fmt = 0;
-                    continue;
-                case 'L':flags |= L;
-                    continue;
-                case 'h':flags |= h;
-                    continue;
-                case 'l':flags |= l;
-                    if (*(fmt + 1) == 'l') {
-                        flags |= ll;
-                        flags &= ~l;
-                    }
-                    continue;
-                case 'c': {}
-                    // *buf++ = ;
-                    char a[2] = "";
-                    a[0]= va_arg(va, int);
-                    a[1]= '\0';
-                    buf = stringer(flags, a, buf, width);
-                    start_fmt = 0;
-                    continue;
-                case 'i':
-                case 'd': {}
-                    if (width == 0 && (flags & SET_PRECISION)) {
-                        width = precision;
-                        flags |= FILL_ZERO;
-                    }
-                    long long int num;
-                    if (flags & l) {
-                        num = va_arg(va, long int);
-                    } else {
-                        if (flags & ll) {
-                            num = va_arg(va, long long int);
-                        } else if (flags & h) {
-                            num = va_arg(va, int);
-                            num = (short int) num;
-                            buf = s21_sitoa(buf, num, width, flags | BASE_10);
-                        } else {
-                            num = va_arg(va, int);
-                            buf = s21_sitoa(buf, num, width, flags | BASE_10);
-                        }
-                    }
-                    start_fmt = 0;
-                    continue;
-                case 'X': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BIG_HEX);
-                    start_fmt = 0;
-                    continue;
-                case 'x': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags);
-                    start_fmt = 0;
-                    continue;
-                case 'p':
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags |IS_ADDRESS);
-                    start_fmt = 0;
-                    continue;
-                case 'b': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_2);
-                    start_fmt = 0;
-                    continue;
-                case 'f': {}
-                    long double d;
-                    if (flags & L)
-                        d = (long double) va_arg(va, long double);
-                    else
-                        d = (double) va_arg(va, double);
-                    if (d < 0)
-                        flags |= IS_NEGATIVE;
-                    if (precision)
-                        d = roundl(d * pow(10, precision)) / pow(10, precision);
-                    else
-                        d = roundl(d * pow(10, 6)) / pow(10, 6);
-                    buf = s21_ftoa(buf, d, width, precision, flags);
-                    start_fmt = 0;
-                    continue;
-                case 's': {}
-                    const char *p = va_arg(va, const char *);
-                    if (width == 0 && (flags & SET_PRECISION)) {
-                        width = s21_strlen(p);
-                    }
-                    buf = stringer(flags, p, buf, width);
-                    start_fmt = 0;
-                    continue;
-                case 'u': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_10);
-                    start_fmt = 0;
-                    continue;
-                case 'o': {}
-                    buf = s21_sitoa(buf, va_arg(va, unsigned int), width, flags | BASE_8);
-                    start_fmt = 0;
-                    continue;
-                case 'm': {}
-                    const uint8_t *m = va_arg(va, const uint8_t *);
-                    width = min(width, 64);
-                    if (m) {
-                        for (;;) {
-                            buf = s21_sitoa(buf, *(m++), 2, FILL_ZERO);
-                            if (--width <= 0)
-                                break;
-                            *(buf++) = ':';
-                        }
-                    }
-                    start_fmt = 0;
-                    continue;
-                case '.': {}
-                    if (!(flags & SET_PRECISION))
-                        flags |= SET_PRECISION;
-                    continue;
-                case '0':
-                    if (!width) {
-                        flags |= FILL_ZERO;
-                    }
-                    // fall through
-                case '1'...'9': {}
-                    if (!(flags & SET_PRECISION))
-                        width = width * 10 + c - '0';
-                    else
-                        precision = precision * 10 + c - '0';
-                    continue;
-                case '*': {}
-                    if (flags & SET_PRECISION) {
-                        precision = va_arg(va, unsigned int);
-                    } else {
-                        width = va_arg(va, unsigned int);
-                    }
-                    continue;
-                case '+': {}
-                    flags |= PUT_PLUS;
-                    continue;
-                case '-': {}
-                    flags |= JUSTIFY_LEFT;
-                    continue;
-                case ' ':
-                    if (!(flags & PUT_SPACE) && width == 0) {
-                        flags |= PUT_SPACE;
-                    }
-                    continue;
-                case 'g':
-                case 'G':
-                case 'e':
-                case 'E':
-                case 'n':
-
-                default:continue;
-            }
-        }
-    }
-    *buf = '\0';
-    return buf - save;
-}
-int s21_sprintf(char *buf, const char *fmt, ...) {
-    va_list va;
-    va_start(va, fmt);
-    int ret = s21_vsprintf(buf, fmt, va);
-    va_end(va);
-    return ret;
 }
